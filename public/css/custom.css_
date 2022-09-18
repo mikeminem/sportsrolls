@@ -1,0 +1,62 @@
+a {
+	color: #AAA;
+}
+
+a:hover {
+	color: #572364;
+	text-decoration: underline;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgba(0,0,0,.9);
+}
+
+.navbar {
+	border-bottom: 1px solid #572364;
+}
+
+
+.rosa {
+	background-color: #e4007c;
+	
+}
+
+
+.card-header {
+	background-color: #e4007c;
+	color: #FFF;
+}
+
+.card {
+	border: 1px solid #572364;
+}
+
+.btn-primary {
+	background-color: #e4007c;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #572364;
+}
+
+.btn-link {
+	color: #e4007c;
+}
+
+.btn-link.focus, .btn-link:focus, .btn-link:hover {
+    text-decoration: underline;
+    border-color: transparent;
+}
+
+.tool {
+	font-size: 30px;
+}
+
+
+/*
+if modal give us problems, just delete the backdrop element
+.modal-backdrop {
+	display:none;
+	z-index: -100;
+}*/

@@ -1,0 +1,65 @@
+to create a migration
+
+php artisan make:migration add_role_status_to_users_table --table=users
+
+https://github.com/Laraveles/spanish
+	- composer require laraveles/spanish
+	- en el archivo config/app.php
+		'providers' => [
+		    // ...
+		    Laraveles\Spanish\SpanishServiceProvider::class,
+		];
+
+	- php artisan vendor:publish --tag=lang
+
+
+https://github.com/UniSharp/laravel-ckeditor
+	- composer require unisharp/laravel-ckeditor
+	- en el archivo config/config.php
+
+		Unisharp\Ckeditor\ServiceProvider::class,
+
+	- php artisan vendor:publish --tag=ckeditor
+
+	usage
+
+	Default way (initiate by name or id) :
+
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace( 'article-ckeditor' );
+    </script>
+
+Or if you want to initiate by jQuery selector :
+
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+    <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
+    <script>
+        $('textarea').ckeditor();
+        // $('.textarea').ckeditor(); // if class is prefered.
+    </script>
+
+
+https://github.com/yajra/laravel-datatables
+
+https://www.itsolutionstuff.com/post/laravel-5-implementing-datatables-tutorial-using-yajra-packageexample.html
+
+$ composer require yajra/laravel-datatables-oracle:"~8.0"
+
+- En el archivo  config/app.php
+	providers
+	    Yajra\DataTables\DataTablesServiceProvider::class,
+
+	aliases
+		'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+
+
+	finally 
+	php artisan vendor:publish --provider="Yajra\DataTables\DataTablesServiceProvider"
+
+
+
+
+Font Awesome from 
+https://fontawesome.com/v4.7/icons/
+https://laraveldaily.com/laravel-validation-specify-attribute-names-for-error-messages/
