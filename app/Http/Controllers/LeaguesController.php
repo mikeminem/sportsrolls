@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Leagues;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class LeaguesController extends Controller
 {
@@ -36,6 +39,39 @@ class LeaguesController extends Controller
     public function store(Request $request)
     {
         //
+        if ($request) {
+            $user_id = Auth::user()->id;
+            $league = Leagues::find(Auth::user()->id);
+            if ($league) {
+                //update info
+                $row = User::find(Auth::user()->id)->league;
+
+                $row->fill($request->all());
+
+                if ($row->update()) {
+                    return response()->json([
+                        'type' => 'success',
+                        'message' => 'Información de la liga guardada!'
+                    ]);
+                } 
+            } else {
+                //New entry
+                $row = new Leagues($request->all());
+                $row->user_id = Auth::user()->id;
+                if ($row->save()) {
+                    return response()->json([
+                        'type' => 'success',
+                        'message' => 'Información de la liga guardada!'
+                    ]);
+                }
+            }
+        }
+
+        //send an error
+        return response()->json([
+            'type' => 'error',
+            'message' => 'Error al intentar guardar la información de la liga!'
+        ]);
     }
 
     /**
@@ -47,6 +83,8 @@ class LeaguesController extends Controller
     public function show(Leagues $leagues)
     {
         //
+        $league = User::find(Auth::user()->id)->league;
+        return view("leagues.league_info", [ 'league' => $league]);
     }
 
     /**

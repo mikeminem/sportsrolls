@@ -121,7 +121,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#"><i class="fa fa-certificate"></i> Usted es {{ $role }}</a>
                                     @if (Auth::user()->role == "Promoter")
-                                        <a class="dropdown-item" href=" {{ url('league_info')}}" title="{{ __('League Info') }}"><i class="fa fa-cog"></i> {{ __('League Info') }}</a>
+                                        <a class="dropdown-item" href=" {{ url('league_info')}}" title="{{ __('League Info') }}"><i class="fa fa-info"></i> {{ __('League Info') }}</a>
                                     @endif
 
                                     <div class="dropdown-divider"></div>

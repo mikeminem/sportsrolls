@@ -29,14 +29,13 @@ Route::get('/users/password/{id}', 'UserController@formpassword');
 Route::post('/users/password/{id}', 'UserController@changepassword');
 
 
-
+//stadiums options
 Route::resource('/stadiums','StadiumsController');
 Route::get('all_stadiums', 'StadiumsController@allStadiums');
 Route::post('save_stadium', 'StadiumsController@save');
 Route::get('get_stadium/{id}', 'StadiumsController@show');
 Route::post('delete_stadium', 'StadiumsController@destroy');
 
-// Route::get('/users/delete/{id}', 'UserController@destroy');
-// Route::get('/users/password/{id}', 'UserController@password');
-// Route::post('/users/password/{id}', 'UserController@changepassword');
-// Route::get('/register/verify/{code}', 'UserController@verify');
+//league options
+Route::resource('/leagues','LeaguesController');
+Route::get('league_info', 'LeaguesController@show');
