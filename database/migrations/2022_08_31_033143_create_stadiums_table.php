@@ -17,7 +17,7 @@ class CreateStadiumsTable extends Migration
             $table->bigIncrements('id');
             $table->string("code",10);
 
-            $table->integer('user_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             
             $table->string("name",120);
