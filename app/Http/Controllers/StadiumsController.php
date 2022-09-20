@@ -136,7 +136,6 @@ class StadiumsController extends Controller
             return false;
         }
         $row = Stadiums::find($request->id);
-
         $row->fill($request->all());
 
         if ($row->update()) {

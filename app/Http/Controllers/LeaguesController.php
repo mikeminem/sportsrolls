@@ -39,6 +39,29 @@ class LeaguesController extends Controller
     public function store(Request $request)
     {
         //
+
+        $rules = [
+            'name'      => 'required|max:120|min:10'
+        ];
+
+        $attributes = [
+            'name'      => 'Nombre de la liga'
+        ];
+
+        //Validate the data
+        $validated = Validator::make($request->all(),$rules, [] , $attributes);
+
+
+        if ($validated->fails()) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'Error al intentar guardar la información de la liga!',
+                'errors' => $validated->errors()
+            ]);
+        }
+
+
+
         if ($request) {
             $user_id = Auth::user()->id;
             $league = Leagues::find(Auth::user()->id);
