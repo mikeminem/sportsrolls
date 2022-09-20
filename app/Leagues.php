@@ -8,7 +8,7 @@ class Leagues extends Model
 {
     //
     protected $fillable = [
-        'name', 'slogan', 'summary', 'president', 'secretary', 'treasurer', 'referee_main'
+        'name', 'slogan', 'summary', 'facebook', 'instagram', 'twitter', 'footer1', 'website', 'watsapp'
     ];
 
 

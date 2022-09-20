@@ -37,31 +37,31 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Presidente</label>
-                                        <input type="text" class="form-control" id="president" name="president" placeholder="Presidente de la liga"  maxlength="80" value="{{ ($league)?$league->president:""}}" required>
+                                        <label for="usr">facebook</label>
+                                        <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Si cuenta con facebook"  maxlength="80" value="{{ ($league)?$league->facebook:""}}" >
                                     </div>
                                 </div>
         
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Secretario</label>
-                                        <input type="text" class="form-control" id="secretry" name="secretary" placeholder="Secretario de la liga" maxlength="80" value="{{ ($league)?$league->secretary:""}}" required>
+                                        <label for="usr">Twitter</label>
+                                        <input type="text" class="form-control" id="twitter" name="twitter" placeholder="Si cuenta con Twitter" maxlength="80" value="{{ ($league)?$league->twitter:""}}" >
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Tesorero</label>
-                                        <input type="text" class="form-control" id="treasurer" name="treasurer" placeholder="Tesorero de la liga"  maxlength="80" value="{{ ($league)?$league->treasurer:""}}" required>
+                                        <label for="usr">Instagram</label>
+                                        <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Si cuenta con instagram"  maxlength="80" value="{{ ($league)?$league->instagram:""}}" >
                                     </div>
                                 </div>
         
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Jefe de Arbitros</label>
-                                        <input type="text" class="form-control" id="referee_main" name="referee_main" placeholder="Jefe de arbitros" maxlength="80" value="{{ ($league)?$league->referee_main:""}}" required>
+                                        <label for="usr">Página web</label>
+                                        <input type="text" class="form-control" id="website" name="website" placeholder="Si cuenta con página web" maxlength="80" value="{{ ($league)?$league->website:""}}" >
                                     </div>
                                 </div>
                             </div>
@@ -76,14 +76,11 @@
                                 </div>
                             </div>
 
-
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     Datos marcados con * son obligatorios
                                 </div>
                             </div>
-
-
 
                             <div class="form-group text-right">
                                 {{ csrf_field() }}

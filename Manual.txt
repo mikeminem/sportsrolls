@@ -62,7 +62,7 @@ $ composer require yajra/laravel-datatables-oracle:"~8.0"
 
 Font Awesome from 
 https://fontawesome.com/v4.7/icons/
-https://laraveldaily.com/laravel-validation-specify-attribute-names-for-error-messages/
+
 
 
 How to handle with git
@@ -81,3 +81,11 @@ git remote add origin https://github.com/elmikeminem/sportsrolls.git
 git branch -M main
 git push -u origin main
 
+References
+https://laraveldaily.com/laravel-validation-specify-attribute-names-for-error-messages/
+https://www.itsolutionstuff.com/post/laravel-one-to-one-eloquent-relationship-tutorialexample.html
+https://stackoverflow.com/questions/37631682/removing-column-from-database-in-laravel-5
+
+
+Next step
+https://adevait.com/laravel/using-laravel-with-react-js
