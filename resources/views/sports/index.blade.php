@@ -15,7 +15,7 @@
                         <h1>{{ __('Sports')}}</h1>
                     </div>
 
-                    {{-- @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') )) --}}
+                    @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
                         <a role="button" 
                             class="btn btn-primary" 
                             href="javascript:void(0);" 
@@ -27,7 +27,7 @@
                         <a role="button" class="btn btn-primary" href="javascript:void(0);" id="btnPrint">
                             <span class="fa fa-print"></span> {{ __("Print")}}
                         </a>
-                    {{-- @endif --}}
+                    @endif
 
                     <a role="button" class="btn btn-primary" href="javascript:void(0);" id="btnRefresh">
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
