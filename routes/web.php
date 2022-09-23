@@ -23,10 +23,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 //* categorias for ligues
 //******************************************************************
 
-Route::resource('/users','UserController');
-Route::get('/users/delete/{id}', 'UserController@destroy');
-Route::get('/users/password/{id}', 'UserController@formpassword');
-Route::post('/users/password/{id}', 'UserController@changepassword');
+// Route::resource('/users','UserController');
+// Route::get('/users/delete/{id}', 'UserController@destroy');
+// Route::get('/users/password/{id}', 'UserController@formpassword');
+// Route::post('/users/password/{id}', 'UserController@changepassword');
 
 
 //stadiums options
@@ -39,3 +39,6 @@ Route::post('delete_stadium', 'StadiumsController@destroy');
 //league options
 Route::resource('/leagues','LeaguesController');
 Route::get('league_info', 'LeaguesController@show');
+
+//sports options
+Route::resource('/sports','SportController');
