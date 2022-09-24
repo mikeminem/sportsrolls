@@ -70,41 +70,30 @@ class StadiumsController extends Controller
             ]);
         }
 
-
-        if (strlen($request->id) ==0 ) {
-            if ($this->store($request)) {
+        if (!isset($request->id) || empty($request->id) ) {
+            //create a new row
+            $model = new Stadiums($request->all());
+            $model->code =  strtoupper( str_random(6));
+            $model->user_id = Auth::user()->id;
+            if ($model->save()) 
                  return response()->json(['type' => 'success', 
                                  'message' => 'Se ha creado el estadio estadio!']);      
-            }
-        } else {
-            if ($this->update($request)) {
+        } 
+        
+        if (isset($request->id) || !empty($request->id) ) {
+            $model = Stadiums::find($request->id);
+            $model->fill($request->all());
+
+            if ($model->update()) 
                 return response()->json(['type' => 'success', 
                                  'message' => 'Se ha modificado el estadio!']); 
-            }   
+            
         }
 
         return response()->json([
             'type' => 'error',
             'message' => 'Error al intentar guardar el Estadio!'
         ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-        $row = new Stadiums($request->all());
-        $row->code =  strtoupper( str_random(6));
-        $row->user_id = Auth::user()->id;
-        if ($row->save()) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -119,27 +108,6 @@ class StadiumsController extends Controller
         if ($id) {
             $stadium = Stadiums::find($id);
         return $stadium;
-        }
-        return false;
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return boolean
-     */
-    public function update(Request $request)
-    {
-        //
-        if (!$request) {
-            return false;
-        }
-        $row = Stadiums::find($request->id);
-        $row->fill($request->all());
-
-        if ($row->update()) {
-            return true;
         }
         return false;
     }
