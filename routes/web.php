@@ -42,3 +42,6 @@ Route::get('league_info', 'LeaguesController@show');
 
 //sports options
 Route::resource('/sports','SportController');
+
+//categories options
+Route::resource('/categories','CategoryController');

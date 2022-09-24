@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', config('app.name') ." :: " .  __('Sports') )
-@section('description',  "Administrador de estadios ")
+@section('description',  "Administrador de Deportes ")
 
 @section('content')
 
@@ -85,7 +85,7 @@
 
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="image"><b>Imagen *</b></label>
+                                <label for="image"><b>Imagen</b></label>
                                 <input type="file" class="form-control" id="image" name="image" accept="image/*">
                             </div>
                         </div>

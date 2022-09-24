@@ -25,6 +25,7 @@ class SportController extends Controller
          if($request->ajax()){
             $rows = DB::table('sports as s')
                     ->select('s.id', 's.code', 's.name', 's.image', 's.is_deleted')
+                    ->where('c.is_deleted', 0)
                     ->get();        
             
             return DataTables::of($rows)
@@ -139,27 +140,6 @@ class SportController extends Controller
         if ($id) {
             $sport = Sport::select('id', 'code', 'name')->find($id);
         return $sport;
-        }
-        return false;
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return boolean
-     */
-    public function update(Request $request)
-    {
-        //
-        if (!$request) {
-            return false;
-        }
-        $row = Sport::find($request->id);
-        $row->fill($request->all());
-
-        if ($row->update()) {
-            return true;
         }
         return false;
     }
