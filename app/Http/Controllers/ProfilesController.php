@@ -75,8 +75,9 @@ class ProfilesController extends Controller
 
         if ($request) {
             $user_id = Auth::user()->id;
-            $league = Profiles::find(Auth::user()->id);
-            if ($league) {
+            //$profile = Profiles::find(Auth::user()->id);
+            $profile = User::find(Auth::user()->id)->profile;
+            if ($profile) {
                 //update info
                 $model = User::find(Auth::user()->id)->profile;
                 $model->fill($request->all());

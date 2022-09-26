@@ -16,9 +16,7 @@
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
                                     <div class="card">
-                                        @if ($profile->photo)
-                                            <img class="card-img-top" id="thumbnil" src="{{ asset('images/noimage.png')}}" alt="" >
-                                        @endif
+                                       
                                         <img class="card-img-top" id="thumbnil" src="{{ asset('images/noimage.png')}}" alt="" >
                                         <div class="card-body text-center">
                                             <h4 class="card-title">{{ Auth::user()->name}}</h4>

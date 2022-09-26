@@ -25,7 +25,7 @@ class SportController extends Controller
          if($request->ajax()){
             $rows = DB::table('sports as s')
                     ->select('s.id', 's.code', 's.name', 's.image', 's.is_deleted')
-                    ->where('c.is_deleted', 0)
+                    ->where('s.is_deleted', 0)
                     ->get();        
             
             return DataTables::of($rows)
