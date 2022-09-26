@@ -47,16 +47,16 @@ class ProfilesController extends Controller
         $rules = [
             //'name'      => 'required|max:120|min:10',
             'dob'                   => 'required',
-            'height'                => 'required',
-            'weight'                => 'required',
+            'tshirt_size'           => 'required',
+            'favorite_number'       => 'required',
             'footware_meansure'     => 'required',
             'sex'                   => 'required',
         ];
 
         $attributes = [
             'dob'                   => 'Fecha de nacimiento',
-            'height'                => 'Estatura',
-            'weight'                => "Peso",
+            'tshirt_size'           => 'Estatura',
+            'favorite_number'       => "Peso",
             'footware_meansure'     => 'Medida de calzado',
             'sex'                   => 'Sexo',
         ];

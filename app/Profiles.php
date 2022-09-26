@@ -8,7 +8,7 @@ class Profiles extends Model
 {
     //
     protected $fillable = [
-        'state_id', 'municipality_id', 'photo', 'dob', 'sex', 'height', 'weight', 'footware_meansure', 'about_me'
+        'state_id', 'municipality_id', 'photo', 'dob', 'sex', 'footware_meansure', 'about_me', 'tshirt_size', 'favorite_number'
     ];
 
     public function user()

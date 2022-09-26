@@ -30,7 +30,7 @@ class LeaguesController extends Controller
 
         $rules = [
             'name'      => 'required|max:120|min:10',
-            'spsort_id' => 'required'
+            'sport_id' => 'required'
         ];
 
         $attributes = [

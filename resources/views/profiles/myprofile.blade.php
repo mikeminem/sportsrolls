@@ -21,14 +21,62 @@
                                         @endif
                                         <img class="card-img-top" id="thumbnil" src="{{ asset('images/noimage.png')}}" alt="" >
                                         <div class="card-body text-center">
-                                          <h4 class="card-title">{{ Auth::user()->name}}</h4>
-                                          <span class="btn btn-primary btn-file">
-                                                <span class="fa fa-photo"></span> 
-                                                Buscar foto
-                                                <input type="file" accept="image/*" id="btnFoto" onchange="showMyImage(this)">
+                                            <h4 class="card-title">{{ Auth::user()->name}}</h4>
+                                            <span class="btn btn-primary btn-file">
+                                                    <span class="fa fa-photo"></span> 
+                                                    Buscar foto
+                                                    <input type="file" accept="image/*" id="btnFoto" onchange="showMyImage(this)">
+                                                    
+                                            </span>
+                                            <a href="javascript:void(0)" class="btn btn-primary" id="btnDeletePhoto" ><span class="fa fa-remove"></span>  Borrar foto</a>
+
+
+
+                                            <hr />
+                                            <div class="row">
                                                 
-                                          </span>
-                                          <a href="javascript:void(0)" class="btn btn-primary" id="btnDeletePhoto" ><span class="fa fa-remove"></span>  Borrar foto</a>
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="dob"><b>Fecha de nacimiento *</b></label>
+                                                        <input type="date" class="form-control" id="dob" name="dob" placeholder="Fecha de nacimiento" value="{{ ($profile)?$profile->dob:""}}">
+                                                    </div>
+                                                </div>
+        
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="tshirt_size"><b>Talla Playera *</b></label>
+                                                        <input type="text" class="form-control" id="tshirt_size" name="tshirt_size" placeholder="Talla playera" maxlength="10" value="{{ ($profile)?$profile->tshirt_size:""}}">
+                                                    </div>
+                                                </div>
+        
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="favorite_number"><b>Número favorito *</b></label>
+                                                        <input type="text" class="form-control" id="favorite_number" name="favorite_number" placeholder="Número favorito" maxlength="5" value="{{ ($profile)?$profile->favorite_number:""}}">
+                                                    </div>
+                                                </div>
+        
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="footware_meansure"><b>Calzado cms *</b></label>
+                                                        <input type="text" class="form-control" id="footware_meansure" name="footware_meansure" placeholder="Mi # de calzado" maxlength="4" value="{{ ($profile)?$profile->footware_meansure:""}}">
+                                                    </div>
+                                                </div>
+        
+                                                <div class="col-md-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="footware_meansure"><b> Sexo *</b></label>
+                                                        <select id="sex" name="sex" class="form-control">
+                                                            <option value="Masculino">Masculino</option>
+                                                            <option value="Femenino">Femenino</option>
+                                                            <option value="NA">NA</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
                                         </div>
                                       </div>
                                 </div>
@@ -42,44 +90,6 @@
                                             </div>
                                         </div>
     
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="dob"><b>Fecha de nacimiento *</b></label>
-                                                <input type="date" class="form-control" id="dob" name="dob" placeholder="Fecha de nacimiento" value="{{ ($profile)?$profile->dob:""}}">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="height"><b>Estatura cms *</b></label>
-                                                <input type="text" class="form-control" id="height" name="height" placeholder="Mi estatura" maxlength="3" value="{{ ($profile)?$profile->height:""}}">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="weight"><b>Peso Kg *</b></label>
-                                                <input type="text" class="form-control" id="weight" name="weight" placeholder="Mi peso" maxlength="5" value="{{ ($profile)?$profile->weight:""}}">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="footware_meansure"><b>Calzado cms *</b></label>
-                                                <input type="text" class="form-control" id="footware_meansure" name="footware_meansure" placeholder="Mi # de calzado" maxlength="4" value="{{ ($profile)?$profile->footware_meansure:""}}">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="footware_meansure"><b> Sexo *</b></label>
-                                                <select id="sex" name="sex" class="form-control">
-                                                    <option value="Masculino">Masculino</option>
-                                                    <option value="Femenino">Femenino</option>
-                                                    <option value="NA">NA</option>
-                                                </select>
-                                            </div>
-                                        </div>
                                     </div>
                                     
                                 </div>
