@@ -85,6 +85,7 @@ References
 https://laraveldaily.com/laravel-validation-specify-attribute-names-for-error-messages/
 https://www.itsolutionstuff.com/post/laravel-one-to-one-eloquent-relationship-tutorialexample.html
 https://stackoverflow.com/questions/37631682/removing-column-from-database-in-laravel-5
+https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded
 
 
 Next step

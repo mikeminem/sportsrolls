@@ -302,12 +302,12 @@
             });
 
             $(document).on("submit", "#deleteForm", function (e) {
-                //alert("Lets Delete the product (softdelete)");
 
                 e.preventDefault();
                 $.ajax({
-                    type: "POST",
-                    url: "delete_stadium",
+                    type: "DELETE",
+                    //url: "delete_stadium",
+                    url: "{{ url('/stadiums')}}/" + $(this).attr("idDelete"),
                     dataType: "json",
                     data: $(this).serialize(),
                     success: function (data) {

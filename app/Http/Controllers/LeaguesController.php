@@ -4,30 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Leagues;
 use App\User;
+use App\Sport;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class LeaguesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function __construct()
     {
-        //
+        $this->middleware('auth');
     }
 
     /**
@@ -41,11 +29,13 @@ class LeaguesController extends Controller
         //
 
         $rules = [
-            'name'      => 'required|max:120|min:10'
+            'name'      => 'required|max:120|min:10',
+            'spsort_id' => 'required'
         ];
 
         $attributes = [
-            'name'      => 'Nombre de la liga'
+            'name'      => 'Nombre de la liga',
+            'sport_id'  => 'Deporte'
         ];
 
         //Validate the data
@@ -60,37 +50,31 @@ class LeaguesController extends Controller
             ]);
         }
 
-
-
         if ($request) {
             $user_id = Auth::user()->id;
             $league = Leagues::find(Auth::user()->id);
             if ($league) {
                 //update info
-                $row = User::find(Auth::user()->id)->league;
+                $model = User::find(Auth::user()->id)->league;
+                $model->fill($request->all());
 
-                $row->fill($request->all());
-
-                if ($row->update()) {
+                if ($model->update()) 
                     return response()->json([
                         'type' => 'success',
                         'message' => 'Información de la liga guardada!'
                     ]);
-                } 
             } else {
                 //New entry
-                $row = new Leagues($request->all());
-                $row->user_id = Auth::user()->id;
-                if ($row->save()) {
+                $model = new Leagues($request->all());
+                $model->user_id = Auth::user()->id;
+                if ($model->save()) 
                     return response()->json([
                         'type' => 'success',
                         'message' => 'Información de la liga guardada!'
                     ]);
-                }
             }
         }
 
-        //send an error
         return response()->json([
             'type' => 'error',
             'message' => 'Error al intentar guardar la información de la liga!'
@@ -106,41 +90,13 @@ class LeaguesController extends Controller
     public function show(Leagues $leagues)
     {
         //
+        $sports = Sport::where('is_deleted',0)->get(['id', 'name']);
         $league = User::find(Auth::user()->id)->league;
-        return view("leagues.league_info", [ 'league' => $league]);
+        
+        return view("leagues.league_info", [ 
+            'league' => $league,
+            'sports'=>$sports
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Leagues  $leagues
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Leagues $leagues)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Leagues  $leagues
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Leagues $leagues)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Leagues  $leagues
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Leagues $leagues)
-    {
-        //
-    }
 }

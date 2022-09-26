@@ -14,23 +14,40 @@
                         <h1>{{ __('League Info')}}</h1>
                         <form id="frmLeague">
                             <div class="row">
-                                <div class="col-md-12 col-sm-12">
+                                <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr"><b>Nombre *</b></label>
+                                        <label for="sport_id"><b>Deporte *</b></label>
+                                        <select id="sport_id" name="sport_id" class="form-control" required >
+                                            <option value="" >Selecciona...</option>
+                                            @foreach ($sports as $sport)
+
+                                                <option value="{{ $sport->id }}" 
+                                                    @if ($league->sport_id == $sport->id)
+                                                        selected
+                                                    @endif
+                                                >{{ $sport->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-9 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="name"><b>Nombre *</b></label>
                                         <input type="text" class="form-control" id="name" name="name" placeholder="Nombre" required maxlength="80" value="{{ ($league)?$league->name:""}}">
                                     </div>
                                 </div>
         
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Subtítulo</label>
+                                        <label for="slogan">Subtítulo</label>
                                         <input type="text" class="form-control" id="slogan" name="slogan" placeholder="Slogan" maxlength="80" value="{{ ($league)?$league->slogan:""}}">
                                     </div>
                                 </div>
         
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Acerca de</label>
+                                        <label for="summary">Acerca de</label>
                                         <textarea class="form-control" id="summary" name="summary" placeholder="Acerca de la liga">{{ ($league)?$league->summary:""}}</textarea>
                                     </div>
                                 </div>
@@ -39,28 +56,28 @@
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">facebook</label>
+                                        <label for="facebook">facebook</label>
                                         <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Si cuenta con facebook"  maxlength="80" value="{{ ($league)?$league->facebook:""}}" >
                                     </div>
                                 </div>
         
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Twitter</label>
+                                        <label for="twitter">Twitter</label>
                                         <input type="text" class="form-control" id="twitter" name="twitter" placeholder="Si cuenta con Twitter" maxlength="80" value="{{ ($league)?$league->twitter:""}}" >
                                     </div>
                                 </div>
 
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Instagram</label>
+                                        <label for="instagram">Instagram</label>
                                         <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Si cuenta con instagram"  maxlength="80" value="{{ ($league)?$league->instagram:""}}" >
                                     </div>
                                 </div>
         
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Página web</label>
+                                        <label for="website">Página web</label>
                                         <input type="text" class="form-control" id="website" name="website" placeholder="Si cuenta con página web" maxlength="80" value="{{ ($league)?$league->website:""}}" >
                                     </div>
                                 </div>
@@ -70,7 +87,7 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
-                                        <label for="usr">Pie de página</label>
+                                        <label for="footer1">Pie de página</label>
                                         <textarea class="form-control" id="footer1" name="footer1" placeholder="Pie de página">{{ ($league)?$league->footer1:""}}</textarea>
                                     </div>
                                 </div>

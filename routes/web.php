@@ -45,3 +45,7 @@ Route::resource('/sports','SportController');
 
 //categories options
 Route::resource('/categories','CategoryController');
+
+//profiles options
+Route::resource('/profiles','ProfilesController');
+Route::get('my_profile', 'ProfilesController@show');

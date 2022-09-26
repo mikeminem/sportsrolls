@@ -42,6 +42,11 @@ class User extends Authenticatable
         return $this->hasOne('App\Leagues');
     }
 
+    public function profile()
+    {
+        return $this->hasOne('App\Profiles');
+    }
+
     public static function getRole($role) {
         switch ($role) {
             case "Admin":
