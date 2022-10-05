@@ -23,7 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 //* categorias for ligues
 //******************************************************************
 
-// Route::resource('/users','UserController');
+Route::resource('/users','UsersController');
 // Route::get('/users/delete/{id}', 'UserController@destroy');
 // Route::get('/users/password/{id}', 'UserController@formpassword');
 // Route::post('/users/password/{id}', 'UserController@changepassword');
