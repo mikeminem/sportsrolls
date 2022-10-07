@@ -34,7 +34,6 @@ Route::resource('/stadiums','StadiumsController');
 Route::get('all_stadiums', 'StadiumsController@allStadiums');
 Route::post('save_stadium', 'StadiumsController@save');
 Route::get('get_stadium/{id}', 'StadiumsController@show');
-//Route::post('delete_stadium', 'StadiumsController@destroy');
 
 //league options
 Route::resource('/leagues','LeaguesController');
@@ -49,3 +48,7 @@ Route::resource('/categories','CategoryController');
 //profiles options
 Route::resource('/profiles','ProfilesController');
 Route::get('my_profile', 'ProfilesController@show');
+
+
+//sports options
+Route::resource('/tournaments','TournamentsController');

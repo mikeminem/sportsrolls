@@ -64,8 +64,13 @@ Font Awesome from
 https://fontawesome.com/v4.7/icons/
 
 
+Stripe access
+mike_valadez@hotmail.com
+
+m1k32002.,
 
 How to handle with git
+**********************
 …or create a new repository on the command line
 echo "# sportsrolls" >> README.md
 git init
