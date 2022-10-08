@@ -8,7 +8,6 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-md-12">
-
             <div class="card">
                 <div class="card-body">
                     <div class="text-left">
@@ -40,7 +39,8 @@
                                 <tr>
                                     <th width="10%">Código</th>
                                     <th>Nombre</th>
-                                    <th> - </th>
+                                    <th>Estado</th>
+                                    <th width="20%"> - </th>
                                 </tr>
                             </thead>
         
@@ -57,7 +57,7 @@
 
 <!-- Modal Form -->
 <div id="formModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="width: 90% !important">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -79,6 +79,20 @@
                             <div class="form-group">
                                 <label for="title"><b>Nombre *</b></label>
                                 <input type="text" class="form-control" id="title" name="title" required maxlength="120"> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label for="summary"><b>Descripción *</b></label><br />
+                                <textarea class="form-control" id="summary" name="summary" rows="3"  maxlength="240" placeholder="Ingresa la descripción  del torneo" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label for="contacts"><b>Contactos *</b></label><br />
+                                <textarea class="form-control" id="contacts" name="contacts" rows="3"  maxlength="240" placeholder="Ingresa los nombres y números de contacto" required></textarea>
                             </div>
                         </div>
 
@@ -155,6 +169,65 @@
       </div>
     </div>
   </div>	
+
+
+<!-- teams modal -->
+<div class="modal" id="teamsModal">
+    <div class="modal-dialog modal-lg" style="max-width:80%; max-height:1000px;" >
+      <div class="modal-content" >
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Listdo de Equipos Registrados</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form id="formTeam" class="form-inline" >
+                    
+                    <input type="text" id="tname" name="tname" class="form-control" required placeholder="Nombre del Equipo" size="20">
+                    <select id="tcategory" name="tcategory" class="form-control">
+                        <option value="">Selecciona Categoría</option>
+                        @foreach($teams as $team)
+                            <option value="{{ $team->id}}">{{ $team->name }}</option>
+                        @endforeach
+                    </select>
+                    <input type="text" id="tcontact" name="tcontact" class="form-control" required placeholder="Nombre Contacto" size="30">
+                    <input type="text" id="tphone" name="tphone" class="form-control" required placeholder="Teléfono Contacto" size="20">
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span>  {{ __('Save')}}</button>
+
+                </form>
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tableTeams">
+                        <thead>
+                            <tr>
+                                <th width="10%">Código</th>
+                                <th>Nombre</th>
+                                <th>Categoria</th>
+                                <th>Contacto</th>
+                                <th width="20%"> - </th>
+                            </tr>
+                        </thead>
+    
+                        <tbody>
+    
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
+                    <span class="fa fa-remove"></span> {{__('Close')}}
+                </button>
+            </div>
+      </div>
+    </div>
+  </div>	
 @endsection
 
 @section('js')
@@ -192,12 +265,57 @@
                 columns: [
                     { data: 'code', name: 'code'},
                     { data: 'title', name: 'title'},
+                    { data: 'status', name: 'status'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
 
+
+            var TableTeams = $('#tableTeams').DataTable({
+                "language": {
+                    "sProcessing":    "Procesando...",
+                    "sLengthMenu":    "Mostrar _MENU_ registros",
+                    "sZeroRecords":   "No se encontraron resultados",
+                    "sEmptyTable":    "No se encontró información",
+                    "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":   "",
+                    "sSearch":        "Buscar:",
+                    "sUrl":           "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "...Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":    "Último",
+                        "sNext":    "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('teams.index') }}',
+                columns: [
+                    { data: 'code', name: 'code'},
+                    { data: 'name', name: 'name'},
+                    { data: 'contact', name: 'contact'},
+                    { data: 'status', name: 'status'},
+                    { data: 'action', name: 'action', orderable: false, searchable: false}
+                ]
+            });
+
+            
+            $(document).on("click", "#btnTeams", function () {
+                jQuery.noConflict(); 
+                jQuery("#teamsModal").modal('show');
+            });
+
             $(document).on("click", "#btnAdd", function () {
-                $("#updateForm").trigger('reset');
+                $("#Form").trigger('reset');
                 $("#id").val("");
 
                 jQuery.noConflict(); 

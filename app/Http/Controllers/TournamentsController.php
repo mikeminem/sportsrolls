@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Tournaments;
+use App\Teams;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -27,19 +28,31 @@ class TournamentsController extends Controller
             //send the grid rows
             $rows = DB::table('tournaments as t')
                     // ->select('t.id', 't.code', 't.name', 't.image', 't.is_deleted')
-                    ->select('t.*')
+                    ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status')
                     ->where('t.is_deleted', 0)
+                    ->where('t.user_id',Auth::user()->id)
                     ->get();        
             
             return DataTables::of($rows)
-                    // ->addColumn('image', function($row) {
-                    //     $image = '';
+                    ->addColumn('code', function($row) {
+                        return  '<b>' . $row->code . '</b>';
+                    })
+                    ->addColumn('title', function($row) {
+                        return '<h4>' . $row->title . '</h4> Equipos inscritos: ';
+                    })
+                    ->addColumn('status', function($row) {
+                        switch ($row->status) {
+                            case 'Por Empezar':
+                                return '<span class="badge badge-info">'. $row->status.'</span>  <span class="fa fa-play tool">';
+                            case 'En Progreso':
+                                return '<span class="badge badge-warning">'. $row->status.'</span>  <span class="fa fa-stop tool">';
+                            case 'Terminado':
+                                return '<span class="badge badge-danger">'. $row->status.'</span>';
+                        }
 
-                    //     if(!is_null($row->image) && !empty($row->image))
-                    //         $image = '<img src="' . asset('storage/sports/' . $row->image) . '" style="height:100px">';
 
-                    //     return $image;
-                    // })
+                        
+                    })
                     ->addColumn('action', function($row) {
 
                         $routeEdit = route('tournaments.show', $row->id);
@@ -49,18 +62,25 @@ class TournamentsController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a>
+                                    <a href="javascript:void(0)" title="Equipos Inscritos" data-name="'.$row->title.'" id="btnTeams"> 
+                                        <span class="fa fa-book tool"></span>
+                                    </a>
                                     <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete"> 
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
                         return $links;
                     })
-                    ->rawColumns(['image', 'action'])
+                    ->rawColumns(['title','status', 'action', 'code'])
                     ->make(true); 
-
         }
 
-        return view ('tournaments.index');
+        //$teams = Teams::all();
+        $teams = [];
+
+        return view ('tournaments.index',[
+            'teams'=> $teams
+        ]);
     }
 
 
@@ -74,11 +94,15 @@ class TournamentsController extends Controller
     {
         //
         $rules = [
-            'title'   => 'required|max:120'
+            'title'     => 'required|max:120',
+            'summary'   => 'required|max:240',
+            'contacts'   => 'required|max:240',
         ];
 
         $attributes = [
-            'title'   => 'Nombre del torneo'
+            'title'     => 'Nombre ',
+            'summary'   => 'Descripción',
+            'contacts'  => 'Contactos',
         ];
 
         //Validate the data
@@ -147,7 +171,7 @@ class TournamentsController extends Controller
     {
         //
         if ($id) {
-            $sport = Tournaments::select('id', 'code', 'title')->find($id);
+            $sport = Tournaments::select('id', 'code', 'title', 'summary', 'contacts', 'status')->find($id);
         return $sport;
         }
         return false;
