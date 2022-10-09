@@ -12,18 +12,23 @@
                 <div class="card-body">
                     <div class="text-left">
                         <h1>{{ __('My Profile')}}</h1>
-                        <form id="frmProfile">
+                        <form id="frmProfile" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
                                     <div class="card">
-                                       
-                                        <img class="card-img-top" id="thumbnil" src="{{ asset('images/noimage.png')}}" alt="" >
+                                       @if ($profile->photo)
+                                            <img class="card-img-top" id="thumbnil" src="{{  asset("/photo/$profile->photo")  }}" alt="" >
+
+                                       @else
+                                            <img class="card-img-top" id="thumbnil" src="{{ asset('images/noimage.png')}}" alt="" >
+                                       @endif
                                         <div class="card-body text-center">
                                             <h4 class="card-title">{{ Auth::user()->name}}</h4>
                                             <span class="btn btn-primary btn-file">
                                                     <span class="fa fa-photo"></span> 
                                                     Buscar foto
-                                                    <input type="file" accept="image/*" id="btnFoto" onchange="showMyImage(this)">
+                                                    {{-- <input type="file" accept="image/*" id="btnFoto" onchange="showMyImage(this)" name="photo"> --}}
+                                                    <input type="file" accept="image/*" id="photo"  name="photo" onchange="showMyImage(this)" >
                                                     
                                             </span>
                                             <a href="javascript:void(0)" class="btn btn-primary" id="btnDeletePhoto" ><span class="fa fa-remove"></span>  Borrar foto</a>
@@ -144,7 +149,11 @@
                     type: "POST",
                     url: "profiles",
                     dataType: "json",
-                    data: $(this).serialize(),
+                    //data: $(this).serialize(),
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    data: new FormData(this),
                     success: function (data) {                
                         if (data.type == "error") {
                             var errors = "";

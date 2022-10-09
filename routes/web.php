@@ -49,6 +49,25 @@ Route::resource('/categories','CategoryController');
 Route::resource('/profiles','ProfilesController');
 Route::get('my_profile', 'ProfilesController@show');
 
+//show photo profile
+Route::get('photo/{filename}',function($filename){
+    $path = storage_path("app/public/profiles/$filename");
 
-//sports options
+    if (!\File::exists($path)) abort(404);
+
+    $file = \File::get($path);
+    $type = \File::mimeType($path);
+
+    $response = Response::make($file,200);
+    $response->header("Content-Type",$type);
+
+    return $response;
+});
+
+
+
+//tournaments options
 Route::resource('/tournaments','TournamentsController');
+
+//teams options
+Route::resource('/teams','TeamsController');

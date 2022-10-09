@@ -6,6 +6,7 @@ use App\Profiles;
 use App\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -73,14 +74,26 @@ class ProfilesController extends Controller
             ]);
         }
 
+        $path = "";
+        if($request->file('photo')){
+            $path =  date('Ymd-His') . '.' .$request->file('photo')->extension();
+            $request->file('photo')->storeAs('public/profiles', $path);
+        }
+
         if ($request) {
-            $user_id = Auth::user()->id;
-            //$profile = Profiles::find(Auth::user()->id);
+            //$user_id = Auth::user()->id;
+            $profile = Profiles::find(Auth::user()->id);
             $profile = User::find(Auth::user()->id)->profile;
             if ($profile) {
                 //update info
                 $model = User::find(Auth::user()->id)->profile;
+                $lastImage = $model->photo;
                 $model->fill($request->all());
+
+                if (!empty($path)) {
+                    Storage::delete('public/sports/' . $lastImage);
+                    $model->photo = $path;
+                }
 
                 if ($model->update()) 
                     return response()->json([
@@ -91,6 +104,10 @@ class ProfilesController extends Controller
                 //New entry
                 $model = new Profiles($request->all());
                 $model->user_id = Auth::user()->id;
+                
+                if (!empty($path))
+                    $model->photo = $path;  
+
                 if ($model->save()) 
                     return response()->json([
                         'type' => 'success',
