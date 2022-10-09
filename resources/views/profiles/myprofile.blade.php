@@ -70,9 +70,9 @@
                                                     <div class="form-group">
                                                         <label for="footware_meansure"><b> Sexo *</b></label>
                                                         <select id="sex" name="sex" class="form-control">
-                                                            <option value="Masculino">Masculino</option>
-                                                            <option value="Femenino">Femenino</option>
-                                                            <option value="NA">NA</option>
+                                                            <option value="Masculino" {{ ($profile->sex == "Masculino") ? "selected": ""  }}>Masculino</option>
+                                                            <option value="Femenino" {{ ($profile->sex == "Femenino") ? "selected": ""  }}>Femenino</option>
+                                                            <option value="NA" {{ ($profile->sex == "NA") ? "selected": ""  }}>NA</option>
                                                         </select>
                                                     </div>
                                                 </div>
