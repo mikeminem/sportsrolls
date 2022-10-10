@@ -37,14 +37,6 @@
 
                                             <hr />
                                             <div class="row">
-                                                
-                                                <div class="col-md-12 col-sm-12">
-                                                    <div class="form-group">
-                                                        <label for="dob"><b>Fecha de nacimiento *</b></label>
-                                                        <input type="date" class="form-control" id="dob" name="dob" placeholder="Fecha de nacimiento" value="{{ ($profile)?$profile->dob:""}}">
-                                                    </div>
-                                                </div>
-        
                                                 <div class="col-md-12 col-sm-12">
                                                     <div class="form-group">
                                                         <label for="tshirt_size"><b>Talla Playera *</b></label>
@@ -66,30 +58,41 @@
                                                     </div>
                                                 </div>
         
-                                                <div class="col-md-12 col-sm-12">
-                                                    <div class="form-group">
-                                                        <label for="footware_meansure"><b> Sexo *</b></label>
-                                                        <select id="sex" name="sex" class="form-control">
-                                                            <option value="Masculino" {{ ($profile->sex == "Masculino") ? "selected": ""  }}>Masculino</option>
-                                                            <option value="Femenino" {{ ($profile->sex == "Femenino") ? "selected": ""  }}>Femenino</option>
-                                                            <option value="NA" {{ ($profile->sex == "NA") ? "selected": ""  }}>NA</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
                                             </div>
-
-
 
                                         </div>
                                       </div>
                                 </div>
 
                                 <div class="col-md-9 col-sm-12">
+
+                                    <div class="row">
+                                                
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="dob"><b>Fecha de nacimiento *</b></label>
+                                                <input type="date" class="form-control" id="dob" name="dob" placeholder="Fecha de nacimiento" value="{{ ($profile)?$profile->dob:""}}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="footware_meansure"><b> Sexo *</b></label>
+                                                <select id="sex" name="sex" class="form-control">
+                                                    <option value="Masculino" {{ ($profile->sex == "Masculino") ? "selected": ""  }}>Masculino</option>
+                                                    <option value="Femenino" {{ ($profile->sex == "Femenino") ? "selected": ""  }}>Femenino</option>
+                                                    <option value="NA" {{ ($profile->sex == "NA") ? "selected": ""  }}>NA</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12">
                                             <div class="form-group">
                                                 <label for="about_me"><b>Acerca de *</b></label>
-                                                <input type="text" class="form-control" id="about_me" name="about_me" placeholder="Descripción breve de mi en los deportes" maxlength="500" value="{{ ($profile)?$profile->about_me:""}}">
+                                                <textarea class="form-control" id="about_me" name="about_me" placeholder="Descripción breve de mi en los deportes" maxlength="500" rows="5">{{ ($profile)?$profile->about_me:""}}</textarea>                                                
                                             </div>
                                         </div>
     
@@ -98,11 +101,6 @@
                                 </div>
                             </div>
         
-                                
-                                
-
-                            
-
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     Datos marcados con * son obligatorios
@@ -136,8 +134,8 @@
         jQuery(document).ready(function($){
 
             $(document).on("click", "#btnDeletePhoto", function () {
-                alert('Borrar Photo');
-//                $('#thumbnil').attr('src','{{ asset('images/noimage.png')}}');
+                
+                //remove_photo_profile
                 var img=document.getElementById("thumbnil");        
                 img.src = '{{ asset('images/noimage.png')}}';
     
@@ -149,7 +147,6 @@
                     type: "POST",
                     url: "profiles",
                     dataType: "json",
-                    //data: $(this).serialize(),
                     contentType: false,
                     cache: false,
                     processData: false,

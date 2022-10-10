@@ -191,9 +191,8 @@
                 serverSide: true,
                 ajax: '{{ route('sports.index') }}',
                 columns: [
-                    //{ data: 'code', name: 'code'},
-                    { data: 'name', name: 'name'},
                     { data: 'code', name: 'code'},
+                    { data: 'name', name: 'name'},
                     { data: 'image', name: 'image'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
