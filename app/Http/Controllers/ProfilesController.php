@@ -82,7 +82,7 @@ class ProfilesController extends Controller
 
         if ($request) {
             //$user_id = Auth::user()->id;
-            $profile = Profiles::find(Auth::user()->id);
+            //$profile = Profiles::find(Auth::user()->id);
             $profile = User::find(Auth::user()->id)->profile;
             if ($profile) {
                 //update info
@@ -164,8 +164,25 @@ class ProfilesController extends Controller
      * @param  \App\Profiles  $profiles
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Profiles $profiles)
+    public function destroy(Request $request)
     {
         //
+        if ($request) {
+            $profile = User::find(Auth::user()->id)->profile;
+
+            $profile->photo = "";
+
+            if ($profile->save()) {
+                return response()->json([
+                    'type' => 'success',
+                    'message' => 'La foto ha sido borrada!'
+                ]);
+            }
+            
+        }
+        return response()->json([
+            'type' => 'error',
+            'message' => 'Error al intentar borrar la foto de perfil!'
+        ]);
     }
 }

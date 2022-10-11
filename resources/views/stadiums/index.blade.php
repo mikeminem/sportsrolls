@@ -306,7 +306,6 @@
                 e.preventDefault();
                 $.ajax({
                     type: "DELETE",
-                    //url: "delete_stadium",
                     url: "{{ url('/stadiums')}}/" + $(this).attr("idDelete"),
                     dataType: "json",
                     data: $(this).serialize(),

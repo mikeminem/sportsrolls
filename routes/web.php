@@ -48,7 +48,7 @@ Route::resource('/categories','CategoryController');
 //profiles options
 Route::resource('/profiles','ProfilesController');
 Route::get('/my_profile', 'ProfilesController@show');
-Route::get('/remove_photo_profile', 'ProfilesController@removePhoto');
+Route::post('/delete_profile_photo', 'ProfilesController@destroy');
 
 //show photo profile
 Route::get('photo/{filename}',function($filename){
