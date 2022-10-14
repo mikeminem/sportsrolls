@@ -31,6 +31,7 @@ class TournamentsController extends Controller
                     ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status', 't.contacts')
                     ->where('t.is_deleted', 0)
                     ->where('t.user_id',Auth::user()->id)
+                    ->orderBy('t.id', 'desc')
                     ->get();        
             
             return DataTables::of($rows)

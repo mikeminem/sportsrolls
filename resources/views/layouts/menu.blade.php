@@ -66,8 +66,8 @@
                                         
                                         <div class="dropdown-divider"></div>
 
-                                        <a class="dropdown-item" href="{{ url('tournaments')}}"><i class="fa fa-file"></i> {{ __('Tournaments') }}</a>
-                                        <a class="dropdown-item" href="#"><i class="fa fa-square"></i> {{ __('Teams') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/tournaments') }}"><i class="fa fa-file"></i> {{ __('Tournaments') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/teams') }}"><i class="fa fa-square"></i> {{ __('Teams') }}</a>
                                         <a class="dropdown-item" href="#"><i class="fa fa-calendar"></i> {{ __('Journeys') }}</a>
                                         <a class="dropdown-item" href="#"><i class="fa fa-tasks"></i> {{ __('Games') }}</a>
                                         
@@ -85,8 +85,8 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ url('/sports')}}" title="Catálogo de Deportes"><i class="fa fa-cube"></i> {{ __('Sports') }}</a>
-                                        <a class="dropdown-item" href="#"><i class="fa fa-cubes"></i> {{ __('Categories') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/sports') }}" title="Catálogo de Deportes"><i class="fa fa-cube"></i> {{ __('Sports') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/categories') }}"><i class="fa fa-cubes"></i> {{ __('Categories') }}</a>
                                         <!--a class="dropdown-item" href="#"><i class="fa fa-venus-mars"></i> {{ __('Branches') }}</a-->
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="#"><i class="fa fa-trophy"></i> {{ __('Sports Leagues') }}</a>

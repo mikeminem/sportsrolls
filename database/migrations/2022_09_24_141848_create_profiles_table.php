@@ -24,7 +24,7 @@ class CreateProfilesTable extends Migration
             $table->float('weight',5,2);
             $table->float('footware_meansure',3,1);
             $table->string('photo',80)->nullable();
-            $table->enum('',['Masculino'=>'Masculino','Femenino'=>'Femenino','NA'=>'NA']);
+            $table->enum('sex',['Masculino'=>'Masculino','Femenino'=>'Femenino','NA'=>'NA']);
             $table->text('about_me')->nullable();
             $table->string('favorite_brands',80)->nullable();
             $table->string('favorite_colors',80)->nullable();

@@ -160,7 +160,7 @@
             @method('DELETE')
 
             <div class="modal-body">
-            <h4>¿Deseas borrar  <mark><span class="text-blod" id="row_name"></span></mark>?</h4>
+            <h4>¿Deseas borrar la categoria <mark><span class="text-blod" id="row_name"></span></mark>?</h4>
             </div>
             {{ csrf_field() }}
 
