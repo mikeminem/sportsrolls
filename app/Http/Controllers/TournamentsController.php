@@ -28,7 +28,7 @@ class TournamentsController extends Controller
             //send the grid rows
             $rows = DB::table('tournaments as t')
                     // ->select('t.id', 't.code', 't.name', 't.image', 't.is_deleted')
-                    ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status')
+                    ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status', 't.contacts')
                     ->where('t.is_deleted', 0)
                     ->where('t.user_id',Auth::user()->id)
                     ->get();        
@@ -38,19 +38,17 @@ class TournamentsController extends Controller
                         return  '<b>' . $row->code . '</b>';
                     })
                     ->addColumn('title', function($row) {
-                        return '<h4>' . $row->title . '</h4> Equipos inscritos: ';
+                        return '<h4>' . $row->title . '</h4> Equipos inscritos: <br> Impresiones: 0 - Cliks: 0';
                     })
                     ->addColumn('status', function($row) {
                         switch ($row->status) {
                             case 'Por Empezar':
-                                return '<span class="badge badge-info">'. $row->status.'</span>  <span class="fa fa-play tool">';
+                                return '<span class="badge badge-info">'. $row->status.' <br> Inscripciones abiertas</span>';
                             case 'En Progreso':
-                                return '<span class="badge badge-warning">'. $row->status.'</span>  <span class="fa fa-stop tool">';
+                                return '<span class="badge badge-warning">'. $row->status.'</span>';
                             case 'Terminado':
                                 return '<span class="badge badge-danger">'. $row->status.'</span>';
                         }
-
-
                         
                     })
                     ->addColumn('action', function($row) {
@@ -58,16 +56,29 @@ class TournamentsController extends Controller
                         $routeEdit = route('tournaments.show', $row->id);
                         $routeDelete = route('tournaments.destroy', $row->id);
 
-                        $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
-                                        <span class="fa fa-edit tool">
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0)" title="Equipos Inscritos" data-name="'.$row->title.'" id="btnTeams"> 
-                                        <span class="fa fa-book tool"></span>
-                                    </a>
-                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete"> 
-                                        <span class="fa fa-trash tool"></span>
+                        $links = '';
+
+                        if ($row->status == 'Por Empezar') {
+                            $links .= '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
+                                <span class="fa fa-edit tool">
+                                </span>
+                                </a><a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete"> 
+                                <span class="fa fa-trash tool"></span>
+                            </a>
+                            <a href="javascript:void(0)" title="Iniciar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="En Progreso" id="btnStatus"> 
+                                        <span class="fa fa-play tool"></span>
                                     </a>';
+                        }
+
+                        if ($row->status == 'En Progreso') {
+                            $links .= '<a href="javascript:void(0)" title="Terminar y archivar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="Terminado" id="btnStatus"> 
+                                        <span class="fa fa-stop tool"></span>
+                                    </a>';
+                        }
+
+                        $links .= '<a href="javascript:void(0)" title="Ver Estadisticas" data-id="'. $row->id.'"  data-name="'.$row->title.'" id="btnStats"> 
+                                <span class="fa fa-bar-chart tool"></span>
+                            </a>';
 
                         return $links;
                     })
@@ -177,8 +188,6 @@ class TournamentsController extends Controller
         return false;
     }
 
-   
-
 
     /**
      * Remove the specified resource from storage.
@@ -195,6 +204,30 @@ class TournamentsController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => 'El Torneo se ha borrado!'
+            ]);
+        }
+
+        return response()->json([
+            'type' => 'error',
+            'message' => 'Error al intentar borrar el Torneo!'
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Tournaments  $tournaments
+     * @return \Illuminate\Http\Response
+     */
+    public function start( Request $request )
+    {
+        //
+        if (isset($request)) {
+            Tournaments::where('id', $request->idStart)->update(['status' => $request->status ]);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => 'El Torneo se ha inciado!'
             ]);
         }
 

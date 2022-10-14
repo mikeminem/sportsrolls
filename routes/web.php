@@ -69,6 +69,8 @@ Route::get('photo/{filename}',function($filename){
 
 //tournaments options
 Route::resource('/tournaments','TournamentsController');
+Route::post('/tournaments.start/{id}', 'TournamentsController@start');
+
 
 //teams options
 Route::resource('/teams','TeamsController');
