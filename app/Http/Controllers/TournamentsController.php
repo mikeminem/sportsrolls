@@ -27,7 +27,6 @@ class TournamentsController extends Controller
         if($request->ajax()){
             //send the grid rows
             $rows = DB::table('tournaments as t')
-                    // ->select('t.id', 't.code', 't.name', 't.image', 't.is_deleted')
                     ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status', 't.contacts')
                     ->where('t.is_deleted', 0)
                     ->where('t.user_id',Auth::user()->id)
@@ -87,12 +86,7 @@ class TournamentsController extends Controller
                     ->make(true); 
         }
 
-        //$teams = Teams::all();
-        $teams = [];
-
-        return view ('tournaments.index',[
-            'teams'=> $teams
-        ]);
+        return view ('tournaments.index');
     }
 
 

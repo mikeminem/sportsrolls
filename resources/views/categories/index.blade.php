@@ -38,8 +38,8 @@
                         <table class="table table-hover" id="table">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
                                     <th>Deporte</th>
+                                    <th>Nombre</th>
                                     <th>Edad Inicial</th>
                                     <th>Edad Final</th>
                                     <th>Nota</th>
@@ -64,25 +64,19 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"> Datos del Deporte</h4>
+                <h4 class="modal-title"> Datos de la Categoría</h4>
                 <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
             </div>
             <!--mandamos la forma-->
             <form id="updateForm" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label for="name"><b>Nombre *</b></label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="80"> 
-                            </div>
-                        </div>
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="sport_id"><b>Deporte *</b></label>
                                 <select class="form-control" id="sport_id" name="sport_id" required>
-                                    <option value="">Slecciona un deporte</option>
+                                    <option value="">Selecciona un deporte</option>
 
                                     @foreach ($sports as $sport)
                                        <option value="{{ $sport->id }}">{{ $sport->name }}</option>
@@ -90,6 +84,16 @@
                                 </select>
                             </div>
                         </div>
+
+
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="name"><b>Nombre *</b></label>
+                                <input type="text" class="form-control" id="name" name="name" required maxlength="80"> 
+                            </div>
+                        </div>
+
+                        
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
@@ -214,9 +218,8 @@
                 serverSide: true,
                 ajax: '{{ route('categories.index') }}',
                 columns: [
-                    //{ data: 'code', name: 'code'},
-                    { data: 'name', name: 'name'},
                     { data: 'sport_id', name: 'sport_id'},
+                    { data: 'name', name: 'name'},
                     { data: 'age_initial', name: 'age_initial'},
                     { data: 'age_final', name: 'age_final'},
                     { data: 'overview', name: 'overview'},
