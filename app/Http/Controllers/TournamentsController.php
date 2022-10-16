@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 use DataTables;
 use DB;
+use App\Sports;
 
 class TournamentsController extends Controller
 {
@@ -27,7 +28,7 @@ class TournamentsController extends Controller
         if($request->ajax()){
             //send the grid rows
             $rows = DB::table('tournaments as t')
-                    ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status', 't.contacts')
+                    ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status', 't.contacts', 't.prints', 't.clicks')
                     ->where('t.is_deleted', 0)
                     ->where('t.user_id',Auth::user()->id)
                     ->orderBy('t.id', 'desc')
@@ -38,7 +39,7 @@ class TournamentsController extends Controller
                         return  '<b>' . $row->code . '</b>';
                     })
                     ->addColumn('title', function($row) {
-                        return '<h4>' . $row->title . '</h4> Equipos inscritos: <br> Impresiones: 0 - Cliks: 0';
+                        return '<h4>' . $row->title . '</h4> Equipos inscritos: <br> Impresiones: '.$row->prints.' - Clicks: '.$row->clicks;
                     })
                     ->addColumn('status', function($row) {
                         switch ($row->status) {
@@ -177,8 +178,19 @@ class TournamentsController extends Controller
     {
         //
         if ($id) {
-            $sport = Tournaments::select('id', 'code', 'title', 'summary', 'contacts', 'status')->find($id);
-        return $sport;
+            $model = Tournaments::select('id', 'code', 'title', 'summary', 'contacts', 'status','sport_id')->find($id);
+
+            if (!$model->code) {
+                $model->code =  strtoupper( str_random(8));
+            }
+
+            if ( !$model->sport_id ) {
+                $model->sport_id = Auth::user()->league->sport_id;
+            }
+            $sport = Sports::select('name')->find($model->sport_id);
+            $model->sport = $sport->name;
+            
+        return $model;
         }
         return false;
     }

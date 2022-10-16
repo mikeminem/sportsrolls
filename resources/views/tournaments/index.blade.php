@@ -76,7 +76,14 @@
                             </div>
                         </div>
 
-                        <div class="col-md-9 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="sport">Deporte</label>
+                                <input type="text" class="form-control" id="sport" name="sport" readonly>
+                                <input type="hidden" class="form-control" id="sport_id" name="sport_id" readonly>                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="title"><b>Nombre *</b></label>
                                 <input type="text" class="form-control" id="title" name="title" required maxlength="120"> 
