@@ -90,7 +90,7 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <hr >
                                     <div class="row">
                                         <div class="col-md-8 col-sm-12">
                                             <div class="form-group">
@@ -103,6 +103,30 @@
                                             <div class="form-group">
                                                 <label for="phone_emergency">Teléfono / Celular </label>
                                                 <input type="text" class="form-control" id="phone_emergency" name="phone_emergency" placeholder="Teléfono" value="{{ ($profile)?$profile->phone_emergency:""}}" maxlength="10">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr >
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="facebook"> Facebook </label>
+                                                <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Cuenta de facebook" value="{{ ($profile)?$profile->facebook:""}}" maxlength="40">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="instagram">Instagram </label>
+                                                <input type="text" class="form-control" id="instagram" name="instagram" placeholder="Cuenta de Instagram" value="{{ ($profile)?$profile->instagram:""}}" maxlength="10">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="twitter">Twitter </label>
+                                                <input type="text" class="form-control" id="twitter" name="twitter" placeholder="Cuenta de twitter" value="{{ ($profile)?$profile->twitter:""}}" maxlength="10">
                                             </div>
                                         </div>
 
