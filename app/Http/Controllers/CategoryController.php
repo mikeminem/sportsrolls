@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 use DataTables;
 use DB;
+use App\Sports;
 
 class CategoryController extends Controller
 {
@@ -147,5 +148,15 @@ class CategoryController extends Controller
             'type' => 'error',
             'message' => 'Error al intentar borrar el deporte!'
         ]);
+    }
+
+    public function list ($sport_id) {
+        
+        if ($sport_id) {
+            $list = Category::where('sport_id',$sport_id)->get();
+            return (string) $list;
+        }
+
+        return (string) false;
     }
 }

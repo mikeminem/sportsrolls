@@ -43,12 +43,9 @@ class TeamsController extends Controller
                             $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
                                 <span class="fa fa-edit tool">
                                 </span>
-                                </a><a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete"> 
+                                </a><a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
                                 <span class="fa fa-trash tool"></span>
-                            </a>
-                            <a href="javascript:void(0)" title="Iniciar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="En Progreso" id="btnStatus"> 
-                                        <span class="fa fa-play tool"></span>
-                                    </a>';
+                            </a>';
 
                         return $links;
                     })
@@ -82,6 +79,60 @@ class TeamsController extends Controller
     public function store(Request $request)
     {
         //
+        $rules = [
+            'name'              => 'required|max:120',
+            'branch'            => 'required|max:240',
+            'tournament_id'     => 'required',
+            'sport_id'          => 'required',
+            'category_id'       => 'required',
+            'contact'           => 'required|max:80',
+            'phone_contact'     => 'required|min:10',
+        ];
+
+        $attributes = [
+            'name'          => 'Nombre',
+            'branch'        => 'Rama',
+            'tournament_id' => 'Torneo',
+            'sport_id'      => 'Deporte',
+            'category_id'   => 'Categoria',
+            'contact'       => 'Mombre del Contacto',
+            'phone_contact' => 'Teléfono / Móvil del Contacto',
+        ];
+
+        //Validate the data
+        $validated = Validator::make($request->all(),$rules, [] , $attributes);
+
+
+        if ($validated->fails()) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'Error al intentar guardar el Equipo!',
+                'errors' => $validated->errors()
+            ]);
+        }
+
+
+        if (!isset($request->id) || empty($request->id)) {
+            $model = new Teams($request->all());
+            $model->user_id = Auth::user()->id;
+            
+            if ($model->save())
+                 return response()->json(['type' => 'success', 
+                                 'message' => 'Se ha creado el Equipo!']);      
+        } else {
+            $model = Teams::find($request->id);
+            $lastImage = $model->image;
+            $model->fill($request->all());
+
+            if ($model->update()) 
+                return response()->json(['type' => 'success', 
+                                 'message' => 'Se ha modificado el Equipo!']); 
+        }
+
+        return response()->json([
+            'type' => 'error',
+            'message' => 'Error al intentar guardar el Equipo!'
+        ]);
     }
 
     /**

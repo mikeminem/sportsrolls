@@ -16,4 +16,9 @@ class Leagues extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function sport()
+    {
+        return $this->belongsTo('App\Sports');
+    }
 }

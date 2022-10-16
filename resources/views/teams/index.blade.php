@@ -102,14 +102,15 @@
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="title"><b>Deporte *</b></label>
-                                <input class="form-control" readonly>
+                                <input class="form-control" readonly id="sport" name="sport">
+                                <input class="form-control" readonly id="sport_id" name="sport_id" value="2">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="title"><b>Categoria *</b></label>
-                                <select class="form-control" required >
+                                <select class="form-control" required id="category_id" name="category_id">
                                     <option value="">Selecciona</option>
                                 </select>
                             </div>
@@ -249,7 +250,26 @@
 
             
             $(document).on("change", "#tournament_id", function (e) {
-                alert('get tournament data');
+                $("#tournament_id option:selected").each(function () {
+                    selected=$(this).val();
+
+                    if (selected) {
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ url('categories_list') }}/" + selected,
+                            dataType: "json",
+                            success: function (data) { 
+                                var options = '<option value="">Selecciona</option>';
+                                for(obj in data) {
+                                    options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                                }
+                                $("#category_id").html(options);
+
+                            },
+                        });
+                    }
+                    
+                });
             });
 
             $(document).on("click", "#btnDelete", function (e) {
@@ -292,7 +312,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('tournaments.store') }}",
+                    url: "{{ route('teams.store') }}",
                     dataType:'JSON',
                     contentType: false,
                     cache: false,
@@ -322,7 +342,7 @@
                         
                     },
                     error:function(){
-                        $.notify("Hubo un error al intentar agregar el Torneo", "error");
+                        $.notify("Hubo un error al intentar agregar el Equipo", "error");
                     },
                 });
 
@@ -360,35 +380,7 @@
             });
 
 
-            $(document).on("submit", "#startForm", function (e) {
-                    e.preventDefault();
-
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ url('tournaments.start')}}/" + $(this).attr("idStart"), 
-                        dataType: "json",
-                        data: $(this).serialize(),
-                        success: function (data) {
-                            if (data.type == "error") {
-                                $.notify(data.message + "\n" + errors, data.type);
-                                return false;
-                            }
-                            
-                            $("#startForm").trigger('reset');
-
-                            jQuery.noConflict(); 
-                            jQuery("#startModal").modal('toggle');
-                            Table.ajax.reload();
-                            $.notify(data.message, data.type);
-
-                        },
-                        error:function(){
-                            $.notify("Hubo un error al intentar inciar el torneo", "error");
-                        },
-                    });
-
-                    return false;
-                });
+            
         });
 
 </script>

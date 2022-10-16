@@ -16,9 +16,9 @@ class CreateTeamsTable extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name',40);
-            $table->string('logo',120);
-            $table->string('photo',120);
-            $table->text('description');
+            $table->string('logo',120)->nullable();
+            $table->string('photo',120)->nullable();
+            $table->text('description')->nullable();
             $table->enum('branch',['Varonil'=>'Varonil', 'Femenil'=>'Femenil', 'Mixto'=>'Mixto']);
 
             $table->bigInteger('user_id')->unsigned();
@@ -34,12 +34,9 @@ class CreateTeamsTable extends Migration
             $table->foreign('category_id')->references('id')->on('categories');
             
             $table->boolean('is_deleted')->default(0);
-            $table->bigInteger('clicks');
-            $table->bigInteger('prints');
+            $table->bigInteger('clicks')->default(0);
+            $table->bigInteger('prints')->default(0);
 
-
-
-            
             $table->timestamps();
         });
     }

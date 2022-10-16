@@ -9,4 +9,5 @@ class Sport extends Model
     protected $fillable = [
         'code', 'name', 'is_deleted', 'image'
     ];
+
 }

@@ -261,6 +261,9 @@
             $(document).on("click", "#btnAdd", function () {
                 $("#Form").trigger('reset');
                 $("#id").val("");
+                $("#sport_id").val("{{ Auth::user()->league->sport_id}}");
+                $("#sport").val("{{ Auth::user()->league->sport->name}}");
+
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
