@@ -29,7 +29,7 @@ class AddPrintsClicksToTournaments extends Migration
     {
         Schema::table('tournaments', function (Blueprint $table) {
             //
-            $table->dropColumn(['prints'],'clicks');
+            $table->dropColumn(['prints','clicks']);
 
         });
     }

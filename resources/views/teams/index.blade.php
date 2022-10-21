@@ -32,12 +32,30 @@
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
                     </a>
                     <hr />
+                    <div class="col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label for="filterTournaments"><b>Torneos Activos</b></label>
+                            <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
+                                <option value="">Selecciona</option>
+                                @foreach($tournaments as $tournament)
+                                    <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
+                                @endforeach
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <hr />
+
+
 
                     <div class="table-responsive">
                         <table class="table table-hover" id="table">
                             <thead>
                                 <tr>
+                                    <th>Torneo</th>
                                     <th>Nombre</th>
+                                    <th>Rama</th>
+                                    <th>Categoría</th>
                                     <th width="20%"> - </th>
                                 </tr>
                             </thead>
@@ -102,8 +120,8 @@
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="title"><b>Deporte *</b></label>
-                                <input class="form-control" readonly id="sport" name="sport">
-                                <input class="form-control" readonly id="sport_id" name="sport_id" value="2">
+                                <input type="text" class="form-control" readonly id="sport" name="sport">
+                                <input type="hidden" class="form-control" readonly id="sport_id" name="sport_id" value="2">
                             </div>
                         </div>
 
@@ -127,8 +145,8 @@
 
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
-                                <label for="phone_contact"><b>Teléfono Contacto *</b></label>
-                                <input type="text" class="form-control" id="phone_contact" name="phone_contact" required maxlength="10"> 
+                                <label for="contact_phone"><b>Teléfono Contacto *</b></label>
+                                <input type="text" class="form-control" id="contact_phone" name="contact_phone" required maxlength="10"> 
                             </div>
                         </div>
                     </div>
@@ -234,15 +252,28 @@
                 serverSide: true,
                 ajax: '{{ route('teams.index') }}',
                 columns: [
+                    { data: 'tournament_id', name: 'tournament_id', visible:false},
                     { data: 'name', name: 'name'},
+                    { data: 'branch', name: 'branch'},
+                    { data: 'category', name: 'category'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
 
 
+            
+            $(document).on("change", "#filterTournaments", function () {
+                //var table = $('#table').DataTable();
+                Table.columns(0).search(this.value).draw();
+            });
+
+
+
             $(document).on("click", "#btnAdd", function () {
                 $("#Form").trigger('reset');
                 $("#id").val("");
+                $("#category_id").empty();
+                $("#category_id").html('<option value="">Selecciona</option>');
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
@@ -252,22 +283,7 @@
             $(document).on("change", "#tournament_id", function (e) {
                 $("#tournament_id option:selected").each(function () {
                     selected=$(this).val();
-
-                    if (selected) {
-                        $.ajax({
-                            type: "GET",
-                            url: "{{ url('categories_list') }}/" + selected,
-                            dataType: "json",
-                            success: function (data) { 
-                                var options = '<option value="">Selecciona</option>';
-                                for(obj in data) {
-                                    options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
-                                }
-                                $("#category_id").html(options);
-
-                            },
-                        });
-                    }
+                    $("#category_id").html(getCategories(selected));
                     
                 });
             });
@@ -289,12 +305,15 @@
                     url: $(this).attr("href"),
                     dataType: "json",
                     success: function (data) { 
-                        console.log(data)
-
+                        var category_id = 0;
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
-                        }
 
+                            if (obj == "category_id"){
+                                category_id = data[obj]
+                            }
+                        }
+                        $("#category_id").html(getCategories($("#tournament_id").val(),category_id));
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('show');
                     },
@@ -326,10 +345,6 @@
                             });
                             
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
-                            $.notify('hello !!', {
-                                style: 'happyblue'
-                            });
-                            
                             return false;
                         }
 
@@ -378,10 +393,33 @@
 
                 return false;
             });
-
-
             
         });
+
+        //global funcntions
+        function getCategories(sport, selected="") {
+            var options = "";
+
+            if (sport) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('categories_list') }}/" + sport,
+                    dataType: "json",
+                    success: function (data) { 
+                        options = '<option value="">Selecciona</option>';
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                        }
+                        $("#category_id").html(options);
+                    },
+                });
+            }
+            return options;
+        }
 
 </script>
 @endsection

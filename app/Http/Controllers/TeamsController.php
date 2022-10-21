@@ -28,7 +28,8 @@ class TeamsController extends Controller
         if($request->ajax()){
             //send the grid rows
             $rows = DB::table('teams as t')
-                    ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','user_id','tournament_id','sport_id', 'is_deleted', 'clicks', 'prints')
+                    ->join('categories as c', 'c.id', '=', 't.category_id')
+                    ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted', 't.clicks', 't.prints', 't.category_id', 'c.name as category')
                     ->where('t.is_deleted', 0)
                     ->where('t.user_id',Auth::user()->id)
                     ->orderBy('t.id', 'desc')
@@ -86,7 +87,7 @@ class TeamsController extends Controller
             'sport_id'          => 'required',
             'category_id'       => 'required',
             'contact'           => 'required|max:80',
-            'phone_contact'     => 'required|min:10',
+            'contact_phone'     => 'required|min:10',
         ];
 
         $attributes = [
@@ -96,7 +97,7 @@ class TeamsController extends Controller
             'sport_id'      => 'Deporte',
             'category_id'   => 'Categoria',
             'contact'       => 'Mombre del Contacto',
-            'phone_contact' => 'Teléfono / Móvil del Contacto',
+            'contact_phone' => 'Teléfono / Móvil del Contacto',
         ];
 
         //Validate the data
@@ -141,9 +142,14 @@ class TeamsController extends Controller
      * @param  \App\Teams  $teams
      * @return \Illuminate\Http\Response
      */
-    public function show(Teams $teams)
+    public function show($id)
     {
         //
+        if ($id) {
+            $model = Teams::find($id);
+            return $model;
+        }
+        return false;
     }
 
     /**
