@@ -33,4 +33,38 @@
         </div>
     </div>
 </div>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="title">Torneos más populares</h1>
+
+      @if (count($tournaments)==0) 
+      <div class="alert alert-danger">
+        <strong>Aviso!</strong> Aún no hay torneos activos
+      </div>
+      @else
+          @foreach($tournaments as $tournament)
+          <div class="col-md-4">
+            <div class="card">
+              <img class="card-img-top" src="img_avatar1.png" alt="{{ $tournament->title }}">
+              <div class="card-body">
+                <h4 class="card-title">{{ $tournament->title }}</h4>
+                <a href="{{ url('tournament_info/' . $tournament->slug) }}" class="btn btn-primary stretched-link"> Ir al torneo <span class="fa fa-arrow-right"> </a>
+              </div>
+              <div class="card-footer text-right"> 
+                <span class="fa fa-list"></span> {{ $tournament->prints}} - 
+                <!--span class="fa fa-heart-o"></span-->  
+                <span class="fa fa-eye"> {{ $tournament->clicks}}
+              </div>
+            </div>
+          </div>
+            
+            
+          @endforeach
+      @endif
+
+    </div>
+  </div>
+</div>
 @endsection

@@ -14,7 +14,7 @@ a:hover, .btn-link:hover {
 .top {
 	background-color: #191919;
 	color:#FFF;
-	padding: 5px;
+	padding: 12px;
 	font-size: 1.2em;
 	border-top: 4px #FF8C00 solid;
 }
@@ -54,4 +54,14 @@ if modal give us problems, just delete the backdrop element
 	background: white;
 	cursor: inherit;
 	display: block;
+  }
+
+
+  .title {
+	  border-bottom: 4px solid #FF8C00;
+	  width: auto;
+  }
+
+  .jumbotron {
+	border-bottom: 4px solid #FF8C00;
   }

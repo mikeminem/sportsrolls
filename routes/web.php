@@ -11,9 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', 'MainController@index')->name('index');
 
 Auth::routes();
 
@@ -71,6 +73,8 @@ Route::get('photo/{filename}',function($filename){
 //tournaments options
 Route::resource('/tournaments','TournamentsController');
 Route::post('/tournaments.start/{id}', 'TournamentsController@start');
+Route::get('/tournament_info/{slug}', 'TournamentsController@showTournament');
+
 
 
 //teams options

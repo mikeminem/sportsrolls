@@ -243,4 +243,24 @@ class TournamentsController extends Controller
             'message' => 'Error al intentar borrar el Torneo!'
         ]);
     }
+
+    public function showTournament ($slug){
+        if (!$slug) {
+            //lets send this to the tournaments list
+        }
+
+        //lets get the tournament info
+        $tournament = Tournaments::where('slug', $slug)->get();
+
+        $clicks = $tournament[0]->clicks + 1;
+
+        Tournaments::where('id', $tournament[0]->id)->update(['clicks' => $clicks ]);
+
+        return view ('tournaments.show', [
+            'tournament' => $tournament[0]
+        ]);
+
+
+
+    }
 }
