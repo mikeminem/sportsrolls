@@ -181,8 +181,22 @@ class TeamsController extends Controller
      * @param  \App\Teams  $teams
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teams $teams)
+    public function destroy($id)
     {
         //
+        if (isset($id) && $id > 0) {
+            Teams::where('id', $id)->update(['is_deleted' => 1 ]);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => 'El equipo se ha borrado!'
+            ]);
+        }
+
+        return response()->json([
+            'type' => 'error',
+            'message' => 'Error al intentar borrar el equipo!'
+        ]);
+
     }
 }

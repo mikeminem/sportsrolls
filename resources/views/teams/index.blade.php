@@ -54,7 +54,7 @@
                                 <tr>
                                     <th>Torneo</th>
                                     <th>Nombre</th>
-                                    <th>Rama</th>
+                                    <th>Rama / Categoria</th>
                                     <th>Categoría</th>
                                     <th width="20%"> - </th>
                                 </tr>
@@ -84,7 +84,7 @@
             <form id="Form" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="row">    
-                        <div class="col-md-9 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>Nombre *</b></label>
                                 <input type="text" class="form-control" id="name" name="name" required maxlength="120"> 
@@ -99,8 +99,28 @@
                                     <option value="Varonil">Varonil</option>
                                     <option value="Femenil">Femenil</option>
                                     <option value="Mixto">Mixto</option>
-                                </select>
-                                
+                                </select>  
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="group"><b>Grupo *</b></label>
+                                <select class="form-control" required id="group" name="group"  >
+                                    <option value="Todos">Todos contra todos</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                    <option value="G">G</option>
+                                    <option value="H">H</option>
+                                    <option value="I">I</option>
+                                    <option value="J">J</option>
+                                    <option value="K">K</option>
+                                    <option value="L">L</option>
+                                </select>  
                             </div>
                         </div>
 
@@ -263,7 +283,6 @@
 
             
             $(document).on("change", "#filterTournaments", function () {
-                //var table = $('#table').DataTable();
                 Table.columns(0).search(this.value).draw();
             });
 
@@ -274,6 +293,7 @@
                 $("#id").val("");
                 $("#category_id").empty();
                 $("#category_id").html('<option value="">Selecciona</option>');
+                $("#sport").val("{{ Auth::user()->league->sport->name}}");
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
@@ -407,12 +427,18 @@
                     dataType: "json",
                     success: function (data) { 
                         options = '<option value="">Selecciona</option>';
+                        var categories = -1
                         for(obj in data) {
                             if ( selected == data[obj]['id'] ) {
                                 options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
                             } else {
                                 options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
                             }
+                            categories++;
+                        }
+                        
+                        if (categories <0) {
+                            $.notify("No hay categorías en este torneo, selecciona otro o agrega categorias al torneo", "error");
                         }
                         $("#category_id").html(options);
                     },
