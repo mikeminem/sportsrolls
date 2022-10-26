@@ -59,6 +59,12 @@ $ composer require yajra/laravel-datatables-oracle:"~8.0"
 
 
 
+---
+for no catcha
+https://github.com/anhskohbo/no-captcha
+follow the steps there
+
+
 
 Font Awesome from 
 https://fontawesome.com/v4.7/icons/
