@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text-left">
-                        <h1>{{ __('User')}}</h1>
+                        <h1>{{ __('Users')}}</h1>
                     </div>
 
                     {{-- @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') )) --}}

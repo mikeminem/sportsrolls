@@ -31,6 +31,9 @@ Route::resource('/users','UsersController');
 // Route::post('/users/password/{id}', 'UserController@changepassword');
 
 
+// States
+Route::resource('/states','StatesController');
+
 //stadiums options
 Route::resource('/stadiums','StadiumsController');
 Route::get('all_stadiums', 'StadiumsController@allStadiums');

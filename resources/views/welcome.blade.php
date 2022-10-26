@@ -53,8 +53,10 @@
                 <a href="{{ url('tournament_info/' . $tournament->slug) }}" class="btn btn-primary stretched-link"> Ir al torneo <span class="fa fa-arrow-right"> </a>
               </div>
               <div class="card-footer text-right"> 
+                <span class="float-left" ><b> {{ $tournament->sport->name }} </b></span>
+                
+                <span class="fa fa-thumbs-up"></span> 0 -
                 <span class="fa fa-list"></span> {{ $tournament->prints}} - 
-                <!--span class="fa fa-heart-o"></span-->  
                 <span class="fa fa-eye"> {{ $tournament->clicks}}
               </div>
             </div>

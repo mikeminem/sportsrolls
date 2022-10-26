@@ -51,6 +51,9 @@
         <main class="py-2">
             @yield('content')
         </main>
+
+        @include('layouts.footer')
+
     </div>
 
     <!--  Jquery -->

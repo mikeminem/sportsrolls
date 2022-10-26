@@ -65,3 +65,12 @@ if modal give us problems, just delete the backdrop element
   .jumbotron {
 	border-bottom: 4px solid #FF8C00;
   }
+
+  .copyright {
+	position: fixed;
+  	bottom: 0;
+	background-color: #191919;
+	margin-top: 20px;
+	color: #FFFFFF;
+	padding: 10px;
+  }

@@ -87,7 +87,7 @@
                                         <a class="dropdown-item" href="{{ url('/categories') }}"><i class="fa fa-cubes"></i> {{ __('Categories') }}</a>
                                         <!--a class="dropdown-item" href="#"><i class="fa fa-venus-mars"></i> {{ __('Branches') }}</a-->
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#"><i class="fa fa-trophy"></i> {{ __('Sports Leagues') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/states') }}"><i class="fa fa-trophy"></i> {{ __('Sports Leagues') }}</a>
                                         <a class="dropdown-item" href="#"><i class="fa fa-users"></i> {{ __('Players') }}</a>
                                     </div>
                                 </li>
@@ -99,10 +99,10 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <!--a class="dropdown-item" href="#"><i class="fa fa-square"></i> {{ __('States') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/states') }}"><i class="fa fa-square"></i> {{ __('States') }}</a>
                                         <a class="dropdown-item" href="#"><i class="fa fa-square"></i> {{ __('Municipalities') }}</a>
-                                        <div class="dropdown-divider"></div-->
-                                        <a class="dropdown-item" href="{{ url('users' ) }}"><i class="fa fa-users"></i> {{ __('Users') }}</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{ url('/users') }}"><i class="fa fa-users"></i> {{ __('Users') }}</a>
                                         <a class="dropdown-item" href="#"><i class="fa fa-cog"></i> {{ __('Roles') }}</a>
                                     </div>
                                 </li>

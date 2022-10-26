@@ -10,4 +10,9 @@ class Sport extends Model
         'code', 'name', 'is_deleted', 'image'
     ];
 
+    public function tournament()
+    {
+        return $this->hasMany('App\Tournaments');
+    }
+
 }
