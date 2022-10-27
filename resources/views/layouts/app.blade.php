@@ -48,7 +48,7 @@
     <div id="app">
         @include('layouts.menu')
 
-        <main class="py-2">
+        <main class="py-2 mb-5">
             @yield('content')
         </main>
 

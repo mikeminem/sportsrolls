@@ -252,9 +252,6 @@
                             });
                             
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
-                            $.notify('hello !!', {
-                                style: 'happyblue'
-                            });
                             
                             return false;
                         }
