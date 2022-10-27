@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\States;
+use App\Municipalities;
 
 class ProfilesController extends Controller
 {
@@ -16,26 +18,8 @@ class ProfilesController extends Controller
     {
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
+    
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -52,6 +36,8 @@ class ProfilesController extends Controller
             'favorite_number'       => 'required',
             'footware_meansure'     => 'required',
             'sex'                   => 'required',
+            'state_id'              => 'required',
+            'municipality_id'       => 'required',
         ];
 
         $attributes = [
@@ -60,6 +46,8 @@ class ProfilesController extends Controller
             'favorite_number'       => "Peso",
             'footware_meansure'     => 'Medida de calzado',
             'sex'                   => 'Sexo',
+            'state_id'              => 'Estado',
+            'municipality_id'       => 'Municipio/delegación',
         ];
 
         //Validate the data
@@ -132,31 +120,21 @@ class ProfilesController extends Controller
     {
         //
         $profile = User::find(Auth::user()->id)->profile;
-        return view("profiles.myprofile", [ 'profile' => $profile]);
+        $states = States::where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
+
+        //if ($profile) {
+            $municipalities = Municipalities::where('state_id',$profile->state_id)->where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
+        //}
+
+        return view("profiles.myprofile", [ 
+            'profile'   => $profile,
+            'states'    => $states,
+            'municipalities' => $municipalities
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Profiles  $profiles
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Profiles $profiles)
-    {
-        //
-    }
+   
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Profiles  $profiles
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Profiles $profiles)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -185,4 +163,6 @@ class ProfilesController extends Controller
             'message' => 'Error al intentar borrar la foto de perfil!'
         ]);
     }
+
+    
 }

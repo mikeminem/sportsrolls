@@ -36,6 +36,8 @@ Route::resource('/states','StatesController');
 
 // Municipalities
 Route::resource('/municipalities','MunicipalitiesController');
+Route::get('/municipalities_list/{state_id}','MunicipalitiesController@list');
+
 
 //stadiums options
 Route::resource('/stadiums','StadiumsController');

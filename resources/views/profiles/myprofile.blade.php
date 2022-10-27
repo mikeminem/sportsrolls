@@ -72,7 +72,7 @@
 
                                         <div class="col-md-4 col-sm-12">
                                             <div class="form-group">
-                                                <label for="footware_meansure"><b> Sexo *</b></label>
+                                                <label for="sex"><b> Sexo *</b></label>
                                                 <select id="sex" name="sex" class="form-control">
                                                     <option value="Masculino" {{ ($profile->sex == "Masculino") ? "selected": ""  }}>Masculino</option>
                                                     <option value="Femenino" {{ ($profile->sex == "Femenino") ? "selected": ""  }}>Femenino</option>
@@ -85,8 +85,8 @@
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12">
                                             <div class="form-group">
-                                                <label for="about_me"><b>Acerca de *</b></label>
-                                                <textarea class="form-control" id="about_me" name="about_me" placeholder="Descripción breve de mi en los deportes" maxlength="500" rows="8">{{ ($profile)?$profile->about_me:""}}</textarea>
+                                                <label for="about_me"><b>Acerca de mi *</b></label>
+                                                <textarea class="form-control" id="about_me" name="about_me" placeholder="Descripción breve de mi en los deportes" maxlength="500" rows="4">{{ ($profile)?$profile->about_me:""}}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -130,6 +130,53 @@
                                             </div>
                                         </div>
 
+                                    </div>
+
+                                    <div class="row">      
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="state_id"><b>Estado *</b></label>
+                                                <select id="state_id" name="state_id" class="form-control">
+                                                <option id="">Selecciona</option>
+                                                @if (isset($states))
+                                                    @foreach($states as $state)
+                                                    @if (isset($profile))
+                                                        @if ($profile->state_id == $state->id)
+                                                            <option value="{{ $state->id}}" selected="selected">{{ $state->name}}</option>
+                                                        @else
+                                                            <option value="{{ $state->id}}">{{ $state->name}}</option>
+                                                        @endif
+                                                    @else
+                                                        <option value="{{ $state->id}}">{{ $state->name}}</option>
+
+                                                    @endif
+                                                    @endforeach
+                                                @endif
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="municipality_id"><b> Municipio *</b></label>
+                                                <select id="municipality_id" name="municipality_id" class="form-control">
+                                                    @if (isset($municipalities))
+                                                    @foreach($municipalities as $municipality)
+                                                    @if (isset($profile))
+                                                        @if ($profile->state_id == $municipality->id)
+                                                            <option value="{{ $municipality->id}}" selected="selected">{{ $municipality->name}}</option>
+                                                        @else
+                                                            <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
+                                                        @endif
+                                                    @else
+                                                        <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
+
+                                                    @endif
+                                                    @endforeach
+                                                @endif
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
 
 
@@ -206,10 +253,17 @@
 <script type="text/javascript">
         jQuery(document).ready(function($){
 
+            state_id
+            $(document).on("change", "#state_id", function (e) {
+                $("#state_id option:selected").each(function () {
+                    selected=$(this).val();
+                    $("#municipality_id").html(getMunicipalities(selected));
+                });
+            });
+
             $(document).on("click", "#btnDeletePhoto", function (e) {
                 e.preventDefault();
-                jQuery("#deletePhotoModal").modal('show');
-                
+                jQuery("#deletePhotoModal").modal('show');    
             });
             
             $(document).on("submit", "#frmProfile", function (e) {
@@ -272,6 +326,40 @@
                 return false;
             });
 
+
+            //global funcntions
+        function getMunicipalities(sport, selected="") {
+            var options = "";
+
+            if (sport) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('municipalities_list') }}/" + sport,
+                    dataType: "json",
+                    success: function (data) { 
+                        options = '<option value="">Selecciona</option>';
+                        var municipalities = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                            municipalities++;
+                        }
+                        
+                        if (municipalities <=-1) {
+                            $.notify("No hay Municipios en este estado, selecciona otro o agrega municioios al estado", "error");
+                        
+                        }
+                        $("#municipality_id").html(options);
+
+                    },
+                });
+            }
+            return options;
+        }
+
         });
 
 
@@ -296,6 +384,10 @@
             }    
             files = null;
         }
+
+
+
+        
 
 </script>
 @endsection

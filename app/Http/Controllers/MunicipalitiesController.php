@@ -148,4 +148,14 @@ class MunicipalitiesController extends Controller
             'message' => 'Error al intentar borrar el Municipio/Delegación!'
         ]);
     }
+
+    public function list ($state_id) {
+        
+        if ($state_id) {
+            $list = Municipalities::where('state_id',$state_id)->get();
+            return (string) $list;
+        }
+
+        return (string) false;
+    }
 }
