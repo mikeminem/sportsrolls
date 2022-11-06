@@ -87,3 +87,6 @@ Route::get('/tournament_info/{slug}', 'TournamentsController@showTournament');
 
 //teams options
 Route::resource('/teams','TeamsController');
+
+//journeys
+Route::resource('/journeys','JourneysController');
