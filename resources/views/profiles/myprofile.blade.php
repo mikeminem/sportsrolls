@@ -23,13 +23,13 @@
                                        @endif
                                         <div class="card-body text-center">
                                             <h4 class="card-title">{{ Auth::user()->name}}</h4>
-                                            <span class="btn btn-primary btn-file">
+                                            <span class="btn btn-primary btn-file" style="width: 200px">
                                                     <span class="fa fa-photo"></span> 
                                                     Buscar foto
                                                     <input type="file" accept="image/*" id="photo"  name="photo" onchange="showMyImage(this)" >
                                                     
                                             </span>
-                                            <a href="javascript:void(0)" class="btn btn-primary" id="btnDeletePhoto" @disabled(true) ><span class="fa fa-remove"></span>  Borrar foto</a>
+                                            <a href="javascript:void(0)" class="btn btn-primary" id="btnDeletePhoto" @disabled(true) style="width: 200px" ><span class="fa fa-remove"></span>  Borrar foto</a>
 
                                             <hr />
                                             <div class="row">
@@ -163,7 +163,7 @@
                                                     @if (isset($municipalities))
                                                     @foreach($municipalities as $municipality)
                                                     @if (isset($profile))
-                                                        @if ($profile->state_id == $municipality->id)
+                                                        @if ($profile->municipality_id == $municipality->id)
                                                             <option value="{{ $municipality->id}}" selected="selected">{{ $municipality->name}}</option>
                                                         @else
                                                             <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
@@ -253,7 +253,6 @@
 <script type="text/javascript">
         jQuery(document).ready(function($){
 
-            state_id
             $(document).on("change", "#state_id", function (e) {
                 $("#state_id option:selected").each(function () {
                     selected=$(this).val();
@@ -327,38 +326,38 @@
             });
 
 
-            //global funcntions
-        function getMunicipalities(sport, selected="") {
-            var options = "";
+            
+            function getMunicipalities(sport, selected="") {
+                var options = "";
 
-            if (sport) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ url('municipalities_list') }}/" + sport,
-                    dataType: "json",
-                    success: function (data) { 
-                        options = '<option value="">Selecciona</option>';
-                        var municipalities = -1
-                        for(obj in data) {
-                            if ( selected == data[obj]['id'] ) {
-                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
-                            } else {
-                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                if (sport) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ url('municipalities_list') }}/" + sport,
+                        dataType: "json",
+                        success: function (data) { 
+                            options = '<option value="">Selecciona</option>';
+                            var municipalities = -1
+                            for(obj in data) {
+                                if ( selected == data[obj]['id'] ) {
+                                    options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                                } else {
+                                    options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                                }
+                                municipalities++;
                             }
-                            municipalities++;
-                        }
-                        
-                        if (municipalities <=-1) {
-                            $.notify("No hay Municipios en este estado, selecciona otro o agrega municioios al estado", "error");
-                        
-                        }
-                        $("#municipality_id").html(options);
+                            
+                            if (municipalities <=-1) {
+                                $.notify("No hay Municipios en este estado, selecciona otro o agrega municioios al estado", "error");
+                            
+                            }
+                            $("#municipality_id").html(options);
 
-                    },
-                });
+                        },
+                    });
+                }
+                return options;
             }
-            return options;
-        }
 
         });
 

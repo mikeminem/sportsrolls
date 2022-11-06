@@ -52,8 +52,8 @@
                                 <tr>
                                     <th>Torneo</th>
                                     <th>Nombre</th>
+                                    <th>Contacto</th>
                                     <th>Rama / Categoria</th>
-                                    <th>Categoría</th>
                                     <th width="20%"> - </th>
                                 </tr>
                             </thead>
@@ -139,7 +139,7 @@
                             <div class="form-group">
                                 <label for="title"><b>Deporte *</b></label>
                                 <input type="text" class="form-control" readonly id="sport" name="sport">
-                                <input type="hidden" class="form-control" readonly id="sport_id" name="sport_id" value="2">
+                                <input type="hidden" class="form-control" readonly id="sport_id" name="sport_id">
                             </div>
                         </div>
 
@@ -272,8 +272,8 @@
                 columns: [
                     { data: 'tournament_id', name: 'tournament_id', visible:false},
                     { data: 'name', name: 'name'},
+                    { data: 'contact', name: 'contact'},
                     { data: 'branch', name: 'branch'},
-                    { data: 'category', name: 'category'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
@@ -292,19 +292,22 @@
                 $("#category_id").empty();
                 $("#category_id").html('<option value="">Selecciona</option>');
                 $("#sport").val("{{ Auth::user()->league->sport->name}}");
+                $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
+
+                $("#category_id").html(getCategories("{{ Auth::user()->league->sport->id}}"));
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
             });
 
             
-            $(document).on("change", "#tournament_id", function (e) {
-                $("#tournament_id option:selected").each(function () {
-                    selected=$(this).val();
-                    $("#category_id").html(getCategories(selected));
+            // $(document).on("change", "#tournament_id", function (e) {
+            //     $("#tournament_id option:selected").each(function () {
+            //         selected=$(this).val();
+            //         $("#category_id").html(getCategories(selected));
                     
-                });
-            });
+            //     });
+            // });
 
             $(document).on("click", "#btnDelete", function (e) {
                 e.preventDefault();

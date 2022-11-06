@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Leagues;
 use App\User;
 use App\Sport;
+use App\States;
+use App\Municipalities;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,10 +94,15 @@ class LeaguesController extends Controller
         //
         $sports = Sport::where('is_deleted',0)->get(['id', 'name']);
         $league = User::find(Auth::user()->id)->league;
+
+        $states = States::where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
+        $municipalities = Municipalities::where('state_id',$leagues->state_id)->where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
         
         return view("leagues.league_info", [ 
-            'league' => $league,
-            'sports'=>$sports
+            'league'            => $league,
+            'sports'            =>$sports,
+            'states'            => $states,
+            'municipalities'    => $municipalities
         ]);
     }
 

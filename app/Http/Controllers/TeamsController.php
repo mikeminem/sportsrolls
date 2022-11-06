@@ -29,13 +29,19 @@ class TeamsController extends Controller
             //send the grid rows
             $rows = DB::table('teams as t')
                     ->join('categories as c', 'c.id', '=', 't.category_id')
-                    ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted', 't.clicks', 't.prints', 't.category_id', 'c.name as category')
+                    ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted', 't.clicks', 't.prints', 't.category_id', 'c.name as category', 't.contact', 't.contact_phone' )
                     ->where('t.is_deleted', 0)
                     ->where('t.user_id',Auth::user()->id)
                     ->orderBy('t.id', 'desc')
                     ->get();        
             
             return DataTables::of($rows)
+                    ->addColumn('contact', function($row) {
+                        return "<b>" . $row->contact . "</b><br>" . $row->contact_phone;
+                    })
+                    ->addColumn('branch', function($row) {
+                        return $row->branch . " / " . $row->category;
+                    })
                     ->addColumn('action', function($row) {
 
                         $routeEdit = route('teams.show', $row->id);
@@ -50,7 +56,7 @@ class TeamsController extends Controller
 
                         return $links;
                     })
-                    ->rawColumns([ 'action' ])
+                    ->rawColumns([ 'action', 'contact' ])
                     ->make(true); 
         }
 

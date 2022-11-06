@@ -21,9 +21,6 @@ class AddStateMunicipalityFieldsToProfilesTable extends Migration
 
             $table->bigInteger('municipality_id')->unsigned();
             $table->foreign('municipality_id')->references('id')->on('municipalities');
-
-
-
         });
     }
 

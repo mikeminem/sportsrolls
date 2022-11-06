@@ -34,10 +34,11 @@
     </div>
 </div>
 
-<div class="container mt-4">
+<div class="container-fluid m-2">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 m-2">
       <h1 class="title">Torneos más populares</h1>
+    </div>
 
       @if (count($tournaments)==0) 
       <div class="alert alert-danger">
@@ -45,7 +46,7 @@
       </div>
       @else
           @foreach($tournaments as $tournament)
-          <div class="col-md-4">
+          <div class="col-md-3 m-2">
             <div class="card">
               <img class="card-img-top" src="img_avatar1.png" alt="{{ $tournament->title }}">
               <div class="card-body">
@@ -66,7 +67,6 @@
           @endforeach
       @endif
 
-    </div>
   </div>
 </div>
 @endsection

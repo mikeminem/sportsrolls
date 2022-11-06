@@ -19,11 +19,14 @@
                                         <label for="sport_id"><b>Deporte *</b></label>
                                         <select id="sport_id" name="sport_id" class="form-control" required >
                                             <option value="" >Selecciona...</option>
+
                                             @foreach ($sports as $sport)
 
                                                 <option value="{{ $sport->id }}" 
-                                                    @if ($league->sport_id == $sport->id)
-                                                        selected
+                                                    @if (isset($league->sport_id))
+                                                        @if ($league->sport_id == $sport->id)
+                                                            selected
+                                                        @endif
                                                     @endif
                                                 >{{ $sport->name }}</option>
                                             @endforeach
@@ -52,6 +55,55 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">      
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="state_id"><b>Estado *</b></label>
+                                        <select id="state_id" name="state_id" class="form-control">
+                                        <option id="">Selecciona</option>
+                                        @if (isset($states))
+                                            @foreach($states as $state)
+                                            @if (isset($profile))
+                                                @if ($profile->state_id == $state->id)
+                                                    <option value="{{ $state->id}}" selected="selected">{{ $state->name}}</option>
+                                                @else
+                                                    <option value="{{ $state->id}}">{{ $state->name}}</option>
+                                                @endif
+                                            @else
+                                                <option value="{{ $state->id}}">{{ $state->name}}</option>
+
+                                            @endif
+                                            @endforeach
+                                        @endif
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="municipality_id"><b> Municipio *</b></label>
+                                        <select id="municipality_id" name="municipality_id" class="form-control">
+                                            @if (isset($municipalities))
+                                            @foreach($municipalities as $municipality)
+                                            @if (isset($profile))
+                                                @if ($profile->municipality_id == $municipality->id)
+                                                    <option value="{{ $municipality->id}}" selected="selected">{{ $municipality->name}}</option>
+                                                @else
+                                                    <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
+                                                @endif
+                                            @else
+                                                <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
+
+                                            @endif
+                                            @endforeach
+                                        @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
 
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
@@ -146,6 +198,46 @@
                 });
                 return false;
             });
+
+            $(document).on("change", "#state_id", function (e) {
+                $("#state_id option:selected").each(function () {
+                    selected=$(this).val();
+                    $("#municipality_id").html(getMunicipalities(selected));
+                });
+            });
+
+
+            function getMunicipalities(sport, selected="") {
+            var options = "";
+
+            if (sport) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('municipalities_list') }}/" + sport,
+                    dataType: "json",
+                    success: function (data) { 
+                        options = '<option value="">Selecciona</option>';
+                        var municipalities = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                            municipalities++;
+                        }
+                        
+                        if (municipalities <=-1) {
+                            $.notify("No hay Municipios en este estado, selecciona otro o agrega municioios al estado", "error");
+                        
+                        }
+                        $("#municipality_id").html(options);
+
+                    },
+                });
+            }
+            return options;
+        }
 
         });
 

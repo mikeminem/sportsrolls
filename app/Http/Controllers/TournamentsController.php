@@ -139,6 +139,7 @@ class TournamentsController extends Controller
             $model->code =  strtoupper( str_random(8));
             $model->user_id = Auth::user()->id;
             $model->start_day = date('Y-m-d');
+            $model->slug = str_slug($model->name);
 
             if (!empty($path))
                 $model->image = $path;
@@ -148,8 +149,11 @@ class TournamentsController extends Controller
                                  'message' => 'Se ha creado el Torneo!']);      
         } else {
             $model = Tournaments::find($request->id);
+
             $lastImage = $model->image;
             $model->fill($request->all());
+            $model->slug = str_slug($model->name);
+
 
             if (!empty($path)) {
                 Storage::delete('public/sports/' . $lastImage);

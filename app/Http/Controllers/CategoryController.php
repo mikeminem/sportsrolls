@@ -27,6 +27,7 @@ class CategoryController extends Controller
                     ->join('sports as s', 's.id', '=', 'c.sport_id')
                     ->select('c.id', 'c.sport_id', 'c.name', 'c.age_initial', 'c.age_final', 'c.overview', 's.name as nameSport')
                     ->where('c.is_deleted', 0)
+                    ->where('c.user_id',Auth::user()->id)
                     ->get();        
             
             return DataTables::of($rows)
@@ -52,9 +53,9 @@ class CategoryController extends Controller
                     ->make(true);
         }
 
-        $sports = Sport::where('is_deleted', 0)->get();
-
-        return view ('categories.index', compact('sports'));
+        //$sports = Sport::where('is_deleted', 0)->get();
+        //return view ('categories.index', compact('sports'));
+        return view ('categories.index');
     }
 
     /**
@@ -80,7 +81,7 @@ class CategoryController extends Controller
         if ($validated->fails()) {
             return response()->json([
                 'type' => 'error',
-                'message' => 'Error al intentar guardar el Deporte!',
+                'message' => 'Error al intentar guardar la categoria!',
                 'errors' => $validated->errors()
             ]);
         }
@@ -88,10 +89,11 @@ class CategoryController extends Controller
 
         if (!isset($request->id) || empty($request->id)) {
             $model = new Category($request->all());
+            $model->user_id = Auth::user()->id;
             
             if ($model->save())
                  return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado el deporte!']);      
+                                 'message' => 'Se ha creado la categoria!']);      
         } else {
             $model = Category::find($request->id);
             $model->fill($request->all());
@@ -99,12 +101,12 @@ class CategoryController extends Controller
             
             if ($model->update()) 
                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado el deporte!']); 
+                                 'message' => 'Se ha modificado la categoria!']); 
         }
 
         return response()->json([
             'type' => 'error',
-            'message' => 'Error al intentar guardar el Deporte!'
+            'message' => 'Error al intentar guardar la categoria!'
         ]);
 
     }
@@ -140,13 +142,13 @@ class CategoryController extends Controller
 
             return response()->json([
                 'type' => 'success',
-                'message' => 'El deporte se ha borrado!'
+                'message' => 'La categoria se ha borrado!'
             ]);
         }
 
         return response()->json([
             'type' => 'error',
-            'message' => 'Error al intentar borrar el deporte!'
+            'message' => 'Error al intentar borrar la categoria!'
         ]);
     }
 

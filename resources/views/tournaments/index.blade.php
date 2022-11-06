@@ -181,7 +181,7 @@
   
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Iniciar Torneo</h4>
+          <h4 class="modal-title">Cambiar estado del Torneo</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -280,7 +280,7 @@
                 $("#idStart").val($(this).attr('data-id'));
                 $("#status").val(status);
                 
-                $("#message").text('¿Deseas hacer algo ' + name + ' a '+ status+'?');
+                $("#message").text('¿Deseas cambiar el estado del torneo ' + name + ' a '+ status+'?');
 
                 jQuery("#startModal").modal('show');
             });

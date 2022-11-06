@@ -121,10 +121,8 @@ class ProfilesController extends Controller
         //
         $profile = User::find(Auth::user()->id)->profile;
         $states = States::where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
-
-        //if ($profile) {
-            $municipalities = Municipalities::where('state_id',$profile->state_id)->where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
-        //}
+        $municipalities = Municipalities::where('state_id',$profile->state_id)->where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
+        
 
         return view("profiles.myprofile", [ 
             'profile'   => $profile,

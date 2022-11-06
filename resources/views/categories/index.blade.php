@@ -75,13 +75,8 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="sport_id"><b>Deporte *</b></label>
-                                <select class="form-control" id="sport_id" name="sport_id" required>
-                                    <option value="">Selecciona un deporte</option>
-
-                                    @foreach ($sports as $sport)
-                                       <option value="{{ $sport->id }}">{{ $sport->name }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control" readonly id="sport" name="sport">
+                                <input type="hidden" class="form-control" readonly id="sport_id" name="sport_id">
                             </div>
                         </div>
 
@@ -230,6 +225,9 @@
             $(document).on("click", "#AddCategory", function () {
                 $("#updateForm").trigger('reset');
                 $("#id").val("");
+
+                $("#sport").val("{{ Auth::user()->league->sport->name}}");
+                $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
