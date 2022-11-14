@@ -203,6 +203,15 @@ class TeamsController extends Controller
             'type' => 'error',
             'message' => 'Error al intentar borrar el equipo!'
         ]);
+    }
 
+    public function list ($category_id) {
+        
+        if ($category_id) {
+            $list = Teams::where('category_id',$category_id)->where('is_deleted',0)->get();
+            return (string) $list;
+        }
+
+        return (string) false;
     }
 }

@@ -48,7 +48,11 @@
           @foreach($tournaments as $tournament)
           <div class="col-md-3 m-2">
             <div class="card">
-              <img class="card-img-top" src="img_avatar1.png" alt="{{ $tournament->title }}">
+              @if($tournament->sport->image)
+                  <img class="card-img-top" src="{{ asset('sport/' . $tournament->sport->image)}}" alt="{{ $tournament->title }}">
+              @else
+                  <img class="card-img-top" src="img_avatar1.png" alt="{{ $tournament->title }}">
+              @endif
               <div class="card-body">
                 <h4 class="card-title">{{ $tournament->title }}</h4>
                 <a href="{{ url('tournament_info/' . $tournament->slug) }}" class="btn btn-primary stretched-link"> Ir al torneo <span class="fa fa-arrow-right"> </a>
@@ -56,8 +60,7 @@
               <div class="card-footer text-right"> 
                 <span class="float-left" ><b> {{ $tournament->sport->name }} </b></span>
                 
-                <span class="fa fa-thumbs-up"></span> 0 -
-                <span class="fa fa-list"></span> {{ $tournament->prints}} - 
+                <span class="fa fa-list"></span> {{ $tournament->prints }} - 
                 <span class="fa fa-eye"> {{ $tournament->clicks}}
               </div>
             </div>

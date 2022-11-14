@@ -14,13 +14,19 @@ class MainController extends Controller
         ->where('status','En Progreso')
         ->get();
         
+        //we update the value of the prints
         foreach ($tournaments as $t) {
+            $prints = 0;
             $prints = $t->prints+1;
-            Tournaments::where('is_deleted',0)->where('status','En Progreso')->update(['prints' => $prints ]);
+            Tournaments::where('id', $t->id)->where('is_deleted',0)->where('status','En Progreso')->update(['prints' => $prints ]);
         }
 
+        $tournaments2 = Tournaments::where('is_deleted',0)
+        ->where('status','En Progreso')
+        ->get();
+
         return view('welcome', [
-            'tournaments' => $tournaments
+            'tournaments' => $tournaments2
         ]);
     }
 

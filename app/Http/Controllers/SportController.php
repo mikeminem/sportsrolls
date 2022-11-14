@@ -33,7 +33,7 @@ class SportController extends Controller
                         $image = '';
 
                         if(!is_null($row->image) && !empty($row->image))
-                            $image = '<img src="' . asset('storage/sports/' . $row->image) . '" style="height:100px">';
+                            $image = '<img src="' . asset('sport/' . $row->image) . '" style="height:100px">';
 
                         return $image;
                     })->addColumn('action', function($row) {

@@ -68,7 +68,7 @@
                                         <a class="dropdown-item" href="{{ url('/tournaments') }}"><i class="fa fa-file"></i> {{ __('Tournaments') }}</a>
                                         <a class="dropdown-item" href="{{ url('/teams') }}"><i class="fa fa-group"></i> {{ __('Teams') }}</a>
                                         <a class="dropdown-item" href="{{ url('/journeys')}}"><i class="fa fa-calendar"></i> {{ __('Journeys') }}</a>
-                                        <a class="dropdown-item" href="#"><i class="fa fa-tasks"></i> {{ __('Games') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/games')}}"><i class="fa fa-tasks"></i> {{ __('Games') }}</a>
 
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ url('/news') }}"><i class="fa fa-newspaper-o"></i>  {{ __('News') }}</a>
@@ -107,7 +107,12 @@
                                         <a class="dropdown-item" href="{{ url('/municipalities')}}"><i class="fa fa-square"></i> {{ __('Municipalities') }}</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ url('/users') }}"><i class="fa fa-users"></i> {{ __('Users') }}</a>
-                                        <a class="dropdown-item" href="#"><i class="fa fa-cog"></i> {{ __('Roles') }}</a>
+                                        <a class="dropdown-item" href="#"><i class="fa fa-money"></i> {{ __('Plan') }}</a>
+
+                                        <div class="dropdown-divider"></div>
+
+                                        <a class="dropdown-item" href="#"><i class="fa fa-bank"></i> {{ __('Banks') }}</a>
+
                                     </div>
                                 </li>
                             @endif

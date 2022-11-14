@@ -22,7 +22,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 //******************************************************************
-//* categorias for ligues
+//* all catalogues
 //******************************************************************
 
 Route::resource('/users','UsersController');
@@ -30,14 +30,12 @@ Route::resource('/users','UsersController');
 // Route::get('/users/password/{id}', 'UserController@formpassword');
 // Route::post('/users/password/{id}', 'UserController@changepassword');
 
-
 // States
 Route::resource('/states','StatesController');
 
 // Municipalities
 Route::resource('/municipalities','MunicipalitiesController');
 Route::get('/municipalities_list/{state_id}','MunicipalitiesController@list');
-
 
 //stadiums options
 Route::resource('/stadiums','StadiumsController');
@@ -54,7 +52,7 @@ Route::resource('/sports','SportController');
 
 //categories options
 Route::resource('/categories','CategoryController');
-Route::get('/categories_list/{sport_id}','CategoryController@list');
+Route::get('/categories_list/{user_id}','CategoryController@list');
 
 //profiles options
 Route::resource('/profiles','ProfilesController');
@@ -76,17 +74,34 @@ Route::get('photo/{filename}',function($filename){
     return $response;
 });
 
+Route::get('sport/{filename}',function($filename){
+    $path = storage_path("app/public/sports/$filename");
 
+    if (!\File::exists($path)) abort(404);
+
+    $file = \File::get($path);
+    $type = \File::mimeType($path);
+
+    $response = Response::make($file,200);
+    $response->header("Content-Type",$type);
+
+    return $response;
+});
 
 //tournaments options
 Route::resource('/tournaments','TournamentsController');
 Route::post('/tournaments.start/{id}', 'TournamentsController@start');
 Route::get('/tournament_info/{slug}', 'TournamentsController@showTournament');
 
-
-
 //teams options
 Route::resource('/teams','TeamsController');
+Route::get('/teams_list/{tournament_id}','TeamsController@list');
+
 
 //journeys
 Route::resource('/journeys','JourneysController');
+Route::get('/journaments_list/{tournament_id}','JourneysController@list');
+
+//games
+Route::resource('/games','GamesController');
+Route::post('/score_game', 'GamesController@updateScore');

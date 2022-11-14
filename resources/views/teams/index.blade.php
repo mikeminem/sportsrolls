@@ -294,20 +294,11 @@
                 $("#sport").val("{{ Auth::user()->league->sport->name}}");
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
-                $("#category_id").html(getCategories("{{ Auth::user()->league->sport->id}}"));
+                $("#category_id").html(getCategories("{{ Auth::user()->id}}"));
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
             });
-
-            
-            // $(document).on("change", "#tournament_id", function (e) {
-            //     $("#tournament_id option:selected").each(function () {
-            //         selected=$(this).val();
-            //         $("#category_id").html(getCategories(selected));
-                    
-            //     });
-            // });
 
             $(document).on("click", "#btnDelete", function (e) {
                 e.preventDefault();
@@ -334,7 +325,11 @@
                                 category_id = data[obj]
                             }
                         }
-                        $("#category_id").html(getCategories($("#tournament_id").val(),category_id));
+                        $("#category_id").html(getCategories({{ Auth::user()->id }}, category_id));
+
+                        $("#sport").val("{{ Auth::user()->league->sport->name}}");
+                        $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
+
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('show');
                     },
@@ -418,35 +413,35 @@
         });
 
         //global funcntions
-        function getCategories(sport, selected="") {
-            var options = "";
+        // function getCategories(user, selected="") {
+        //     var options = "";
 
-            if (sport) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ url('categories_list') }}/" + sport,
-                    dataType: "json",
-                    success: function (data) { 
-                        options = '<option value="">Selecciona</option>';
-                        var categories = -1
-                        for(obj in data) {
-                            if ( selected == data[obj]['id'] ) {
-                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
-                            } else {
-                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
-                            }
-                            categories++;
-                        }
+        //     if (sport) {
+        //         $.ajax({
+        //             type: "GET",
+        //             url: "{{ url('categories_list') }}/" + user,
+        //             dataType: "json",
+        //             success: function (data) { 
+        //                 options = '<option value="">Selecciona</option>';
+        //                 var categories = -1
+        //                 for(obj in data) {
+        //                     if ( selected == data[obj]['id'] ) {
+        //                         options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+        //                     } else {
+        //                         options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+        //                     }
+        //                     categories++;
+        //                 }
                         
-                        if (categories <0) {
-                            $.notify("No hay categorías en este torneo, selecciona otro o agrega categorias al torneo", "error");
-                        }
-                        $("#category_id").html(options);
-                    },
-                });
-            }
-            return options;
-        }
+        //                 if (categories <0) {
+        //                     $.notify("No hay categorías en este torneo, selecciona otro o agrega categorias al torneo", "error");
+        //                 }
+        //                 $("#category_id").html(options);
+        //             },
+        //         });
+        //     }
+        //     return options;
+        // }
 
 </script>
 @endsection

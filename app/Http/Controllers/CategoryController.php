@@ -152,10 +152,10 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function list ($sport_id) {
+    public function list ($user_id) {
         
-        if ($sport_id) {
-            $list = Category::where('sport_id',$sport_id)->get();
+        if ($user_id) {
+            $list = Category::where('user_id',$user_id)->where('is_deleted',0)->get();
             return (string) $list;
         }
 

@@ -16,4 +16,9 @@ class Tournaments extends Model
     {
         return $this->belongsTo('App\Sports');
     }
+
+    public function games()
+    {
+        return $this->hasMany('App\Games');
+    }
 }

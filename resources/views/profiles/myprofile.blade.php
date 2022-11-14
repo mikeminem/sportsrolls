@@ -17,7 +17,7 @@
                                 <div class="col-md-3 col-sm-12">
                                     <div class="card">
                                        @if ($profile->photo)
-                                            <img class="card-img-top" id="thumbnil" src="{{  asset("/photo/$profile->photo")  }}" alt="" >
+                                            <img class="card-img-top" id="thumbnil" src="{{  asset("/photo/$profile->photo")  }}" alt="Mi foto" >
                                        @else
                                             <img class="card-img-top" id="thumbnil" src="{{ asset('images/noimage.png')}}" alt="" >
                                        @endif

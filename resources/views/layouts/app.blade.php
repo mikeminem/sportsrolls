@@ -79,5 +79,104 @@
     <!--page js-->
      @yield('js')
 
+
+     <script type="text/javascript">
+        //global funcntions
+        //get categories
+        function getCategories(user, selected="") {
+            var options = "";
+
+            if (user) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('categories_list') }}/" + user,
+                    dataType: "json",
+                    success: function (data) { 
+                        options = '<option value="">Selecciona</option>';
+                        var categories = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                            categories++;
+                        }
+                        
+                        if (categories <0) {
+                            $.notify("No hay categorías en este torneo, selecciona otro o agrega categorias al torneo", "error");
+                        }
+                        $("#category_id").html(options);
+                    },
+                });
+            }
+            return options;
+        };
+
+        //getJourneys
+        function getJourneys(component, tournament, selected="") {
+            var options = "";
+
+            if (tournament) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('journaments_list') }}/" + tournament,
+                    dataType: "json",
+                    success: function (data) { 
+                        options += '<option value="">Selecciona</option>';
+                        var journaments = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                            journaments++;
+                        }
+                        
+                        if (journaments <0) {
+                            $.notify("No hay Jornadas en este torneo, selecciona otro o agrega jornadas al torneo", "error");
+                        }
+                        $("#" + component).html(options);
+                        
+                    },
+                });
+            }
+        }
+
+        //getJourneys
+        function getTeams(component, tournament, selected="") {
+            var options = "";
+
+            if (tournament) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('teams_list') }}/" + tournament,
+                    dataType: "json",
+                    success: function (data) { 
+                        options += '<option value="">Selecciona</option>';
+                        var journaments = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                            journaments++;
+                        }
+                        
+                        if (journaments <0) {
+                            $.notify("No hay Equipos en este torneo, selecciona otro o agrega equipos al torneo", "error");
+                        }
+                        $("#" + component).html(options);
+                        
+                    },
+                });
+            }
+        }
+
+
+</script>
+
 </body>
 </html>
