@@ -12,11 +12,11 @@ a:hover, .btn-link:hover {
 
 
 .top {
-	background-color: #191919;
+	background-color: #343a40;
 	color:#FFF;
 	padding: 12px;
 	font-size: 1.2em;
-	border-top: 4px #FF8C00 solid;
+	border-top: 6px #FF8C00 solid;
 }
 
 .tool {
@@ -73,4 +73,8 @@ if modal give us problems, just delete the backdrop element
 	margin-top: 20px;
 	color: #FFFFFF;
 	padding: 10px;
+  }
+
+  .win {
+	  border-bottom: #343a40 solid 2px;
   }

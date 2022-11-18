@@ -21,12 +21,8 @@ class MainController extends Controller
             Tournaments::where('id', $t->id)->where('is_deleted',0)->where('status','En Progreso')->update(['prints' => $prints ]);
         }
 
-        $tournaments2 = Tournaments::where('is_deleted',0)
-        ->where('status','En Progreso')
-        ->get();
-
         return view('welcome', [
-            'tournaments' => $tournaments2
+            'tournaments' => $tournaments
         ]);
     }
 

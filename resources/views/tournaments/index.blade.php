@@ -220,7 +220,7 @@
 <script type="text/javascript">
         jQuery(document).ready(function($){
             
-            var Table = $('#table').DataTable({
+            var Table = $('#table').DataTable({                
                 "language": {
                     "sProcessing":    "Procesando...",
                     "sLengthMenu":    "Mostrar _MENU_ registros",

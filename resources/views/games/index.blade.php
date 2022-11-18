@@ -33,17 +33,73 @@
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
                     </a>
                     <hr />
+                        <div class="row">
+                            <div class="col-md-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="filterTournaments"><b>Torneos Activos</b></label>
+                                    <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
+                                        <option value="">Todos</option>
+                                        @foreach($tournaments as $tournament)
+                                            <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="filterJourneys"><b>Jornadas</b></label>
+                                    <select class="form-control" required id="filterJourneys" name="filterJourneys"  >
+                                        <option value="">Selecciona Torneo</option>
+                                    </select>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="branch"><b>Rama *</b></label>
+                                    <select class="form-control" required id="FilterBranchs" name="FilterBranchs"  >
+                                        <option value="">Todas</option>
+                                        <option value="Varonil">Varonil</option>
+                                        <option value="Femenil">Femenil</option>
+                                        <option value="Mixto">Mixto</option>
+                                    </select>  
+                                </div>
+                            </div>
+    
+                            <div class="col-md-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="title"><b>Categoria *</b></label>
+                                    <select class="form-control" required id="FilterCategories" name="FilterCategories">
+                                        <option value="">Todas</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id}}">{{ $category->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    <hr />
 
                     <div class="table-responsive">
                         <table class="table table-hover" id="table">
                             <thead>
                                 <tr>
+                                    <th>Torneo</th>
                                     <th>Jornada</th>
                                     <th>Fecha / Hora</th>
                                     <th>Equipo 1 (Visitante)</th>
                                     <th>Marcador</th>
                                     <th>Equipo 2 (Casa)</th>
+                                    <th>Rama</th>
+                                    <th>Categoria</th>
                                     <th>Estado</th>
+                                    <th>Id</th>
+                                    
                                     <th> - </th>
                                 </tr>
                             </thead>
@@ -77,18 +133,22 @@
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="tournament_id"><b>Torneo *</b></label>
+                                <!--input type="hidden" class="form-control" readonly id="tournament_id" name="tournament_id"><br /-->
+
                                 <select class="form-control" required id="tournament_id" name="tournament_id">
                                     <option value="">Selecciona</option>
                                     @foreach($tournaments as $tournament)
                                         <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
                                     @endforeach
                                 </select>
+
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="journey_id"><b>Jornada *</b></label>
+                                <!--input type="hidden" class="form-control" readonly id="journey_id" name="journey_id"><br /-->
                                 <select class="form-control" required id="journey_id" name="journey_id">
                                     <option value="">Selecciona un torneo</option>
                                 </select>
@@ -112,6 +172,9 @@
                                 <label for="title"><b>Categoria *</b></label>
                                 <select class="form-control" required id="category_id" name="category_id">
                                     <option value="">Selecciona</option>
+                                    @foreach($categories as $category)
+                                            <option value="{{ $category->id}}">{{ $category->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -304,6 +367,7 @@
         jQuery(document).ready(function($){
             
             var Table = $('#table').DataTable({
+                order: [[9, 'desc']],
                 "language": {
                     "sProcessing":    "Procesando...",
                     "sLengthMenu":    "Mostrar _MENU_ registros",
@@ -332,22 +396,67 @@
                 serverSide: true,
                 ajax: '{{ route('games.index') }}',
                 columns: [
-                    { data: 'journey_id', name: 'journey_id'},
+                    { data: 'tournament_id', name: 'tournament_id', visible:false},
+                    { data: 'journey_id', name: 'journey_id', visible:false},
                     { data: 'date_time', name: 'date_time'},
                     { data: 'team1', name: 'team1', className: "text-right"},
                     { data: 'score', name: 'score', className: "text-center"},
                     { data: 'team2', name: 'team2'},
+                    { data: 'branch', name: 'branch'},
+                    { data: 'category', name: 'category'},
                     { data: 'status', name: 'status'},
+                    { data: 'id', name: 'id', visible:false},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
 
+            //filters
+            $(document).on("change", "#filterTournaments", function () {
+                Table.columns(0).search(this.value).draw();
+
+                //send the journeys availables
+                selected=$(this).val();
+                $("#journey_id").html('<option valu="">Selecciona un torneo</option>');
+                getJourneys("filterJourneys",selected,""); 
+
+            });
+
+            $(document).on("change", "#filterJourneys", function () {
+                Table.columns(1).search(this.value).draw();
+            });
+
+            
+            $(document).on("change", "#FilterBranchs", function () {
+                Table.columns(6).search(this.value).draw();
+            });
+
+            $(document).on("change", "#FilterCategories", function () {
+                Table.columns(7).search(this.value).draw();
+            });
+
+
             $(document).on("click", "#btnAdd", function () {
                 $("#updateForm").trigger('reset');
                 $("#id").val("");
+
+                var tournament = $('#filterTournaments option:selected').val();
+                var journeySelected = $('#filterJourneys option:selected').val();
+                var branch = $('#FilterBranchs option:selected').val();
+
+                $('#tournament_id').val(tournament);
+                // $('#tournament').html($('#filterTournaments option:selected').text());
+
+                $("#journey_id").html('<option valu="">Selecciona un torneo</option>');
+                getJourneys("journey_id",tournament,journeySelected);
+
+                $('#branch').val(branch);
+
+                //journey
+                //$('#journey_id').val($('#filterJourneys option:selected').val());
+                // $('#journey').html($('#filterJourneys option:selected').text());
                 
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
-                $("#category_id").html(getCategories("{{ Auth::user()->id}}"));
+                //$("#category_id").html(getCategories("{{ Auth::user()->id}}"));
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
@@ -410,6 +519,19 @@
                     dataType: "json",
                     success: function (data) { 
                         console.log(data)
+                        var tournament_id = data["tournament_id"];
+                        var journey_id = data["journey_id"];
+                        var category_id = data["category_id"];
+                        var team1_id = data["team1_id"];
+                        var team2_id = data["team2_id"];
+
+                        getJourneys("journey_id", tournament_id, journey_id);
+
+                        $("#team1_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
+                        $("#team2_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
+
+                        getTeams("team1_id",category_id, team1_id);
+                        getTeams("team2_id",category_id, team2_id);
 
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
@@ -442,10 +564,6 @@
                     data: new FormData(this),
                     success: function (data) {                
                         if (data.type == "error") {
-                            // var errors = "";
-                            // $.each(data.errors, function (i, val) {
-                            //     errors = errors  +  val + "\n";
-                            // });
                             
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );                            
                             return false;

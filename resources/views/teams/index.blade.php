@@ -32,18 +32,18 @@
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
                     </a>
                     <hr />
-                    <div class="col-md-3 col-sm-12">
-                        <div class="form-group">
-                            <label for="filterTournaments"><b>Torneos Activos</b></label>
-                            <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
-                                <option value="">Selecciona</option>
-                                @foreach($tournaments as $tournament)
-                                    <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
-                                @endforeach
-                            </select>
-                            
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="filterTournaments"><b>Torneos Activos</b></label>
+                                <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
+                                    <option value="">Selecciona</option>
+                                    @foreach($tournaments as $tournament)
+                                        <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
+                                    @endforeach
+                                </select>
+                                
+                            </div>
                         </div>
-                    </div>
                     <hr />
                     
                     <div class="table-responsive">

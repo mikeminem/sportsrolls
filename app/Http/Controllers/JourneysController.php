@@ -162,7 +162,7 @@ class JourneysController extends Controller
     public function list ($tournament_id) {
         
         if ($tournament_id) {
-            $list = Journeys::where('tournament_id',$tournament_id)->get();
+            $list = Journeys::where('tournament_id',$tournament_id)->orderby('id','desc')->get();
             return (string) $list;
         }
 

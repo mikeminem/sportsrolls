@@ -10,6 +10,7 @@ use DataTables;
 use DB;
 use App\Tournaments;
 use App\Games;
+use App\Category;
 
 class GamesController extends Controller
 {
@@ -32,7 +33,7 @@ class GamesController extends Controller
             // g.is_deleted = 0
             
             $rows = DB::table('games as g')
-                    ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time')
+                    ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch')
                     ->join('teams as t1', 't1.id', '=', 'g.team1_id')
                     ->join('teams as t2', 't2.id', '=', 'g.team2_id')
                     ->join('categories as c', 'c.id', '=', 'g.category_id')        
@@ -52,24 +53,29 @@ class GamesController extends Controller
                         $score2 = "";
 
                         if ($row->score_team1 > $row->score_team2) {
-                            $score1 .= "<b>" . $row->score_team1 . "</b>";
+                            $score1 .= '<b class="win">'. $row->score_team1 . "</b>";
                             $score2 .= $row->score_team2;
                         } else if ($row->score_team2 > $row->score_team1) {
-                            $score2 .= "<b>" . $row->score_team2 . "</b>";
+                            $score2 .= '<b class="win">'.  $row->score_team2 . "</b>";
                             $score1 .= $row->score_team1;
 
                         } else if ($row->score_team1 == $row->score_team2) {
                             $score1 .=  $row->score_team1;
                             $score2.=  $row->score_team2;
                         }
-                        return "<h4>".$score1 . " - " . $score2 . "</h4>"; 
+                        // return "<h5>".$score1 . " - " . $score2 . "</h5>"; 
+                        return $score1 . " - " . $score2; 
                     })
                     ->addColumn('action', function($row) {
 
-                        $routeEdit = route('games.show', $row->id);
-                        $routeDelete = route('games.destroy', $row->id);
+                        
 
-                        $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
+                        if ($row->status != "Finalizado") {
+                            
+                            $routeEdit = route('games.show', $row->id);
+                            $routeDelete = route('games.destroy', $row->id);
+
+                            $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a> 
@@ -81,14 +87,20 @@ class GamesController extends Controller
                                     </a>';
 
                         return $links;
+
+                        }
+
+                        
                     })
                     ->rawColumns(['game_time','score', 'action'])
                     ->make(true);
         }
 
         $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->where('user_id',Auth::user()->id)->get(['id','title']);
+        $categories = Category::where('user_id',Auth::user()->id)->where('is_deleted',0)->get();
 
-        return view ('games.index', compact('tournaments'));
+
+        return view ('games.index', compact('tournaments', 'categories'));
     }
 
     /**
@@ -228,5 +240,72 @@ class GamesController extends Controller
             'type' => 'error',
             'message' => 'Error al intentar guardar el resultado del juego!'
         ]);
+    }
+
+    public function standings() {
+        // (SELECT t.name as team, count('x') as JJ, 
+        // SUM(CASE WHEN g.score_team1 > g.score_team2 THEN 1 ELSE 0 END)  as JG,
+        // SUM(CASE WHEN g.score_team1 < g.score_team2 THEN 1 ELSE 0 END)  as JP,
+        // sum(g.score_team1) as PAF, 
+        // sum(g.score_team2) as PEC, 
+        // sum(g.score_team1 - g.score_team2) as DIF
+        // FROM teams t
+        // inner join games as g on g.team1_id = t.id
+        // where
+        // t.branch = "Varonil" and
+        // t.tournament_id = 6 and
+        // t.category_id = 4
+        // group by team)
+        // UNION
+        // (SELECT t.name as team, 
+        // count('x') as JJ, 
+        // SUM(CASE WHEN g.score_team2 > g.score_team1 THEN 1 ELSE 0 END) as JG,
+        // SUM(CASE WHEN g.score_team2 < g.score_team1 THEN 1 ELSE 0 END) as JP,
+        // sum(g.score_team2) as PAF, 
+        // sum(g.score_team1) as PEC,  
+        // sum(g.score_team2 - g.score_team1) as DIF
+        // FROM teams t
+        // inner join games as g on g.team2_id = t.id
+        // where
+        // t.branch = "Varonil" and
+        // t.tournament_id = 6 and
+        // t.category_id = 4
+        // group by team)
+        // order by JG desc, dif desc
+
+
+        //OP2
+        // with cte as (
+        //     (SELECT distinct( t.name) as team,
+        //            sum(1) as JJ,
+        //            SUM(CASE WHEN g.score_team1 > g.score_team2 THEN 1 ELSE 0 END)  as JG,
+        //            SUM(CASE WHEN g.score_team1 < g.score_team2 THEN 1 ELSE 0 END)  as JP,
+        //            sum(g.score_team1) as PAF, 
+        //            sum(g.score_team2) as PEC, 
+        //            sum(g.score_team1 - g.score_team2) as DIF
+        //            FROM games as g
+        //            inner join teams as t on t.id = g.team1_id
+        //            WHERE
+        //            g.category_id = 4
+        //            GROUP BY team)
+        //            UNION
+        //            (SELECT distinct( t.name) as team,
+        //            sum(1) as JJ,
+        //            SUM(CASE WHEN g.score_team1 < g.score_team2 THEN 1 ELSE 0 END)  as JG,
+        //            SUM(CASE WHEN g.score_team1 > g.score_team2 THEN 1 ELSE 0 END)  as JP,
+        //            sum(g.score_team2) as PAF, 
+        //            sum(g.score_team1) as PEC, 
+        //            sum(g.score_team2 - g.score_team1) as DIF
+        //            FROM games as g
+        //            inner join teams as t on t.id = g.team2_id
+        //            WHERE
+        //            g.category_id = 4
+        //            GROUP BY team)
+        //     )
+        //     select cte.team, sum(JJ) as JJ, sum(JG) as JG, sum(JP) as JP, sum(PAF) as PAF, sum(PEC) as PEC, sum(DIF) as DIF 
+        //     FROM cte 
+        //     group by team
+        //     order by JG desc, DIF desc
+
     }
 }
