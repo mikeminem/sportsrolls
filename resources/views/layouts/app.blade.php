@@ -14,6 +14,7 @@
     <meta property=”og:title” content=”@yield('title')”/>
     <meta property=”og.type” content=website/>
     <meta property=”og:description” content=”@yield('description')”/>
+    <meta property=”og:keywords” content=”@yield('keywords')”/>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">

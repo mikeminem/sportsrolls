@@ -145,6 +145,14 @@ class GamesController extends Controller
             ]);
         }
 
+        if ($request->team1_id ==$request->team2_id ) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'Error al intentar guardar el juego!',
+                'errors' => "Error, no se puede programar un juego con el misto equipo como ribales"
+            ]);
+        }
+
 
         if (!isset($request->id) || empty($request->id)) {
             $model = new Games($request->all());
@@ -229,7 +237,7 @@ class GamesController extends Controller
         if ($request) {
             $model = Games::find($request->id);
 
-            $model->status = "Cerrado";
+            $model->status = "Finalizado";
             $model->fill($request->all());
             if ($model->update()) 
                 return response()->json(['type' => 'success', 
@@ -243,69 +251,38 @@ class GamesController extends Controller
     }
 
     public function standings() {
-        // (SELECT t.name as team, count('x') as JJ, 
-        // SUM(CASE WHEN g.score_team1 > g.score_team2 THEN 1 ELSE 0 END)  as JG,
-        // SUM(CASE WHEN g.score_team1 < g.score_team2 THEN 1 ELSE 0 END)  as JP,
-        // sum(g.score_team1) as PAF, 
-        // sum(g.score_team2) as PEC, 
-        // sum(g.score_team1 - g.score_team2) as DIF
-        // FROM teams t
-        // inner join games as g on g.team1_id = t.id
-        // where
-        // t.branch = "Varonil" and
-        // t.tournament_id = 6 and
-        // t.category_id = 4
-        // group by team)
-        // UNION
-        // (SELECT t.name as team, 
-        // count('x') as JJ, 
-        // SUM(CASE WHEN g.score_team2 > g.score_team1 THEN 1 ELSE 0 END) as JG,
-        // SUM(CASE WHEN g.score_team2 < g.score_team1 THEN 1 ELSE 0 END) as JP,
-        // sum(g.score_team2) as PAF, 
-        // sum(g.score_team1) as PEC,  
-        // sum(g.score_team2 - g.score_team1) as DIF
-        // FROM teams t
-        // inner join games as g on g.team2_id = t.id
-        // where
-        // t.branch = "Varonil" and
-        // t.tournament_id = 6 and
-        // t.category_id = 4
-        // group by team)
-        // order by JG desc, dif desc
-
-
-        //OP2
-        // with cte as (
-        //     (SELECT distinct( t.name) as team,
-        //            sum(1) as JJ,
-        //            SUM(CASE WHEN g.score_team1 > g.score_team2 THEN 1 ELSE 0 END)  as JG,
-        //            SUM(CASE WHEN g.score_team1 < g.score_team2 THEN 1 ELSE 0 END)  as JP,
-        //            sum(g.score_team1) as PAF, 
-        //            sum(g.score_team2) as PEC, 
-        //            sum(g.score_team1 - g.score_team2) as DIF
-        //            FROM games as g
-        //            inner join teams as t on t.id = g.team1_id
-        //            WHERE
-        //            g.category_id = 4
-        //            GROUP BY team)
-        //            UNION
-        //            (SELECT distinct( t.name) as team,
-        //            sum(1) as JJ,
-        //            SUM(CASE WHEN g.score_team1 < g.score_team2 THEN 1 ELSE 0 END)  as JG,
-        //            SUM(CASE WHEN g.score_team1 > g.score_team2 THEN 1 ELSE 0 END)  as JP,
-        //            sum(g.score_team2) as PAF, 
-        //            sum(g.score_team1) as PEC, 
-        //            sum(g.score_team2 - g.score_team1) as DIF
-        //            FROM games as g
-        //            inner join teams as t on t.id = g.team2_id
-        //            WHERE
-        //            g.category_id = 4
-        //            GROUP BY team)
+        // SELECT  t.name as team,
+        // count('x') as JJ,
+        // count(case when PAF > PEC then 1 end) JG,
+        // count(case when PAF < PEC then 1 end) JP,
+        // sum(score.PAF) as PAF,
+        // sum(score.PEC) as PEC,
+        // sum(score.PAF) - sum(score.PEC) as DIF,
+        // sum(
+        //         case when PAF > PEC then 2 else 0 end 
+        //         + case when PAF < PEC then 1 else 0 end
+        //     ) as puntos 
+        // FROM 
+        // (
+        //     (SELECT 
+        //             h.team1_id team, 
+        //             h.score_team1 PAF,
+        //             h.score_team2 PEC
+        //             FROM games h
+        //             WHERE h.category_id=3
         //     )
-        //     select cte.team, sum(JJ) as JJ, sum(JG) as JG, sum(JP) as JP, sum(PAF) as PAF, sum(PEC) as PEC, sum(DIF) as DIF 
-        //     FROM cte 
-        //     group by team
-        //     order by JG desc, DIF desc
+        // UNION ALL
+        //     ( SELECT 
+        //             v.team2_id team,
+        //             v.score_team2 PEF,
+        //             v.score_team1 PEC
+        //             FROM games v
+        //             WHERE v.category_id=3
+        //     )
+        // ) as score
+        // join teams t on t.id = score.team
+        // group by t.name
+        // order by JG desc, JP asc, DIF desc
 
     }
 }

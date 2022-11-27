@@ -17,7 +17,7 @@
                         <!-- Authentication Links -->
                         @guest
 
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link" href="#"><i class="fa fa-cube"></i> {{ __('Services') }}</a>
                             </li>
                             <li class="nav-item">
@@ -31,7 +31,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">{{ __('No data') }}</a>
                                 </div>
-                            </li>
+                            </li> --}}
 
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}"><i class="fa fa-sign-in"></i> {{ __('Login') }}</a>
@@ -42,10 +42,10 @@
                                 </li>
                             @endif
 
-                            <form class="form-inline" action="#">
+                            {{-- <form class="form-inline" action="#">
                                 <input class="form-control mr-sm-2" type="text" placeholder="{{ __('Search')}}">
                                 <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> {{ __('Search')}}</button>
-                              </form>
+                            </form> --}}
 
                         @else
 

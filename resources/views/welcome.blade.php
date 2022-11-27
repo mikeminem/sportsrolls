@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+
+@section('title', config('app.name') ." :: Inicio" )
+@section('description',   "SportRoles.com es una plataforma para adminnistrar ligas deportivas de una forma sencilla fácil y rápida, el objetivo es difundir información de ligas deportivas amateurs y lograr difundir esta información")
+@section('keywords',   "SportRoles.com, rol de juego, tablas de posiciones, estadisticas, resultdos, deportes, futbol, basquetbol, beisbol, soccer, futbol americano, voleybol, tenis")
+
+
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -72,4 +78,19 @@
 
   </div>
 </div>
+
+
+@php
+  $image = asset('images/imgFutbol.jpg');
+@endphp
+<div class="jumbotron banner" style="background: url({{  $image }}) no-repeat center center; 
+background-size: cover; ">
+  <div class="container text-center">
+    <p>
+      El deporte nos apasiona...
+    </p>
+      
+  </div>
+</div>
+
 @endsection

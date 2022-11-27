@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Tournaments;
 use App\Teams;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use DataTables;
 use DB;
 use App\Sports;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class TournamentsController extends Controller
 {
@@ -257,11 +259,70 @@ class TournamentsController extends Controller
         $tournament = Tournaments::where('slug', $slug)->get();
 
         $clicks = $tournament[0]->clicks + 1;
-
         Tournaments::where('id', $tournament[0]->id)->update(['clicks' => $clicks ]);
 
+        //send the game details
+        $games  = DB::table('games as g')
+        ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch', 'g.category_id')
+        ->join('teams as t1', 't1.id', '=', 'g.team1_id')
+        ->join('teams as t2', 't2.id', '=', 'g.team2_id')
+        ->join('categories as c', 'c.id', '=', 'g.category_id')        
+        ->where('g.is_deleted', 0)
+        // ->where('g.status', 'Finalizado')
+        ->where('g.tournament_id', $tournament[0]->id )
+        ->orderBy('g.id', 'asc')
+        ->get();  
+
+        $categories = Category::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get();
+        
+        //lets send the score
+        $scores = array();
+
+        foreach ($categories as $category) {
+            $query = "SELECT  t.name as team,
+                count('x') as JJ,
+                count(case when PAF > PEC then 1 end) JG,
+                count(case when PAF < PEC then 1 end) JP,
+                sum(score.PAF) as PAF,
+                sum(score.PEC) as PEC,
+                sum(score.PAF) - sum(score.PEC) as DIF,
+                sum(
+                        case when PAF > PEC then 2 else 0 end 
+                        + case when PAF < PEC then 1 else 0 end
+                    ) as puntos
+                FROM 
+                (
+                    (SELECT 
+                            h.team1_id team, 
+                            h.score_team1 PAF,
+                            h.score_team2 PEC
+                            FROM games h
+                            WHERE h.category_id=" . $category->id . " and
+                            h.status = 'Finalizado'
+                    )
+                UNION ALL
+                    ( SELECT 
+                            v.team2_id team,
+                            v.score_team2 PEF,
+                            v.score_team1 PEC
+                            FROM games v
+                            WHERE v.category_id=" . $category->id ."
+                            and
+                            v.status = 'Finalizado'
+                    )
+                ) as score
+                join teams t on t.id = score.team
+                group by t.name
+                order by JG desc, JP asc, DIF desc";
+
+            $scores[$category->id] = DB::select( DB::raw( $query) );
+        }
+
         return view ('tournaments.show', [
-            'tournament' => $tournament[0]
+            'tournament' => $tournament[0],
+            'games'      => $games,
+            'categories' => $categories,
+            'scores'     => $scores
         ]);
 
 

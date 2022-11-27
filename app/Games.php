@@ -25,8 +25,7 @@ class Games extends Model
         'is_deleted'
     ];
 
-    public function tournament()
-    {
+    public function tournament() {
         return $this->belongsTo('App\Tournaments');
     }
 }

@@ -98,6 +98,9 @@ https://www.itsolutionstuff.com/post/laravel-one-to-one-eloquent-relationship-tu
 https://stackoverflow.com/questions/37631682/removing-column-from-database-in-laravel-5
 https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded
 
+build a score table
+https://stackoverflow.com/questions/8009379/how-to-output-a-standings-table-on-the-fly-from-a-mysql-table-of-football-socce
+
 
 Next step
 https://adevait.com/laravel/using-laravel-with-react-js

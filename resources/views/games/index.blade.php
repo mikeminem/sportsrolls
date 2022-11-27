@@ -117,7 +117,7 @@
 
 <!-- Modal Form -->
 <div id="formModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg mw-100 w-75" >
+    <div class="modal-dialog modal-lg mw-100 w-50" >
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -130,7 +130,7 @@
                     <div class="row">
                         <input type="hidden" class="form-control" readonly id="sport_id" name="sport_id">
 
-                        <div class="col-md-3 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="tournament_id"><b>Torneo *</b></label>
                                 <!--input type="hidden" class="form-control" readonly id="tournament_id" name="tournament_id"><br /-->
@@ -145,7 +145,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="journey_id"><b>Jornada *</b></label>
                                 <!--input type="hidden" class="form-control" readonly id="journey_id" name="journey_id"><br /-->
@@ -154,8 +154,11 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-3 col-sm-12">
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="branch"><b>Rama *</b></label>
                                 <select class="form-control" required id="branch" name="branch"  >
@@ -167,7 +170,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="title"><b>Categoria *</b></label>
                                 <select class="form-control" required id="category_id" name="category_id">
@@ -181,7 +184,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-3 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="game_day"><b>Fecha dej Juego *</b></label>
                                 <input type="date" class="form-control" id="game_day" name="game_day" required maxlength="80"> 
@@ -189,7 +192,7 @@
                         </div>
 
 
-                        <div class="col-md-3 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="game_time"><b>Hora del Juego *</b></label>
                                 <input type="time" class="form-control" id="game_time" name="game_time" required max="80" min="5"> 
@@ -262,7 +265,7 @@
             <!--mandamos la forma-->
             <form id="scoreForm" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <input type="text" class="form-control" id="idscore" name="id">
+                    <input type="hidden" class="form-control" id="idscore" name="id">
 
                     <div class="row">
         
@@ -286,7 +289,7 @@
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="game_day"><b>Notas *</b></label>
+                                <label for="game_day"><b>Notas</b></label>
                             
                                 <textarea class="form-control" id="notes" name="notes" rows="5"></textarea>
                             </div>
@@ -601,12 +604,12 @@
                     data: new FormData(this),
                     success: function (data) {                
                         if (data.type == "error") {
-                            var errors = "";
-                            $.each(data.errors, function (i, val) {
-                                errors = errors  +  val + "\n";
-                            });
+                            // var errors = "";
+                            // $.each(data.errors, function (i, val) {
+                            //     errors = errors  +  val + "\n";
+                            // });
                             
-                            $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
+                            $.notify(data.message + "\n" + data.errors, data.type, { position:"center" } );
                             
                             return false;
                         }

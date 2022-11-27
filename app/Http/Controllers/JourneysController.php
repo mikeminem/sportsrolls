@@ -97,8 +97,16 @@ class JourneysController extends Controller
         if (!isset($request->id) || empty($request->id)) {
             $model = new Journeys($request->all());
             $model->user_id = Auth::user()->id;
+            $model->status ="Abierto";
             
             if ($model->save())
+                //set the new toruament to is current and the oldest to not current
+                Journeys::where('user_id', Auth::user()->id)
+                    ->where('id',"<>", $model->id)
+                    ->where('is_deleted',0)
+                    ->where('tournament_id',$model->tournament_id)
+                    ->where('status','Abierto')->update(['status' => "Cerrado" ]);
+
                  return response()->json(['type' => 'success', 
                                  'message' => 'Se ha creado la jornada!']);      
         } else {
