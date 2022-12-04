@@ -270,7 +270,8 @@ class TournamentsController extends Controller
         ->where('g.is_deleted', 0)
         // ->where('g.status', 'Finalizado')
         ->where('g.tournament_id', $tournament[0]->id )
-        ->orderBy('g.id', 'asc')
+        ->orderBy('g.game_day', 'asc')
+        ->orderBy('g.game_time', 'asc')
         ->get();  
 
         $categories = Category::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get();

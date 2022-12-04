@@ -117,7 +117,7 @@
 
 <!-- Modal Form -->
 <div id="formModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg mw-100 w-50" >
+    <div class="modal-dialog modal-lg" >
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -205,7 +205,7 @@
                         
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="team1_id"><b>Equipo 1 (Visitante)</b></label>
+                                <label for="team1_id"><b>Equipo 1 (Casa)</b></label>
                                 <select class="form-control" required id="team1_id" name="team1_id">
                                     <option value="">Selecciona torneo, rama y cateogria</option>
                                 </select>
@@ -214,7 +214,7 @@
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="team2_id"><b>Equipo 2 (Casa)</b></label>
+                                <label for="team2_id"><b>Equipo 2 (Visitante)</b></label>
                                 <select class="form-control" required id="team2_id" name="team2_id">
                                     <option value="">Selecciona torneo, rama y cateogria</option>
                                 </select>
@@ -271,18 +271,41 @@
         
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="score_team1"><span id="team1score" >Equipo 1 (Visitante)</span></label>
-                                <input type="number" class="form-control" id="score_team1" name="score_team1">
+                                <label for="score_team1"><span id="team1score" >Equipo 1 </span> (Casa) * </label>
+                                <input type="number" class="form-control" id="score_team1" name="score_team1" required>
                             </div>
                         </div>
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="score_team2"><span id="team2score" >Equipo 2 (Casa)</span></label>
-                                <input type="number" class="form-control" id="score_team2" name="score_team2">
+                                <label for="score_team2"><span id="team2score" >Equipo 2 </span> (Visitante) *</label>
+                                <input type="number" class="form-control" id="score_team2" name="score_team2" required>
 
                             </div>
                         </div>
+
+                    </div>
+
+                    <div class="row">
+        
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="status"><span id="team1score" >Estado del Juego *</span></label>
+                                <select name="status" id="status" class="form-control" required>
+                                    <option value="">Selecciona</option>
+                                    <option value="Finalizado">Finalizado</option>
+                                    <option value="Cancelado">Cancelado</option>
+                                    <option value="Suspendido">Suspendido</option>
+                                    <option value="Protestado">Protestado</option>
+
+
+
+
+
+                                </select>
+                            </div>
+                        </div>
+
 
                     </div>
 
@@ -291,7 +314,7 @@
                             <div class="form-group">
                                 <label for="game_day"><b>Notas</b></label>
                             
-                                <textarea class="form-control" id="notes" name="notes" rows="5"></textarea>
+                                <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
                             </div>
                         </div>
                     </div>

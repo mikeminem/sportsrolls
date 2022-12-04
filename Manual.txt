@@ -104,3 +104,13 @@ https://stackoverflow.com/questions/8009379/how-to-output-a-standings-table-on-t
 
 Next step
 https://adevait.com/laravel/using-laravel-with-react-js
+
+
+
+Facebook meta tags
+https://developers.facebook.com/docs/plugins/share-button/
+<meta property="og:url"           content="https://www.your-domain.com/your-page.html" />
+<meta property="og:type"          content="website" />
+<meta property="og:title"         content="Your Website Title" />
+<meta property="og:description"   content="Your description" />
+<meta property="og:image"         content="https://www.your-domain.com/path/image.jpg" />

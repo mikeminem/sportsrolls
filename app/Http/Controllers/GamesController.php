@@ -80,7 +80,7 @@ class GamesController extends Controller
                                         </span>
                                     </a> 
                                     <a href="javascript:void(0)" data-id="'.$row->id .'" data-team1="'.$row->team1.'" data-team2="'.$row->team2.'" title="Capturar resultados" id="btnScore"> 
-                                        <span class="fa fa-refresh tool"></span>
+                                        <span class="fa fa-calculator tool"></span>
                                     </a>
                                     <a href="' . $routeDelete . '" title="Borrar Registro"  id="btnDelete"> 
                                         <span class="fa fa-trash tool"></span>

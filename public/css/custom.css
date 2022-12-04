@@ -95,3 +95,12 @@ if modal give us problems, just delete the backdrop element
 	  
 	  -webkit-text-stroke: 2px black;
 }
+
+.whatsapp {
+	position: relative !important;
+	background-color: #25D366 !important;
+	height: 28px;
+	margin: 0px;
+	border: none;
+	top:-3 !important;
+}

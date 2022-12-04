@@ -16,6 +16,17 @@
             <div class="card">
                 <div class="card-body">
 
+                    <div class="row text-right">
+                        <div class="col-md-12">
+                            <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.sportroles.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
+
+                            <a class="btn btn-primary whatsapp" href="whatsapp://send?text={{ url('tournament_info/' . $tournament->slug) }}"       data-action="share/whatsapp/share"  
+                            target="_blank"><span class="fa fa-whatsapp"></span> Compartir </a>   
+                        </div>
+                    </div>
+
+                    
+
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs">
                         
@@ -70,17 +81,54 @@
                                                 </thead>
                                                 
                                                 <tbody>
+                                                    @php
+                                                        $day = "";
+                                                        $change=1;
+                                                    @endphp
                                                     @foreach ($games as $game)
-
+                                                        
                                                         @if($game->journey_id == $journey->id)
-                                                            <tr class="{{ $game->status === "Suspendido" ? 'table-danger' : '' }}" >
-                                                                <td>{{ $game->game_day }} / {{ $game->game_time }}</td>
-                                                                <td class="text-right">{{ $game->team1 }}</td>
-                                                                <th>VS </th>
-                                                                <td>{{ $game->team2 }}</td>
-                                                                <td>{{ $game->branch }}</td>
-                                                                <td>{{ $game->category }}</td>
-                                                            </tr>        
+                                                            
+
+                                                            @if ($change ==1)
+                                                                @php
+                                                                    $day = $game->game_day;
+                                                                @endphp
+                                                                <tr >   
+                                                                    <td colspan="6" class="text-center table-success"><h4> 
+                                                                        @php
+                                                                            $dayName = date('D', strtotime($day));
+                                                                            $diassemana = array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+                                                                            $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+ 
+                                                                            echo $diassemana[date('w', strtotime($day))]." ".date('d', strtotime($day))." de ".$meses[date('n', strtotime($day))-1]. " del ".date('Y', strtotime($day)) ;
+                                                                        @endphp
+                                                                        
+                                                                    </h4></td>
+                                                                </tr>   
+                                                            @endif     
+
+                                                            @if($day == $game->game_day)
+
+                                                                @php
+                                                                    $change=0;
+                                                                @endphp
+                                                                
+                                                                <tr class="{{ $game->status === "Suspendido" ? 'table-danger' : '' }}" >
+                                                                    <td>{{ $game->game_time }}</td>
+                                                                    <td class="text-right">{{ $game->team1 }}</td>
+                                                                    <th>VS </th>
+                                                                    <td>{{ $game->team2 }}</td>
+                                                                    <td>{{ $game->branch }}</td>
+                                                                    <td>{{ $game->category }}</td>
+                                                                </tr>
+                                                            @else
+                                                                @php
+                                                                    $day = $game->game_day;
+                                                                    $change =1;
+                                                                @endphp
+                                                                
+                                                            @endif
                                                         @endif
                                                         
                                                     @endforeach
@@ -121,53 +169,55 @@
                             <div class="row">
                                 @foreach ($tournament->journeys as $journey)
 
-                                    <div class="col-md-4">
-                                        <p>
-                                            <h3> {{ $journey->name }}</h3>
+                                    @if ($journey->is_deleted == 0)
+                                        <div class="col-md-4">
+                                            <p>
+                                                <h3> {{ $journey->name }}</h3>
 
-                                            @foreach ($categories as $category)
-                                                <h5>Categoría {{ $category->name}}</h5>
-                                                <div class="games">
-                                                    @php 
-                                                        $i=0;
-                                                    @endphp
-                                                @foreach ($games as $game)
-                                                
-                                                        @if (($game->journey_id == $journey->id) && ($game->status == "Finalizado"))
-                                                            
-                                                            @php 
-                                                                $i++;
-                                                            @endphp
-                                                                    
-                                                            @if ($game->category_id == $category->id)
-                                                                <div class="match p-2">    
-                                                                    @if(($game->score_team1 > $game->score_team2 ))
-                                                                        <b class="win">{{ $game->team1}} {{ $game->score_team1}}</b> <br>
-                                                                        {{ $game->team2}} {{ $game->score_team2}} 
-                                                                    @elseif ($game->score_team1 < $game->score_team2)
-                                                                        {{ $game->team1}} {{ $game->score_team1}} <br />
-                                                                        <b class="win">{{ $game->team2}} {{ $game->score_team2}}</b>
-                                                                    @else
-                                                                        {{ $game->team1}} {{ $game->score_team1}} <br>
-                                                                        {{ $game->team2}} {{ $game->score_team2}} 
-                                                                    @endif
-                                                                </div>
-                                                            @endif
-                                                        @endif    
+                                                @foreach ($categories as $category)
+                                                    <h5>Categoría {{ $category->name}}</h5>
+                                                    <div class="games">
+                                                        @php 
+                                                            $i=0;
+                                                        @endphp
+                                                    @foreach ($games as $game)
+                                                    
+                                                            @if (($game->journey_id == $journey->id) && ($game->status == "Finalizado"))
+                                                                
+                                                                @php 
+                                                                    $i++;
+                                                                @endphp
+                                                                        
+                                                                @if ($game->category_id == $category->id)
+                                                                    <div class="match p-2">    
+                                                                        @if(($game->score_team1 > $game->score_team2 ))
+                                                                            <b class="win">{{ $game->team1}} {{ $game->score_team1}}</b> <br>
+                                                                            {{ $game->team2}} {{ $game->score_team2}} 
+                                                                        @elseif ($game->score_team1 < $game->score_team2)
+                                                                            {{ $game->team1}} {{ $game->score_team1}} <br />
+                                                                            <b class="win">{{ $game->team2}} {{ $game->score_team2}}</b>
+                                                                        @else
+                                                                            {{ $game->team1}} {{ $game->score_team1}} <br>
+                                                                            {{ $game->team2}} {{ $game->score_team2}} 
+                                                                        @endif
+                                                                    </div>
+                                                                @endif
+                                                            @endif    
+                                                    @endforeach
+                                                    </div>
+                                                    <br />
                                                 @endforeach
+
+                                                @if ($i==0)
+                                                <div class="alert alert-danger">
+                                                    <strong>Nota!</strong> no se encontraron resultados en esta jornada
                                                 </div>
-                                                <br />
-                                            @endforeach
+                                                @endif
+                                                
+                                            </p>
 
-                                            @if ($i==0)
-                                            <div class="alert alert-danger">
-                                                <strong>Nota!</strong> no se encontraron resultados en esta jornada
-                                              </div>
-                                            @endif
-                                            
-                                        </p>
-
-                                    </div>
+                                        </div>
+                                    @endif
                                 @endforeach
                             </div>
                             
@@ -191,8 +241,8 @@
                                             <table class="table table-hover table-striped" id="table">
                                                 <thead>
                                                     <tr class="text-center">
-                                                        <th>Lugar</th>
-                                                        <th>Equipo</th>
+                                                        <th width="50px">Lugar</th>
+                                                        <th width="200px">Equipo</th>
                                                         <th>JJ</th>
                                                         <th>JG</th>
                                                         <th>JP</th>
@@ -215,7 +265,7 @@
                                                             <td class="text-right">{{ $score->JP }}</td>
                                                             <td class="text-right">{{ $score->PAF }}</td>
                                                             <td class="text-right">{{ $score->PEC }}</td>
-                                                            <td class="text-right">{{ $score->DIF }}</td>
+                                                            <td class="text-right">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
                                                         </tr>
 
                                                         @php
@@ -231,9 +281,6 @@
                                     </div>
                                 </div>    
                             @endforeach
-                            
-
-
 
                         </div>
                         {{-- <div class="tab-pane container fade" id="menu4">Equipos Registrados</div>

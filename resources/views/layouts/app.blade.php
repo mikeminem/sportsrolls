@@ -33,6 +33,9 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 <body>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v15.0" nonce="n3xha6Hh"></script>
+
     <div class="content-fluid top">
         <div class="content">
             <div class="row">
