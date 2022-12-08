@@ -142,6 +142,12 @@ class TournamentsController extends Controller
             $model->user_id = Auth::user()->id;
             $model->start_day = date('Y-m-d');
             $model->slug = str_slug($model->name);
+            if (isset($request->enable_points_system))  {
+                $model->enable_points_system = "Si";
+            } else {
+                $model->enable_points_system = "No";
+            }
+
 
             if (!empty($path))
                 $model->image = $path;
@@ -155,6 +161,11 @@ class TournamentsController extends Controller
             $lastImage = $model->image;
             $model->fill($request->all());
             $model->slug = str_slug($model->name);
+            if (isset($request->enable_points_system))  {
+                $model->enable_points_system = "Si";
+            } else {
+                $model->enable_points_system = "No";
+            }
 
 
             if (!empty($path)) {
@@ -184,7 +195,7 @@ class TournamentsController extends Controller
     {
         //
         if ($id) {
-            $model = Tournaments::select('id', 'code', 'title', 'summary', 'contacts', 'status','sport_id')->find($id);
+            $model = Tournaments::select('id', 'code', 'title', 'summary', 'contacts', 'status','sport_id', 'enable_points_system','winner_points', 'loser_points', 'draw_points')->find($id);
 
             if (!$model->code) {
                 $model->code =  strtoupper( str_random(8));

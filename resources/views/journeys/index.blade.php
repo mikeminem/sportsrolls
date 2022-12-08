@@ -41,7 +41,6 @@
                                     <th width="20%">Nombre</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Final</th>
-                                    <th width="20%">Notas</th>
                                     <th>Estado</th>
                                     <th> - </th>
                                 </tr>
@@ -110,7 +109,7 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="notes"><b>Nota</b></label>
-                                <input type="text" class="form-control" id="notes" name="notes" maxlength="100"> 
+                                <input type="text" class="form-control" id="notes" name="notes"> 
                             </div>
                         </div>
 
@@ -219,7 +218,6 @@
                     { data: 'name', name: 'name'},
                     { data: 'start_at', name: 'start_at'},
                     { data: 'finish_at', name: 'finish_at'},
-                    { data: 'notes', name: 'notes'},
                     { data: 'status', name: 'status'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]

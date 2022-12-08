@@ -24,7 +24,7 @@ class JourneysController extends Controller
     {
          if($request->ajax()){
             $rows = DB::table('journeys as j')
-                    ->select('j.id', 'j.name', 'j.notes', 'j.start_at', 'j.finish_at', 'j.tournament_id', 'j.sport_id', 'j.is_deleted', 'j.status')
+                    ->select('j.id', 'j.name', 'j.start_at', 'j.finish_at', 'j.tournament_id', 'j.sport_id', 'j.is_deleted', 'j.status')
                     ->where('j.is_deleted', 0)
                     ->where('j.user_id',Auth::user()->id)
                     ->orderBy('j.id', 'desc')

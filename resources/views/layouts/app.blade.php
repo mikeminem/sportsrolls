@@ -3,18 +3,29 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    {{-- <title>{{ config('app.name', 'Deportes 101') }}</title> --}}
     <title>@yield('title')</title>
 
-    <!--que para el FB-->
-    <meta property=”og:title” content=”@yield('title')”/>
-    <meta property=”og.type” content=website/>
-    <meta property=”og:description” content=”@yield('description')”/>
-    <meta property=”og:keywords” content=”@yield('keywords')”/>
+    <meta name=”robots” content=”index, follow”>
+    <meta name=”description” content=”@yield('description')”/>
+    <meta name=”keywords” content=”@yield('keywords')”/>
+    <meta name="author" content="SportRoles.com" />
+    <meta name="copyright" content="Copyright SportRoles.com" />
+    <meta name="revisit-after" content="1 days" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+
+
+    <!--social media metas-->
+    <meta property="og:url"             content="@yield('url')" />
+    <meta property=”og:title”           content=”@yield('title')”/>
+    <meta property=”og.type”            content="website" />
+    <meta property=”og:description”     content=”@yield('description')” />
+    <meta property=”og:keywords”        content=”@yield('keywords')” />
+    <meta property="og:image:alt"       content="@yield('title')"/>
+    <meta property=”og:image”           content=”{{ asset('images/imgSportRoles.jpg') }}” />
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -38,7 +49,7 @@
 
     <div class="content-fluid top">
         <div class="content">
-            <div class="row">
+            <!--div class="row">
                 <div class="col-sm-6 col-md-6 text-center">
                     <i class="fa fa-envelope"></i> {{ __("Contact Us")}}
                 </div>
@@ -46,7 +57,7 @@
                 <div class="col-sm-6 col-md-6 text-center">
                     <i class="fa fa-whatsapp"></i> {{ __("WhatsApp")}}
                 </div>
-            </div>
+            </div-->
         </div>
     </div>
     <div id="app">

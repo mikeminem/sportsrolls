@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('title', config('app.name') ." :: " .  $tournament->title )
-@section('description',   $tournament->title ." " . $tournament->summary . " - " . config('app.name') )
+@section('description', $tournament->title ." | " . $tournament->summary . " | " . config('app.name') )
+@section('url',  url('tournament_info/' . $tournament->slug) )
+
 
 @section('content')
 <div class="jumbotron rounded-0 text-center my-1">
@@ -70,7 +72,7 @@
                                             <table class="table table-hover table-striped" id="table">
                                                 <thead>
                                                     <tr class="text-center">
-                                                        <th>Fecha / Hora</th>
+                                                        <th> Hora</th>
                                                         <th>Equipo Casa</th>
                                                         <th>-</th>
                                                         <th>Equipo Visitante</th>
@@ -125,8 +127,30 @@
                                                             @else
                                                                 @php
                                                                     $day = $game->game_day;
-                                                                    $change =1;
+                                                                    $change =0;
                                                                 @endphp
+
+                                                                <tr >   
+                                                                    <td colspan="6" class="text-center table-success"><h4> 
+                                                                        @php
+                                                                            $dayName = date('D', strtotime($day));
+                                                                            $diassemana = array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+                                                                            $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+                                                                            echo $diassemana[date('w', strtotime($day))]." ".date('d', strtotime($day))." de ".$meses[date('n', strtotime($day))-1]. " del ".date('Y', strtotime($day)) ;
+                                                                        @endphp
+                                                                        
+                                                                    </h4></td>
+                                                                </tr>   
+
+                                                                <tr class="{{ $game->status === "Suspendido" ? 'table-danger' : '' }}" >
+                                                                    <td>{{ $game->game_time }}</td>
+                                                                    <td class="text-right">{{ $game->team1 }}</td>
+                                                                    <th>VS </th>
+                                                                    <td>{{ $game->team2 }}</td>
+                                                                    <td>{{ $game->branch }}</td>
+                                                                    <td>{{ $game->category }}</td>
+                                                                </tr>
                                                                 
                                                             @endif
                                                         @endif
@@ -246,9 +270,9 @@
                                                         <th>JJ</th>
                                                         <th>JG</th>
                                                         <th>JP</th>
-                                                        <th>PAF</th>
-                                                        <th>PEC</th>
-                                                        <th>Dif</th>
+                                                        <th>PF</th>
+                                                        <th>PC</th>
+                                                        <th>DIF</th>
                                                     </tr>
                                                 </thead>
                             

@@ -3,7 +3,8 @@
 
 @section('title', config('app.name') ." :: Inicio" )
 @section('description',   "SportRoles.com es una plataforma para adminnistrar ligas deportivas de una forma sencilla fácil y rápida, el objetivo es difundir información de ligas deportivas amateurs y lograr difundir esta información")
-@section('keywords',   "SportRoles.com, rol de juego, tablas de posiciones, estadisticas, resultdos, deportes, futbol, basquetbol, beisbol, soccer, futbol americano, voleybol, tenis")
+@section('keywords',   "SportRoles.com, rol de juego, rol de juegos, roles de juego, roles de juegos, tablas de posiciones, estadísticas, tabla de posiciones, resultdos, deportes, futbol, basquetbol, beisbol, soccer, futbol americano, voleybol, tenis")
+@section('url',  url('/')  )
 
 
 @section('content')
@@ -18,13 +19,13 @@
                 </ol>
                 <div class="carousel-inner">
                   <div class="carousel-item active">
-                    <img class="d-block w-100" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=777&fg=555&text=First slide" alt="First slide">
+                    <img class="mx-auto d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=777&fg=555&text=First slide" alt="First slide">
                   </div>
                   <div class="carousel-item">
-                    <img class="d-block w-100" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=666&fg=444&text=Second slide" alt="Second slide">
+                    <img class="mx-auto d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=666&fg=444&text=Second slide" alt="Second slide">
                   </div>
                   <div class="carousel-item">
-                    <img class="d-block w-100" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=555&fg=333&text=Third slide" alt="Third slide">
+                    <img class="mx-auto d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=555&fg=333&text=Third slide" alt="Third slide">
                   </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -66,8 +67,22 @@
               <div class="card-footer text-right"> 
                 <span class="float-left" ><b> {{ $tournament->sport->name }} </b></span>
                 
-                <span class="fa fa-list"></span> {{ $tournament->prints }} - 
-                <span class="fa fa-eye"> {{ $tournament->clicks}}
+                <span class="fa fa-list"></span>
+                @php
+                  $prints = $tournament->prints;
+                  if ($prints>=1000) {
+                      $prints = number_format($prints /1000,1) . "K";
+                  }
+                @endphp   
+                {{ $prints }} 
+                <span class="fa fa-eye"></span>
+                @php
+                  $clicks = $tournament->clicks;
+                  if ($clicks>=1000) {
+                      $clicks = number_format($clicks /1000,1) . "K";
+                  }
+                @endphp   
+                  {{ $clicks }}
               </div>
             </div>
           </div>

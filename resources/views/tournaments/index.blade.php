@@ -80,13 +80,22 @@
                             <div class="form-group">
                                 <label for="sport">Deporte</label>
                                 <input type="text" class="form-control" id="sport" name="sport" readonly>
-                                <input type="hidden" class="form-control" id="sport_id" name="sport_id" readonly>                            </div>
+                                <input type="hidden" class="form-control" id="sport_id" name="sport_id" readonly>                            
+                            </div>
                         </div>
 
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>Nombre *</b></label>
+                                <label for="title"><b>Nombre del Torneo *</b></label>
                                 <input type="text" class="form-control" id="title" name="title" required maxlength="120"> 
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label for="contacts"><b>Contactos *</b></label>
+                                <input type="text" class="form-control" id="contacts" name="contacts" required maxlength="120"> 
                             </div>
                         </div>
 
@@ -97,14 +106,42 @@
                             </div>
                         </div>
 
+                       
+
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" id="enable_points_system" name="enable_points_system"> Habilitar sistema por puntos
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
                             <div class="form-group">
-                                <label for="contacts"><b>Contactos *</b></label><br />
-                                <textarea class="form-control" id="contacts" name="contacts" rows="3"  maxlength="240" placeholder="Ingresa los nombres y números de contacto" required></textarea>
+                                <label for="winner_points">Puntos Juego Ganado</label><br />
+                                <input type="text" class="form-control" id="winner_points" name="winner_points" required maxlength="2" readonly> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <label for="draw_points">Puntos Juego Empatado</label><br />
+                                <input type="text" class="form-control" id="draw_points" name="draw_points" required maxlength="2" readonly> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <label for="loser_points">Puntos Juego Perdido</label><br />
+                                <input type="text" class="form-control" id="loser_points" name="loser_points" required maxlength="2" readonly> 
                             </div>
                         </div>
 
                     </div>
+
 
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
@@ -285,6 +322,27 @@
                 jQuery("#startModal").modal('show');
             });
 
+
+            
+            $(document).on("click", "#enable_points_system", function (e) { 
+
+                if ($(this).is(":checked")) {
+                    $('#winner_points').removeAttr('readonly');
+                    $('#loser_points').removeAttr('readonly');
+                    $('#draw_points').removeAttr('readonly');
+                } else {
+                    $('#winner_points').attr('readonly', true)
+                    $('#loser_points').attr('readonly', true)
+                    $('#draw_points').attr('readonly', true)
+
+                    //values
+                    $('#winner_points').val('0');
+                    $('#loser_points').val('0');
+                    $('#draw_points').val('0');
+
+                }
+            });
+            
             $(document).on("click", "#btnDelete", function (e) {
                 e.preventDefault();
 
@@ -306,6 +364,16 @@
 
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
+
+                            if (obj == "enable_points_system") {
+                                if (data[obj]=="Si") {
+                                    $("#enable_points_system").prop('checked', true);
+                                    $('#winner_points').removeAttr('readonly');
+                                    $('#loser_points').removeAttr('readonly');
+                                    $('#draw_points').removeAttr('readonly');
+
+                                }
+                            }
                         }
 
                         jQuery.noConflict(); 
