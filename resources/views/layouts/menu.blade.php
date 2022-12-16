@@ -132,10 +132,9 @@
                                     <div class="dropdown-divider"></div>
 
                                     <a class="dropdown-item" href="{{ url('my_profile') }}"><i class="fa fa-photo"></i> {{ __('My Profile') }}</a>
-                                    <a class="dropdown-item" href="#"><i class="fa fa-money"></i> {{ __('Plan Info') }}</a>
+                                    <!--a class="dropdown-item" href="#"><i class="fa fa-money"></i> {{ __('Plan Info') }}</a-->
 
                                     <div class="dropdown-divider"></div>
-
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

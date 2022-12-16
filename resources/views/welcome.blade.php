@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 
-@section('title', config('app.name') ." :: Inicio" )
+@section('title', config('app.name') ." :: Rol de Juego, Estadísticas, Noticias, Avisos, Tabla de posiciones de tu torneo" )
 @section('description',   "SportRoles.com es una plataforma para adminnistrar ligas deportivas de una forma sencilla fácil y rápida, el objetivo es difundir información de ligas deportivas amateurs y lograr difundir esta información")
 @section('keywords',   "SportRoles.com, rol de juego, rol de juegos, roles de juego, roles de juegos, tablas de posiciones, estadísticas, tabla de posiciones, resultdos, deportes, futbol, basquetbol, beisbol, soccer, futbol americano, voleybol, tenis")
 @section('url',  url('/')  )
@@ -19,13 +19,25 @@
                 </ol>
                 <div class="carousel-inner">
                   <div class="carousel-item active">
-                    <img class="mx-auto d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=777&fg=555&text=First slide" alt="First slide">
+                    <img class="mx-auto w-100 d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=777&fg=555&text=SportRoles.com" alt="SportRoles.com roles de juego y estadisticas">
+                    <div class="carousel-caption" style="background:rgba(0, 0, 0, 0.8)">
+                      <h2>Bienvenido a Sport Roles</h2>
+                      <p>Administra tus ligas deportivas de una forma sencilla</p>
+                    </div>
                   </div>
                   <div class="carousel-item">
-                    <img class="mx-auto d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=666&fg=444&text=Second slide" alt="Second slide">
+                    <img class="mx-auto w-100 d-block" src="{{ asset('images/imgAmericano.jpg')}}?auto=yes&bg=666&fg=444&text=SportRoles.com" alt="SportRoles.com roles de juego y estadisticas">
+                    <div class="carousel-caption" style="background:rgba(0, 0, 0, 0.8)">
+                      <h2>SportRoles.com</h2>
+                      <p>Genera la tabla de posiciones de manera automática</p>
+                    </div>
                   </div>
                   <div class="carousel-item">
-                    <img class="mx-auto d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=555&fg=333&text=Third slide" alt="Third slide">
+                    <img class="mx-auto w-100 d-block" src="{{ asset('images/imgBaseball.jpg')}}?auto=yes&bg=555&fg=333&text=SportRoles.com" alt="SportRoles.com roles de juego y estadisticas">
+                    <div class="carousel-caption" style="background:rgba(0, 0, 0, 0.8)">
+                      <h2>SportRoles.com</h2>
+                      <p>Comparte el contenido de tu liga deportiva en Internet</p>
+                    </div>
                   </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

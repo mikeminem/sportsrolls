@@ -278,7 +278,10 @@ class TournamentsController extends Controller
         ->join('teams as t1', 't1.id', '=', 'g.team1_id')
         ->join('teams as t2', 't2.id', '=', 'g.team2_id')
         ->join('categories as c', 'c.id', '=', 'g.category_id')        
+        ->join('journeys as j', 'j.id', '=', 'g.journey_id')        
         ->where('g.is_deleted', 0)
+        ->where('j.is_deleted', 0)
+        ->where('j.show', "Si")
         // ->where('g.status', 'Finalizado')
         ->where('g.tournament_id', $tournament[0]->id )
         ->orderBy('g.game_day', 'asc')
@@ -295,6 +298,7 @@ class TournamentsController extends Controller
                 count('x') as JJ,
                 count(case when PAF > PEC then 1 end) JG,
                 count(case when PAF < PEC then 1 end) JP,
+                count(case when PAF = PEC then 1 end) JE,
                 sum(score.PAF) as PAF,
                 sum(score.PEC) as PEC,
                 sum(score.PAF) - sum(score.PEC) as DIF,
@@ -309,8 +313,10 @@ class TournamentsController extends Controller
                             h.score_team1 PAF,
                             h.score_team2 PEC
                             FROM games h
+                            INNER JOIN journeys j on j.id = h.journey_id
                             WHERE h.category_id=" . $category->id . " and
-                            h.status = 'Finalizado'
+                            h.status = 'Finalizado' and
+                            j.show ='Si'
                     )
                 UNION ALL
                     ( SELECT 
@@ -318,9 +324,11 @@ class TournamentsController extends Controller
                             v.score_team2 PEF,
                             v.score_team1 PEC
                             FROM games v
+                            INNER JOIN journeys j on j.id = v.journey_id
                             WHERE v.category_id=" . $category->id ."
                             and
-                            v.status = 'Finalizado'
+                            v.status = 'Finalizado' and
+                            j.show ='Si'
                     )
                 ) as score
                 join teams t on t.id = score.team

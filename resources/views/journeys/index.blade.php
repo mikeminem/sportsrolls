@@ -38,9 +38,11 @@
                         <table class="table table-hover" id="table">
                             <thead>
                                 <tr>
+                                    <th>Id</th>
                                     <th width="20%">Nombre</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Final</th>
+                                    <th>Mostrar</th>
                                     <th>Estado</th>
                                     <th> - </th>
                                 </tr>
@@ -101,8 +103,18 @@
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="finish_at"><b>Feecha Fin *</b></label>
+                                <label for="finish_at"><b>Fecha Fin *</b></label>
                                 <input type="date" class="form-control" id="finish_at" name="finish_at" required max="80" min="5"> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label for="show"><b>Publicar en Página *</b></label>
+                                <select id="show" name="show" class="form-control">
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
                             </div>
                         </div>
 
@@ -187,6 +199,7 @@
         jQuery(document).ready(function($){
             
             var Table = $('#table').DataTable({
+                order: [[0, 'desc']],
                 "language": {
                     "sProcessing":    "Procesando...",
                     "sLengthMenu":    "Mostrar _MENU_ registros",
@@ -215,9 +228,11 @@
                 serverSide: true,
                 ajax: '{{ route('journeys.index') }}',
                 columns: [
+                    { data: 'id', name: 'id',  visible:false},
                     { data: 'name', name: 'name'},
                     { data: 'start_at', name: 'start_at'},
                     { data: 'finish_at', name: 'finish_at'},
+                    { data: 'show', name: 'show'},
                     { data: 'status', name: 'status'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
@@ -254,6 +269,10 @@
 
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
+
+                            if (obj == "show") {
+                                $('#show option:selected').val(data[obj]);
+                            }
                         }
 
                         jQuery.noConflict(); 

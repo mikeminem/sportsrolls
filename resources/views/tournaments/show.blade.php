@@ -18,7 +18,7 @@
             <div class="card">
                 <div class="card-body">
 
-                    <div class="row text-right">
+                    <div class="row text-right mb-3">
                         <div class="col-md-12">
                             <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.sportroles.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
 
@@ -30,16 +30,16 @@
                     
 
                     <!-- Nav tabs -->
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-pills nav-justified">
                         
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#menu1">Próximos Juegos</a>
+                            <a class="nav-link active" data-toggle="tab" href="#menu1"><span class="fa fa-calendar"></span> Próximos Juegos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#menu2">Resultados</a>
+                            <a class="nav-link" data-toggle="tab" href="#menu2"><span class="fa fa-list"></span> Resultados</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#menu3">Tabla de Posiciones</a>
+                            <a class="nav-link" data-toggle="tab" href="#menu3"><span class="fa fa-list-ol"></span> Tabla de Posiciones</a>
                         </li>
                         {{-- <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#menu4">Equipos</a>
@@ -65,7 +65,9 @@
                                 @endphp
                                 @foreach ($tournament->journeys as $journey)
 
-                                    @if( ($journey->status=="Abierto") && (($journey->is_deleted==0)) )
+                                    @if( ($journey->status=="Abierto") && 
+                                    ($journey->show=="Si") && 
+                                    ($journey->is_deleted==0) )
 
                                     <h3 class="text-center">{{ $journey->name }}</h3>
                                         <div class="table-responsive">
@@ -193,7 +195,8 @@
                             <div class="row">
                                 @foreach ($tournament->journeys as $journey)
 
-                                    @if ($journey->is_deleted == 0)
+                                    @if (($journey->is_deleted == 0) && 
+                                         ($journey->show == "Si") )
                                         <div class="col-md-4">
                                             <p>
                                                 <h3> {{ $journey->name }}</h3>
@@ -267,11 +270,11 @@
                                                     <tr class="text-center">
                                                         <th width="50px">Lugar</th>
                                                         <th width="200px">Equipo</th>
-                                                        <th>JJ</th>
-                                                        <th>JG</th>
-                                                        <th>JP</th>
-                                                        <th>PF</th>
-                                                        <th>PC</th>
+                                                        <th class="d-none d-sm-table-cell">JJ</th>
+                                                        <th class="d-none d-sm-table-cell">JG</th>
+                                                        <th class="d-none d-sm-table-cell">JP</th>
+                                                        <th class="d-none d-sm-table-cell">PF</th>
+                                                        <th class="d-none d-sm-table-cell">PC</th>
                                                         <th>DIF</th>
                                                     </tr>
                                                 </thead>
@@ -284,12 +287,12 @@
                                                         <tr>
                                                             <td>{{ $lugar }}</td>
                                                             <td>{{ $score->team }}</td>
-                                                            <td class="text-right">{{ $score->JJ }}</td>
-                                                            <td class="text-right">{{ $score->JG }}</td>
-                                                            <td class="text-right">{{ $score->JP }}</td>
-                                                            <td class="text-right">{{ $score->PAF }}</td>
-                                                            <td class="text-right">{{ $score->PEC }}</td>
-                                                            <td class="text-right">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
+                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->JJ }}</td>
+                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->JG }}</td>
+                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->JP }}</td>
+                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->PAF }}</td>
+                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->PEC }}</td>
+                                                            <td class="text-right ">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
                                                         </tr>
 
                                                         @php
