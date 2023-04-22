@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddShowStatsFieldToJourneysTable extends Migration
+class AddShowStatsFieldToCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddShowStatsFieldToJourneysTable extends Migration
      */
     public function up()
     {
-        Schema::table('journeys', function (Blueprint $table) {
+        Schema::table('categories', function (Blueprint $table) {
             //
             $table->enum("show_stats",['Si'=>'Si','No'=>'No'])->default('No');
 
@@ -27,7 +27,7 @@ class AddShowStatsFieldToJourneysTable extends Migration
      */
     public function down()
     {
-        Schema::table('journeys', function (Blueprint $table) {
+        Schema::table('categories', function (Blueprint $table) {
             //
             $table->dropColumn(['show_stats']);
 

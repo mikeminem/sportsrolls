@@ -17,7 +17,9 @@
 
 Route::get('/', 'MainController@index')->name('index');
 
-Auth::routes(['register' => false]);
+//Auth::routes(['register' => false]);
+Auth::routes(['register' => false, 'password.request' => false, 'password.reset' => false]);
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -96,6 +98,9 @@ Route::get('/tournament_info/{slug}', 'TournamentsController@showTournament');
 //teams options
 Route::resource('/teams','TeamsController');
 Route::get('/teams_list/{tournament_id}','TeamsController@list');
+Route::get('/update_team_status/{id}/{status}', 'TeamsController@updateStatus');
+//Route::put('/update_brand_website/{id}/{website}', 'BrandController@updateWebsite');
+
 
 
 //journeys

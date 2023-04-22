@@ -1,0 +1,41 @@
+Todo List
+
+
+Add this modal, to see what games the team has played 
+SELECT g.id, t1.name, g.score_team1, 'vs', g.score_team2, t2.name, g.status
+FROM games g
+INNER JOIN teams as t1 on t1.id = g.team1_id
+INNER JOIN teams as t2 on t2.id = g.team2_id
+WHERE
+(g.team1_id = 74 OR
+g.team2_id = 74) AND
+g.status = 'Finalizado'
+
+
+Agregar el estadio a la forma de game, liga con stadiums
+
+
+Filtrar los equipos cuando se selecciona la rama, para poder hacer cruces de equipos para Finales
+
+
+Agregar logo a la liga
+
+
+Agregar logo al torneo, o una imagen del mismo
+
+
+Agregar logos a los teams
+
+
+Agregar los campos a la tabla de tournament
+enable_enroll <-- para inscribir equipos
+enable_enroll_player <- para inscribir a los jugadores
+
+tabla de teams, habilitar el codigo, para que pueda ser compartido con los duelos de los equipos
+
+
+DONE
+***********************************************************
+Agregar el tipo de juego a la forma de game (type)
+'Amistoso','Pretemporada','Temporada Regular','Finales','Final','Semifinal','Otro'
+Terminado; 120323

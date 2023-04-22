@@ -64,8 +64,8 @@
                                         <option id="">Selecciona</option>
                                         @if (isset($states))
                                             @foreach($states as $state)
-                                            @if (isset($profile))
-                                                @if ($profile->state_id == $state->id)
+                                            @if (isset($league))
+                                                @if ($league->state_id == $state->id)
                                                     <option value="{{ $state->id}}" selected="selected">{{ $state->name}}</option>
                                                 @else
                                                     <option value="{{ $state->id}}">{{ $state->name}}</option>
@@ -85,19 +85,18 @@
                                         <label for="municipality_id"><b> Municipio *</b></label>
                                         <select id="municipality_id" name="municipality_id" class="form-control">
                                             @if (isset($municipalities))
-                                            @foreach($municipalities as $municipality)
-                                            @if (isset($profile))
-                                                @if ($profile->municipality_id == $municipality->id)
-                                                    <option value="{{ $municipality->id}}" selected="selected">{{ $municipality->name}}</option>
-                                                @else
-                                                    <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
-                                                @endif
-                                            @else
-                                                <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
-
+                                                @foreach($municipalities as $municipality)
+                                                    @if (isset($league))
+                                                        @if ($league->municipality_id == $municipality->id)
+                                                            <option value="{{ $municipality->id}}" selected="selected">{{ $municipality->name}}</option>
+                                                        @else
+                                                            <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
+                                                        @endif
+                                                    @else
+                                                        <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
+                                                    @endif
+                                                @endforeach
                                             @endif
-                                            @endforeach
-                                        @endif
                                         </select>
                                     </div>
                                 </div>

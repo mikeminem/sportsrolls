@@ -161,19 +161,18 @@
                                                 <label for="municipality_id"><b> Municipio *</b></label>
                                                 <select id="municipality_id" name="municipality_id" class="form-control">
                                                     @if (isset($municipalities))
-                                                    @foreach($municipalities as $municipality)
-                                                    @if (isset($profile))
-                                                        @if ($profile->municipality_id == $municipality->id)
-                                                            <option value="{{ $municipality->id}}" selected="selected">{{ $municipality->name}}</option>
+                                                        @foreach($municipalities as $municipality)
+                                                        @if (isset($profile))
+                                                            @if ($profile->municipality_id == $municipality->id)
+                                                                <option value="{{ $municipality->id}}" selected="selected">{{ $municipality->name}}</option>
+                                                            @else
+                                                                <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
+                                                            @endif
                                                         @else
                                                             <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
                                                         @endif
-                                                    @else
-                                                        <option value="{{ $municipality->id}}">{{ $municipality->name}}</option>
-
+                                                        @endforeach
                                                     @endif
-                                                    @endforeach
-                                                @endif
                                                 </select>
                                             </div>
                                         </div>

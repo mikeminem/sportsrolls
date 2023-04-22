@@ -122,21 +122,41 @@
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="winner_points">Puntos Juego Ganado</label><br />
-                                <input type="text" class="form-control" id="winner_points" name="winner_points" required maxlength="2" readonly> 
+                                <!--input type="number" class="form-control" id="winner_points" name="winner_points" required maxlength="2" readonly --> 
+                                <select class="form-control" name="winner_points" id="winner_points" disabled >
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    
+                                </select>
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="draw_points">Puntos Juego Empatado</label><br />
-                                <input type="text" class="form-control" id="draw_points" name="draw_points" required maxlength="2" readonly> 
+                                <!--input type="number" class="form-control" id="draw_points" name="draw_points" required maxlength="2" readonly -->
+                                <select class="form-control" name="draw_points" id="draw_points" disabled >
+                                    <option value="-1">No Mostrar</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    
+                                </select> 
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="loser_points">Puntos Juego Perdido</label><br />
-                                <input type="text" class="form-control" id="loser_points" name="loser_points" required maxlength="2" readonly> 
+                                <!--input type="number" class="form-control" id="loser_points" name="loser_points" required maxlength="2" readonly -->
+                                <select class="form-control" name="loser_points" id="loser_points" disabled >
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>                                    
+                                </select> 
                             </div>
                         </div>
 
@@ -179,7 +199,7 @@
   
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Borrar Rregistro</h4>
+          <h4 class="modal-title">Borrar Torneo</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
   
@@ -218,7 +238,7 @@
   
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Cambiar estado del Torneo</h4>
+          <h4 class="modal-title">Terminar Torneo</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -227,6 +247,12 @@
 
             <div class="modal-body">
             <h4 id="message"> <mark><span class="text-blod" id="row_title"></span></mark>?</h4>
+            <p>
+                <div class="alert alert-danger">
+                    <strong>Nota!</strong> Si Terminas el torneo, este se archivará y ya no se podrá consultar en los torneos activos.
+                  </div>
+            
+            </p>    
             </div>
             {{ csrf_field() }}
             <input type="hidden" class="form-control" id="idStart" name="idStart" readonly>
@@ -327,18 +353,18 @@
             $(document).on("click", "#enable_points_system", function (e) { 
 
                 if ($(this).is(":checked")) {
-                    $('#winner_points').removeAttr('readonly');
-                    $('#loser_points').removeAttr('readonly');
-                    $('#draw_points').removeAttr('readonly');
+                    $('#winner_points').removeAttr('disabled');
+                    $('#loser_points').removeAttr('disabled');
+                    $('#draw_points').removeAttr('disabled');
                 } else {
-                    $('#winner_points').attr('readonly', true)
-                    $('#loser_points').attr('readonly', true)
-                    $('#draw_points').attr('readonly', true)
+                    $('#winner_points').attr('disabled', true)
+                    $('#loser_points').attr('disabled', true)
+                    $('#draw_points').attr('disabled', true)
 
                     //values
                     $('#winner_points').val('0');
                     $('#loser_points').val('0');
-                    $('#draw_points').val('0');
+                    $('#draw_points').val('-1');
 
                 }
             });

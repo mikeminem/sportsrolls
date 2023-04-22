@@ -32,6 +32,8 @@
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
                     </a>
                     <hr />
+                    <div class="row">
+
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="filterTournaments"><b>Torneos Activos</b></label>
@@ -44,6 +46,19 @@
                                 
                             </div>
                         </div>
+
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="filterCategories"><b>Categorías</b></label>
+                                <select class="form-control" required id="filterCategories" name="filterCategories"  >
+                                    <option value="">Selecciona un torneo</option>
+                                    
+                                </select>
+                                
+                            </div>
+                        </div>
+                    </div>
+
                     <hr />
                     
                     <div class="table-responsive">
@@ -51,9 +66,11 @@
                             <thead>
                                 <tr>
                                     <th>Torneo</th>
+                                    <th>Id Categoria</th>
                                     <th>Nombre</th>
                                     <th>Contacto</th>
-                                    <th>Rama / Categoria</th>
+                                    <th>Categoría</th>
+                                    <th>Estado</th>
                                     <th width="20%"> - </th>
                                 </tr>
                             </thead>
@@ -156,15 +173,15 @@
                     <div class="row">    
                         <div class="col-md-9 col-sm-12">
                             <div class="form-group">
-                                <label for="contact"><b>Nombre Contacto *</b></label>
-                                <input type="text" class="form-control" id="contact" name="contact" required maxlength="120"> 
+                                <label for="contact"><b>Nombre Contacto </b></label>
+                                <input type="text" class="form-control" id="contact" name="contact"  maxlength="120"> 
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
-                                <label for="contact_phone"><b>Teléfono Contacto *</b></label>
-                                <input type="text" class="form-control" id="contact_phone" name="contact_phone" required maxlength="10"> 
+                                <label for="contact_phone"><b>Teléfono Contacto </b></label>
+                                <input type="text" class="form-control" id="contact_phone" name="contact_phone"  maxlength="10"> 
                             </div>
                         </div>
                     </div>
@@ -205,7 +222,7 @@
   
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Borrar Rregistro</h4>
+          <h4 class="modal-title">Borrar Equipo</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
   
@@ -239,7 +256,7 @@
 
 @section('js')
 <script type="text/javascript">
-        jQuery(document).ready(function($){
+    jQuery(document).ready(function($){
             
             var Table = $('#table').DataTable({
                 "language": {
@@ -271,19 +288,55 @@
                 ajax: '{{ route('teams.index') }}',
                 columns: [
                     { data: 'tournament_id', name: 'tournament_id', visible:false},
+                    { data: 'category_id', name: 'category_id', visible:false},
                     { data: 'name', name: 'name'},
                     { data: 'contact', name: 'contact'},
-                    { data: 'branch', name: 'branch'},
+                    { data: 'category', name: 'category'},
+                    { data: 'status', name: 'status'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
 
-
-            
             $(document).on("change", "#filterTournaments", function () {
                 Table.columns(0).search(this.value).draw();
+
+                //we send the categories
+                var tournament=$(this).val();
+                    if (tournament =="")
+                    {
+                        $("#filterCategories").empty();
+                        $("#filterCategories").html('<option value="">Selecciona un torneo</option>');
+                    }
+                    else
+                    {
+                        getCategories("filterCategories",tournament);
+                    }
             });
 
+            $(document).on("change", "#filterCategories", function () {
+                Table.columns(1).search(this.value).draw();
+            });
+
+
+
+
+            //get the category from the tournament selected
+            $(document).on("change", "#tournament_id", function () {
+                var tournament = $('#tournament_id option:selected').val();
+
+                if (tournament =="")
+                {
+                    $("#category_id").empty();
+                    $("#category_id").html('<option value="">Selecciona</option>');
+                }
+                else
+                {
+                    //$("#category_id").html(getCategories(tournament));
+                    getCategories("category_id",tournament);
+
+                } 
+            });
+                
 
 
             $(document).on("click", "#btnAdd", function () {
@@ -294,7 +347,7 @@
                 $("#sport").val("{{ Auth::user()->league->sport->name}}");
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
-                $("#category_id").html(getCategories("{{ Auth::user()->id}}"));
+                //$("#category_id").html(getCategories("{{ Auth::user()->id}}"));
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
@@ -317,15 +370,16 @@
                     url: $(this).attr("href"),
                     dataType: "json",
                     success: function (data) { 
-                        var category_id = 0;
+                        var tournament_id = 0;
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
 
-                            if (obj == "category_id"){
-                                category_id = data[obj]
+                            if (obj == "tournament_id"){
+                                tournament_id = data[obj];
                             }
                         }
-                        $("#category_id").html(getCategories({{ Auth::user()->id }}, category_id));
+                        //$("#category_id").html(getCategories({{ Auth::user()->id }}, category_id));
+                        getCategories("category_id",tournament_id, data["category_id"]);
 
                         $("#sport").val("{{ Auth::user()->league->sport->name}}");
                         $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
@@ -409,8 +463,36 @@
 
                 return false;
             });
-            
+
+            //mandamos activar o desactivar lo de mostrar en portal
+        $(document).on("change", "#cboStatus", function () {
+            $.ajaxSetup({
+                headers: {
+                'X-CSSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "update_team_status/" + $(this).attr("data-id") + "/" + $(this).val(),
+                dataType: "json",
+                success: function (data) {
+                    // var response = "";
+                    // $.each(data.response, function (i, val) {
+                    //     response = response + val + "\n";
+                    // });
+                    $.notify(data.response, data.results);
+
+                },
+                error: function() {
+                    $.notify("Hubo un error al intentar actualizar el registro", "error");
+                },
+            });
         });
+            
+    });
+
+        
 
         //global funcntions
         // function getCategories(user, selected="") {

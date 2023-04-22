@@ -34,15 +34,36 @@
                     </a>
                     <hr />
 
+
+                    <div class="row">
+
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="filterTournaments"><b>Torneos Activos</b></label>
+                                <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
+                                    <option value="">Todos los torneos</option>
+                                    @foreach($tournaments as $tournament)
+                                        <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
+                                    @endforeach
+                                </select>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
                     <div class="table-responsive">
                         <table class="table table-hover" id="table">
                             <thead>
                                 <tr>
                                     <th>Id</th>
+                                    <th>torneo</th>
+                                    <th>Categoria</th>
                                     <th width="20%">Nombre</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Final</th>
-                                    <th>Mostrar</th>
+                                    <th>Publicar en Página</th>
                                     <th>Estado</th>
                                     <th> - </th>
                                 </tr>
@@ -110,8 +131,8 @@
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="show"><b>Publicar en Página *</b></label>
-                                <select id="show" name="show" class="form-control">
+                                <label for="show_public"><b>Publicar en Página *</b></label>
+                                <select id="show_public" name="show_public" class="form-control">
                                     <option value="Si">Si</option>
                                     <option value="No">No</option>
                                 </select>
@@ -229,13 +250,18 @@
                 ajax: '{{ route('journeys.index') }}',
                 columns: [
                     { data: 'id', name: 'id',  visible:false},
+                    { data: 'tournament_id', name: 'tournament_id', visible:false},
                     { data: 'name', name: 'name'},
                     { data: 'start_at', name: 'start_at'},
                     { data: 'finish_at', name: 'finish_at'},
-                    { data: 'show', name: 'show'},
+                    { data: 'show_public', name: 'show_public'},
                     { data: 'status', name: 'status'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
+            });
+
+            $(document).on("change", "#filterTournaments", function () {
+                Table.columns(1).search(this.value).draw();
             });
 
             $(document).on("click", "#btnAdd", function () {
@@ -270,8 +296,8 @@
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
 
-                            if (obj == "show") {
-                                $('#show option:selected').val(data[obj]);
+                            if (obj == "show_public") {
+                                $('#show_public option:selected').val(data[obj]);
                             }
                         }
 

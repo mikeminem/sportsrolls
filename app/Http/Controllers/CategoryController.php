@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Sport;
+use App\Tournaments;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +27,8 @@ class CategoryController extends Controller
          if($request->ajax()){
             $rows = DB::table('categories as c')
                     ->join('sports as s', 's.id', '=', 'c.sport_id')
-                    ->select('c.id', 'c.sport_id', 'c.name', 'c.age_initial', 'c.age_final', 'c.overview', 's.name as nameSport')
+                    ->join('tournaments as t', 't.id', '=', 'c.tournament_id')
+                    ->select('c.id', 'c.sport_id', 'c.name', 'c.overview', 's.name as nameSport', 'c.show_stats', 't.id as tournament')
                     ->where('c.is_deleted', 0)
                     ->where('c.user_id',Auth::user()->id)
                     ->get();        
@@ -55,7 +58,11 @@ class CategoryController extends Controller
 
         //$sports = Sport::where('is_deleted', 0)->get();
         //return view ('categories.index', compact('sports'));
-        return view ('categories.index');
+        $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->where('user_id',Auth::user()->id)->get(['id','title']);
+
+        return view ('categories.index', [
+            'tournaments' => $tournaments
+        ]);
     }
 
     /**
@@ -71,7 +78,9 @@ class CategoryController extends Controller
         ];
 
         $attributes = [
-            'name'   => 'Nombre'
+            'name'          => 'Nombre',
+            'tournament_id' => 'Torneo',
+            'show_stats'    => 'Mostrar tabla de posiciones'
         ];
 
         //Validate the data
@@ -121,8 +130,7 @@ class CategoryController extends Controller
     {
         //
         if ($id) {
-            $category = Category::select('id', 'sport_id', 'name', 'age_initial', 'age_final', 'overview')->find($id);
-            
+            $category = Category::select('id', 'sport_id', 'name', 'age_initial', 'age_final', 'overview', 'tournament_id')->find($id);
             return $category;
         }
         return false;
@@ -152,10 +160,10 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function list ($user_id) {
+    public function list ($tournament_id) {
         
-        if ($user_id) {
-            $list = Category::where('user_id',$user_id)->where('is_deleted',0)->get();
+        if ($tournament_id) {
+            $list = Category::where('tournament_id',$tournament_id)->where('is_deleted',0)->get();
             return (string) $list;
         }
 

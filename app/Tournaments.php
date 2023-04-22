@@ -8,7 +8,8 @@ class Tournaments extends Model
 {
     //
     protected $fillable = [
-        'code', 'title', 'summary', 'contacts', 'header_image', 'convocatory', 'is_deleted', 'status', 'start_day', 'sport_id', 'clicks', 'slug', 'enable_points_system','winner_points', 'loser_points', 'draw_points'
+        'code', 'title', 'summary', 'contacts', 'header_image', 'convocatory', 'is_deleted', 'status', 'start_day', 'sport_id', 'clicks', 'slug', 
+        'enable_points_system','winner_points', 'loser_points', 'draw_points'
     ];
 
 

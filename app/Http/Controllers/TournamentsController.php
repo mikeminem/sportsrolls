@@ -141,11 +141,14 @@ class TournamentsController extends Controller
             $model->code =  strtoupper( str_random(8));
             $model->user_id = Auth::user()->id;
             $model->start_day = date('Y-m-d');
-            $model->slug = str_slug($model->name);
+            $model->slug = str_slug($model->title);
             if (isset($request->enable_points_system))  {
                 $model->enable_points_system = "Si";
             } else {
                 $model->enable_points_system = "No";
+                $model->winner_points =0;
+                $model->loser_points =0;
+                $model->draw_points =-1;
             }
 
 
@@ -160,11 +163,14 @@ class TournamentsController extends Controller
 
             $lastImage = $model->image;
             $model->fill($request->all());
-            $model->slug = str_slug($model->name);
+            $model->slug = str_slug($model->title);
             if (isset($request->enable_points_system))  {
                 $model->enable_points_system = "Si";
             } else {
                 $model->enable_points_system = "No";
+                $model->winner_points =0;
+                $model->loser_points =0;
+                $model->draw_points =-1;
             }
 
 
@@ -269,6 +275,8 @@ class TournamentsController extends Controller
         //lets get the tournament info
         $tournament = Tournaments::where('slug', $slug)->get();
 
+        $teams = Teams::where('tournament_id', $tournament[0]->id)->orderby('name','asc')->get();
+
         $clicks = $tournament[0]->clicks + 1;
         Tournaments::where('id', $tournament[0]->id)->update(['clicks' => $clicks ]);
 
@@ -281,18 +289,31 @@ class TournamentsController extends Controller
         ->join('journeys as j', 'j.id', '=', 'g.journey_id')        
         ->where('g.is_deleted', 0)
         ->where('j.is_deleted', 0)
-        ->where('j.show', "Si")
+        ->where('j.show_public', "Si")
         // ->where('g.status', 'Finalizado')
         ->where('g.tournament_id', $tournament[0]->id )
         ->orderBy('g.game_day', 'asc')
         ->orderBy('g.game_time', 'asc')
         ->get();  
 
-        $categories = Category::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get();
+        $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->get();
         
         //lets send the score
         $scores = array();
 
+
+        //build points section of the query!
+        $points = "";
+        if ($tournament[0]->enable_points_system == "Si"){
+            $points = ", sum( case when PAF > PEC then " . $tournament[0]->winner_points . " else 0 end \n";
+
+            if ($tournament[0]->draw_points > -1){
+                $points .= " + case when PAF = PEC then " . $tournament[0]->draw_points . " else 0 end \n";
+            }
+                
+            $points .= " + case when PAF < PEC then " . $tournament[0]->loser_points . " else 0 end ) as PUNTOS";
+        }
+        
         foreach ($categories as $category) {
             $query = "SELECT  t.name as team,
                 count('x') as JJ,
@@ -301,11 +322,8 @@ class TournamentsController extends Controller
                 count(case when PAF = PEC then 1 end) JE,
                 sum(score.PAF) as PAF,
                 sum(score.PEC) as PEC,
-                sum(score.PAF) - sum(score.PEC) as DIF,
-                sum(
-                        case when PAF > PEC then 2 else 0 end 
-                        + case when PAF < PEC then 1 else 0 end
-                    ) as puntos
+                sum(score.PAF) - sum(score.PEC) as DIF
+                $points
                 FROM 
                 (
                     (SELECT 
@@ -316,7 +334,8 @@ class TournamentsController extends Controller
                             INNER JOIN journeys j on j.id = h.journey_id
                             WHERE h.category_id=" . $category->id . " and
                             h.status = 'Finalizado' and
-                            j.show ='Si'
+                            j.show_public ='Si' and
+                            j.tournament_id = ". $tournament[0]->id ."
                     )
                 UNION ALL
                     ( SELECT 
@@ -325,16 +344,24 @@ class TournamentsController extends Controller
                             v.score_team1 PEC
                             FROM games v
                             INNER JOIN journeys j on j.id = v.journey_id
-                            WHERE v.category_id=" . $category->id ."
-                            and
+                            WHERE v.category_id=" . $category->id ." and
                             v.status = 'Finalizado' and
-                            j.show ='Si'
+                            j.show_public ='Si' and
+                            j.tournament_id = ". $tournament[0]->id ."
                     )
                 ) as score
                 join teams t on t.id = score.team
+                where
+                t.status = 'Activo'
                 group by t.name
-                order by JG desc, JP asc, DIF desc";
+                order by JG desc";
 
+            if (strlen($points)>0) {
+                $query .= ", PUNTOS desc";
+            }
+
+            $query .= ", DIF desc";
+            
             $scores[$category->id] = DB::select( DB::raw( $query) );
         }
 
@@ -342,7 +369,8 @@ class TournamentsController extends Controller
             'tournament' => $tournament[0],
             'games'      => $games,
             'categories' => $categories,
-            'scores'     => $scores
+            'scores'     => $scores,
+            'teams'      => $teams
         ]);
 
 

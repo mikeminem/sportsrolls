@@ -3,6 +3,7 @@
 @section('title', config('app.name') ." :: " .  $tournament->title )
 @section('description', $tournament->title ." | " . $tournament->summary . " | " . config('app.name') )
 @section('url',  url('tournament_info/' . $tournament->slug) )
+@section('keywords', $tournament->title ." | " . $tournament->summary . " | " . config('app.name') )
 
 
 @section('content')
@@ -41,12 +42,12 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#menu3"><span class="fa fa-list-ol"></span> Tabla de Posiciones</a>
                         </li>
-                        {{-- <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#menu4">Equipos</a>
                         </li>
-                        <li class="nav-item">
+                        <!--li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#menu5">Organizador</a>
-                        </li> --}}
+                        </li-->
                         
                     </ul>
                     
@@ -66,7 +67,7 @@
                                 @foreach ($tournament->journeys as $journey)
 
                                     @if( ($journey->status=="Abierto") && 
-                                    ($journey->show=="Si") && 
+                                    ($journey->show_public=="Si") && 
                                     ($journey->is_deleted==0) )
 
                                     <h3 class="text-center">{{ $journey->name }}</h3>
@@ -165,7 +166,7 @@
                                         </div>
 
                                         <p>
-                                            <h4> Nota: {{ $journey->notes }}</h4>
+                                             NOTA: {{ $journey->notes }}
                                         </p>
 
                                         @php
@@ -196,7 +197,7 @@
                                 @foreach ($tournament->journeys as $journey)
 
                                     @if (($journey->is_deleted == 0) && 
-                                         ($journey->show == "Si") )
+                                         ($journey->show_public == "Si") )
                                         <div class="col-md-4">
                                             <p>
                                                 <h3> {{ $journey->name }}</h3>
@@ -259,6 +260,7 @@
 
                             
                             @foreach ($categories as $category)
+                                @if ($category->show_stats == "Si")
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h3>Categoría {{ $category->name }}</h3>
@@ -268,14 +270,21 @@
                                             <table class="table table-hover table-striped" id="table">
                                                 <thead>
                                                     <tr class="text-center">
-                                                        <th width="50px">Lugar</th>
+                                                        <th width="20px">Lugar</th>
                                                         <th width="200px">Equipo</th>
-                                                        <th class="d-none d-sm-table-cell">JJ</th>
-                                                        <th class="d-none d-sm-table-cell">JG</th>
-                                                        <th class="d-none d-sm-table-cell">JP</th>
-                                                        <th class="d-none d-sm-table-cell">PF</th>
-                                                        <th class="d-none d-sm-table-cell">PC</th>
-                                                        <th>DIF</th>
+                                                        <th width="20px">JJ</th>
+                                                        <th width="20px">JG</th>
+                                                        @if ($tournament->draw_points>-1)
+                                                            <th width="20px">JE</th>
+                                                        @endif
+                                                        <th width="20px">JP</th>
+                                                        <th width="20px">PF</th>
+                                                        <th width="20px">PC</th>
+                                                        <th width="20px">DIF</th>
+                                                        @if ($tournament->enable_points_system=="Si")
+                                                            <th width="20px">PTOs</th>
+                                                        @endif
+                                                        
                                                     </tr>
                                                 </thead>
                             
@@ -285,14 +294,20 @@
                                                     @endphp
                                                     @foreach ( $scores[$category->id] as $score )
                                                         <tr>
-                                                            <td>{{ $lugar }}</td>
-                                                            <td>{{ $score->team }}</td>
-                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->JJ }}</td>
-                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->JG }}</td>
-                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->JP }}</td>
-                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->PAF }}</td>
-                                                            <td class="text-right d-none d-sm-table-cell">{{ $score->PEC }}</td>
-                                                            <td class="text-right ">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
+                                                            <td class="text-center">{{ $lugar }}</td>
+                                                            <td >{{ $score->team }}</td>
+                                                            <td class="text-center ">{{ $score->JJ }}</td>
+                                                            <td class="text-center ">{{ $score->JG }}</td>
+                                                            @if ($tournament->draw_points>-1)
+                                                                <td class="text-center ">{{ $score->JE }}</td>
+                                                            @endif
+                                                            <td class="text-center ">{{ $score->JP }}</td>
+                                                            <td class="text-center ">{{ $score->PAF }}</td>
+                                                            <td class="text-center ">{{ $score->PEC }}</td>
+                                                            <td class="text-center ">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
+                                                            @if (isset($score->PUNTOS))
+                                                                <td class="text-center ">{{ $score->PUNTOS }}</td>
+                                                            @endif                                                                
                                                         </tr>
 
                                                         @php
@@ -303,16 +318,70 @@
 
                                                 </tbody>
                                             </table>
+                                            <p><b>Fuente: Sport Roles: www.sportroles.com</b></p>
                                         </div>
     
                                     </div>
                                 </div>    
+
+                                @endif
                             @endforeach
 
                         </div>
-                        {{-- <div class="tab-pane container fade" id="menu4">Equipos Registrados</div>
-                        <div class="tab-pane container fade" id="menu5">Comité organizador</div> --}}
-                        
+                        <div class="tab-pane container fade" id="menu4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h1>Equipos Inscritos</h1>
+                                </div>
+                            </div>
+
+                            
+                            <div class="row">
+                            @foreach ($categories as $category)
+                                @if ($category->show_stats == "Si")
+                                    <div class="col-md-6">
+                                        <h3>Categoría {{ $category->name }}</h3>
+
+
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped" id="table">
+                                                <thead>
+                                                    <tr class="text-left">
+                                                        <th width="200px">Equipo</th>
+                                                    </tr>
+                                                </thead>
+                            
+                                                <tbody>
+                                                   
+                                                    @foreach ( $teams as $team )
+                                                        @if ($team->category_id == $category->id)
+                                                            <tr>
+                                                                <td >
+                                                                    {{ $team->name }} 
+                                                                    @if ($team->status == 'Baja')
+                                                                    <span class="badge badge-danger">Baja del torneo</span>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                                                                
+                                                    @endforeach
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+    
+                                    </div>
+                                    
+                                    @endif
+                                @endforeach
+                            </div>    
+
+                            
+                        </div>
+                        {{-- <div class="tab-pane container fade" id="menu5">Comité organizador</div> --}}
+
+
                     </div>
                 </div>
             </div>

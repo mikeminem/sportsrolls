@@ -57,7 +57,7 @@ class LeaguesController extends Controller
             $league = Leagues::find(Auth::user()->id);
             if ($league) {
                 //update info
-                $model = User::find(Auth::user()->id)->league;
+                $model = Leagues::find(Auth::user()->id);
                 $model->fill($request->all());
 
                 if ($model->update()) 
@@ -92,11 +92,16 @@ class LeaguesController extends Controller
     public function show(Leagues $leagues)
     {
         //
-        $sports = Sport::where('is_deleted',0)->get(['id', 'name']);
         $league = User::find(Auth::user()->id)->league;
+        $sports = Sport::where('is_deleted',0)->get(['id', 'name']);
 
         $states = States::where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
-        $municipalities = Municipalities::where('state_id',$leagues->state_id)->where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
+        if ($league) {
+            $municipalities = Municipalities::where('state_id',$league->state_id)->where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
+        } else {
+            $league = new User();
+            $municipalities = Municipalities::where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
+        }
         
         return view("leagues.league_info", [ 
             'league'            => $league,

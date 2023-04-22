@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', config('app.name') ." :: " .  __('Category') )
-@section('description',  "Administrador de Categorias ")
+@section('description',  "Administrador de Categorías ")
 
 @section('content')
 
@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text-left">
-                        <h1>{{ __('Category')}}</h1>
+                        <h1>{{ __('Categories')}}</h1>
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
@@ -33,16 +33,28 @@
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
                     </a>
                     <hr />
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="filterTournaments"><b>Torneos Activos</b></label>
+                                <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
+                                    <option value="">Todas las Categorias</option>
+                                    @foreach($tournaments as $tournament)
+                                        <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
+                                    @endforeach
+                                </select>
+                                
+                            </div>
+                        </div>
+                    <hr />
 
                     <div class="table-responsive">
                         <table class="table table-hover" id="table">
                             <thead>
                                 <tr>
+                                    <th>Torneo</th>
                                     <th>Deporte</th>
                                     <th>Nombre</th>
-                                    <th>Edad Inicial</th>
-                                    <th>Edad Final</th>
-                                    <th>Nota</th>
+                                    <th>Mostrar Tabla de Pos</th>
                                     <th> - </th>
                                 </tr>
                             </thead>
@@ -80,8 +92,20 @@
                             </div>
                         </div>
 
-
                         <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="title"><b>Torneo *</b></label>
+                                <select class="form-control" required id="tournament_id" name="tournament_id">
+                                    <option value="">Selecciona</option>
+                                    @foreach($tournaments as $tournament)
+                                        <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-8 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>Nombre *</b></label>
                                 <input type="text" class="form-control" id="name" name="name" required maxlength="80"> 
@@ -90,7 +114,7 @@
 
                         
 
-                        <div class="col-md-4 col-sm-12">
+                        <!--div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="age_initial"><b>Edad Inicial *</b></label>
                                 <input type="number" class="form-control" id="age_initial" name="age_initial" required max="80" min="5"> 
@@ -102,11 +126,22 @@
                                 <label for="age_final"><b>Edad Final *</b></label>
                                 <input type="number" class="form-control" id="age_final" name="age_final" required max="80" min="5"> 
                             </div>
-                        </div>
+                        </div-->
+
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="overview"><b>Nota</b></label>
+                                <label for="show_stats"><b>Mostrar tabla de posiciones *</b></label>
+                                <select id="show_stats" name="show_stats" class="form-control" required>
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label for="overview"><b>Descripción</b></label>
                                 <input type="text" class="form-control" id="overview" name="overview" maxlength="100"> 
                             </div>
                         </div>
@@ -213,13 +248,16 @@
                 serverSide: true,
                 ajax: '{{ route('categories.index') }}',
                 columns: [
+                    { data: 'tournament', name: 'tournament',  visible:false},
                     { data: 'sport_id', name: 'sport_id'},
                     { data: 'name', name: 'name'},
-                    { data: 'age_initial', name: 'age_initial'},
-                    { data: 'age_final', name: 'age_final'},
-                    { data: 'overview', name: 'overview'},
+                    { data: 'show_stats', name: 'show_stats'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
+            });
+
+            $(document).on("change", "#filterTournaments", function () {
+                Table.columns(0).search(this.value).draw();
             });
 
             $(document).on("click", "#AddCategory", function () {
@@ -255,6 +293,8 @@
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
                         }
+                        $("#sport").val("{{ Auth::user()->league->sport->name}}");
+                        //$("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('show');

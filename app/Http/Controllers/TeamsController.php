@@ -29,18 +29,34 @@ class TeamsController extends Controller
             //send the grid rows
             $rows = DB::table('teams as t')
                     ->join('categories as c', 'c.id', '=', 't.category_id')
-                    ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted', 't.clicks', 't.prints', 't.category_id', 'c.name as category', 't.contact', 't.contact_phone' )
+                    ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted', 
+                    't.clicks', 't.prints', 't.category_id', 'c.name as category', 't.contact', 't.contact_phone', 't.status' )
                     ->where('t.is_deleted', 0)
                     ->where('t.user_id',Auth::user()->id)
                     ->orderBy('t.id', 'desc')
-                    ->get();        
-            
+                    ->get();
+
             return DataTables::of($rows)
-                    ->addColumn('contact', function($row) {
+                    ->addColumn('contact', function ($row) {
                         return "<b>" . $row->contact . "</b><br>" . $row->contact_phone;
                     })
-                    ->addColumn('branch', function($row) {
-                        return $row->branch . " / " . $row->category;
+                    ->addColumn('status', function ($row) {
+                        $combo = '<select id="cboStatus" class="form-control" data-id="'.$row->id.'">';
+
+                        if ($row->status=='Activo') {
+                            $combo .= '<option value="Activo" selected>Activo</opction>';
+                        } else {
+                            $combo .= '<option value="Activo">Activo</opction>';
+                        }
+
+                        if ($row->status=='Baja') {
+                            $combo .= '<option value="Baja" selected>Baja</opction>';
+                        } else {
+                            $combo .= '<option value="Baja">Baja</opction>';
+                        }
+
+                        $combo .= '</select>';
+                        return  $combo;
                     })
                     ->addColumn('action', function($row) {
 
@@ -56,7 +72,7 @@ class TeamsController extends Controller
 
                         return $links;
                     })
-                    ->rawColumns([ 'action', 'contact' ])
+                    ->rawColumns([ 'action', 'contact', 'status' ])
                     ->make(true); 
         }
 
@@ -92,8 +108,8 @@ class TeamsController extends Controller
             'tournament_id'     => 'required',
             'sport_id'          => 'required',
             'category_id'       => 'required',
-            'contact'           => 'required|max:80',
-            'contact_phone'     => 'required|min:10',
+            //'contact'           => 'required|max:80',
+            //'contact_phone'     => 'required|min:10',
         ];
 
         $attributes = [
@@ -102,8 +118,8 @@ class TeamsController extends Controller
             'tournament_id' => 'Torneo',
             'sport_id'      => 'Deporte',
             'category_id'   => 'Categoria',
-            'contact'       => 'Mombre del Contacto',
-            'contact_phone' => 'Teléfono / Móvil del Contacto',
+            //'contact'       => 'Mombre del Contacto',
+            //'contact_phone' => 'Teléfono / Móvil del Contacto',
         ];
 
         //Validate the data
@@ -208,10 +224,17 @@ class TeamsController extends Controller
     public function list ($category_id) {
         
         if ($category_id) {
-            $list = Teams::where('category_id',$category_id)->where('is_deleted',0)->orderby('name')->get();
+            $list = Teams::where('category_id',$category_id)
+                ->where('status','Activo')
+                ->where('is_deleted',0)
+                ->orderby('name')->get();
             return (string) $list;
         }
-
         return (string) false;
+    }
+
+    public function updateStatus( $id,  $status) {
+        Teams::where('id', $id)->update(['status' => $status]);
+        return response()->json(['results' => 'success', 'response' => ['¡El equipo se a modificado!']]);
     }
 }

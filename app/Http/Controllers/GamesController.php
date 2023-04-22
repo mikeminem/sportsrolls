@@ -33,7 +33,7 @@ class GamesController extends Controller
             // g.is_deleted = 0
             
             $rows = DB::table('games as g')
-                    ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch')
+                    ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch', 'g.type')
                     ->join('teams as t1', 't1.id', '=', 'g.team1_id')
                     ->join('teams as t2', 't2.id', '=', 'g.team2_id')
                     ->join('categories as c', 'c.id', '=', 'g.category_id')        
@@ -46,7 +46,28 @@ class GamesController extends Controller
                     ->addColumn('date_time', function($row) {
                         $day = substr($row->game_day,8,2) . "/" . substr($row->game_day,5,2) . "/" . substr($row->game_day,0,4); 
 
-                        return $row->game_time ." - ". $day;
+                        return $day . '<br />' . $row->game_time ;
+                    })
+                    ->addColumn( 'status', function($row) {
+                        $status = $row->status;
+                        switch ($row->status) {
+                            case 'Abierto':
+                                $status = '<span class="badge badge-primary">Abierto</span>';
+                                break;
+                            case 'Finalizado':
+                                $status = '<span class="badge badge-success">Finalizado</span>';
+                                break; 
+                            case 'Protestado':
+                                $status = '<span class="badge badge-warning">Protestado</span>';
+                                break;
+                            case 'Cancelado':
+                                $status = '<span class="badge badge-danger">Cancelado</span>';
+                                break;   
+                            case 'Suspendido':
+                                $status = '<span class="badge badge-danger">Suspendido</span>';
+                                break;   
+                        }
+                        return $status;
                     })
                     ->addColumn('score', function($row) {
                         $score1 = "";
@@ -69,38 +90,38 @@ class GamesController extends Controller
                     ->addColumn('action', function($row) {
 
                         
-
+                        $links = '';
                         if ($row->status != "Finalizado") {
                             
                             $routeEdit = route('games.show', $row->id);
                             $routeDelete = route('games.destroy', $row->id);
 
-                            $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
+                            $links .= '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a> 
-                                    <a href="javascript:void(0)" data-id="'.$row->id .'" data-team1="'.$row->team1.'" data-team2="'.$row->team2.'" title="Capturar resultados" id="btnScore"> 
-                                        <span class="fa fa-calculator tool"></span>
-                                    </a>
                                     <a href="' . $routeDelete . '" title="Borrar Registro"  id="btnDelete"> 
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
-                        return $links;
-
+                                    
                         }
-
+                                
+                        $links .= ' <a href="javascript:void(0)" data-id="' . $row->id . '" data-team1="' . $row->team1 . '" data-team2="' . $row->team2 . '" title="Capturar resultados" id="btnScore"> 
+                        <span class="fa fa-calculator tool"></span>
+                        </a>';
+                        
+                        return $links;
                         
                     })
-                    ->rawColumns(['game_time','score', 'action'])
+                    ->rawColumns(['date_time', 'status', 'game_time','score', 'action'])
                     ->make(true);
         }
 
         $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->where('user_id',Auth::user()->id)->get(['id','title']);
-        $categories = Category::where('user_id',Auth::user()->id)->where('is_deleted',0)->get();
+        //$categories = Category::where('user_id',Auth::user()->id)->where('is_deleted',0)->get();
 
-
-        return view ('games.index', compact('tournaments', 'categories'));
+        return view ('games.index', compact('tournaments'));
     }
 
     /**

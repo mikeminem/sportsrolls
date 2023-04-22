@@ -53,9 +53,11 @@
     </div>
 </div>
 
-<div class="container-fluid m-2">
+<!-- start current torunaments-->
+
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-12 m-2">
+    <div class="col-md-12">
       <h1 class="title">Torneos más populares</h1>
     </div>
 
@@ -65,16 +67,16 @@
       </div>
       @else
           @foreach($tournaments as $tournament)
-          <div class="col-md-3 m-2">
-            <div class="card">
+          <div class="col-md-3">
+            <div class="card h-100">
               @if($tournament->sport->image)
-                  <img class="card-img-top" src="{{ asset('sport/' . $tournament->sport->image)}}" alt="{{ $tournament->title }}">
+                  <img class="card-img-top img-fluid" src="{{ asset('sport/' . $tournament->sport->image)}}" alt="{{ $tournament->title }}">
               @else
                   <img class="card-img-top" src="img_avatar1.png" alt="{{ $tournament->title }}">
               @endif
               <div class="card-body">
                 <h4 class="card-title">{{ $tournament->title }}</h4>
-                <a href="{{ url('tournament_info/' . $tournament->slug) }}" class="btn btn-primary stretched-link"> Ir al torneo <span class="fa fa-arrow-right"> </a>
+                <a href="{{ url('tournament_info/' . $tournament->slug) }}" class="btn btn-primary stretched-link" width="100%"> Ir al torneo <span class="fa fa-arrow-right"> </a>
               </div>
               <div class="card-footer text-right"> 
                 <span class="float-left" ><b> {{ $tournament->sport->name }} </b></span>
@@ -105,19 +107,80 @@
 
   </div>
 </div>
+<!-- end current torunaments-->
+<br />
+
+<!-- comming up torunaments-->
+
+@if (count($tournaments2)>0) 
+<div class="container-fluid m-1">
+  <div class="row">
+    <div class="col-md-12 m-1">
+      <h1 class="title">Próximos Torneos</h1>
+    </div>
+          @foreach($tournaments2 as $tournament)
+          <div class="col-md-3 m-1">
+            <div class="card">
+              @if($tournament->sport->image)
+                  <img class="card-img-top" src="{{ asset('sport/' . $tournament->sport->image)}}" alt="{{ $tournament->title }}">
+              @else
+                  <img class="card-img-top" src="img_avatar1.png" alt="{{ $tournament->title }}">
+              @endif
+              <div class="card-body">
+                <h4 class="card-title">{{ $tournament->title }}</h4>
+                <a href="{{ url('tournament_info/' . $tournament->slug) }}" class="btn btn-primary stretched-link" width="100%"> Ir al torneo <span class="fa fa-arrow-right"> </a>
+              </div>
+              <div class="card-footer text-right"> 
+                <span class="float-left" ><b> {{ $tournament->sport->name }} </b></span>
+                
+                <span class="fa fa-list"></span>
+                @php
+                  $prints = $tournament->prints;
+                  if ($prints>=1000) {
+                      $prints = number_format($prints /1000,1) . "K";
+                  }
+                @endphp   
+                {{ $prints }} 
+                <span class="fa fa-eye"></span>
+                @php
+                  $clicks = $tournament->clicks;
+                  if ($clicks>=1000) {
+                      $clicks = number_format($clicks /1000,1) . "K";
+                  }
+                @endphp   
+                  {{ $clicks }}
+              </div>
+            </div>
+          </div>
+
+            
+          @endforeach
+          
+        </div>
+      </div>
+    <br />
+
+    @endif
+<!-- end comming up torunaments-->
+
 
 
 @php
-  $image = asset('images/imgFutbol.jpg');
+  //$image = asset('images/imgFutbol.jpg');
+  $image1 = 'images/banner-'.$imageNumber.'.jpg';
+  $image2 = 'images/cuadrado-'.$imageNumber.'.jpg';
 @endphp
-<div class="jumbotron banner" style="background: url({{  $image }}) no-repeat center center; 
-background-size: cover; ">
-  <div class="container text-center">
-    <p>
-      El deporte nos apasiona...
-    </p>
-      
-  </div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12  d-none d-md-block d-lg-block  d-xl-block">
+          <img src=" {{ asset($image1) }}" alt="SportRolels en el deporte" class="img-fluid">
+        </div>
+
+        <div class="col-md-12 d-block d-sm-none d-none d-sm-block d-md-none">
+          <img src=" {{ asset($image2) }}" alt="SportRolels en el deporte" class="img-fluid">
+        </div>
+    </div>
 </div>
 
 @endsection

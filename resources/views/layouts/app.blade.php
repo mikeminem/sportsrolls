@@ -7,6 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title')</title>
 
     <meta name=”robots” content=”index, follow”>
@@ -42,14 +43,25 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-1X7MS1GBYC"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-1X7MS1GBYC');
+        </script>
 </head>
 <body>
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v15.0" nonce="n3xha6Hh"></script>
 
-    <div class="content-fluid top">
+    <!--div class="content-fluid top">
         <div class="content">
-            <!--div class="row">
+            <div class="row">
                 <div class="col-sm-6 col-md-6 text-center">
                     <i class="fa fa-envelope"></i> {{ __("Contact Us")}}
                 </div>
@@ -57,9 +69,9 @@
                 <div class="col-sm-6 col-md-6 text-center">
                     <i class="fa fa-whatsapp"></i> {{ __("WhatsApp")}}
                 </div>
-            </div-->
+            </div>
         </div>
-    </div>
+    </div-->
     <div id="app">
         @include('layouts.menu')
 
@@ -98,13 +110,13 @@
      <script type="text/javascript">
         //global funcntions
         //get categories
-        function getCategories(user, selected="") {
+        function getCategories(component, tournament_id, selected="") {
             var options = "";
 
-            if (user) {
+            if (tournament_id) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('categories_list') }}/" + user,
+                    url: "{{ url('categories_list') }}/" + tournament_id,
                     dataType: "json",
                     success: function (data) { 
                         options = '<option value="">Selecciona</option>';
@@ -121,7 +133,9 @@
                         if (categories <0) {
                             $.notify("No hay categorías en este torneo, selecciona otro o agrega categorias al torneo", "error");
                         }
-                        $("#category_id").html(options);
+                        //$("#category_id").html(options);
+                        $("#" + component).html(options);
+                        
                     },
                 });
             }
