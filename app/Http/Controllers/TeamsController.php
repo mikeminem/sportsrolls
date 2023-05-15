@@ -64,9 +64,12 @@ class TeamsController extends Controller
                         $routeDelete = route('teams.destroy', $row->id);
 
                             $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
-                                <span class="fa fa-edit tool">
-                                </span>
-                                </a><a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
+                                            <span class="fa fa-edit tool"></span>
+                                        </a>
+                                        <a href="javascript:void(0)" data-toggle="tooltip" title="¡Agregar foto!" id="btnPicture" data-id="'.$row->id.'" data-name="'.$row->name.'">
+                                            <span class="fa fa-image tool"></span>
+                                        </a>
+                                        <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
                                 <span class="fa fa-trash tool"></span>
                             </a>';
 
@@ -221,13 +224,33 @@ class TeamsController extends Controller
         ]);
     }
 
-    public function list ($category_id) {
+    public function list($category_id) {
         
         if ($category_id) {
             $list = Teams::where('category_id',$category_id)
                 ->where('status','Activo')
                 ->where('is_deleted',0)
                 ->orderby('name')->get();
+            return (string) $list;
+        }
+        return (string) false;
+    }
+
+    /**
+     * Get the list of Teams by branch id
+     *
+     * @param  int      $tournament
+     * @param  string   $branch
+     * @return string
+     */
+    public function listByBranch($tournament, $branch) {
+        
+        if ($branch) {
+            $list = Teams::where('branch',$branch)
+                ->where('tournament_id', $tournament)
+                ->where('status','Activo')
+                ->where('is_deleted',0)
+                ->orderby('name')->get(['id','name']);
             return (string) $list;
         }
         return (string) false;

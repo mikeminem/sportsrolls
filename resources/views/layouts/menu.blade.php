@@ -83,6 +83,7 @@
                                         <a class="dropdown-item" href="{{ url('/tournaments') }}"><i class="fa fa-file"></i> {{ __('Tournaments') }}</a>
 
                                         <a class="dropdown-item" href="{{ url('/categories') }}"><i class="fa fa-cubes"></i> {{ __('Categories') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/groups') }}"><i class="fa fa-circle-o"></i> {{ __('Groups') }}</a>
                                         <a class="dropdown-item" href="{{ url('/teams') }}"><i class="fa fa-group"></i> {{ __('Teams') }}</a>
                                         <a class="dropdown-item" href="{{ url('/journeys')}}"><i class="fa fa-calendar"></i> {{ __('Journeys') }}</a>
                                         <a class="dropdown-item" href="{{ url('/games')}}"><i class="fa fa-tasks"></i> {{ __('Games') }}</a>

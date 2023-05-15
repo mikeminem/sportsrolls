@@ -56,6 +56,9 @@ Route::resource('/sports','SportController');
 Route::resource('/categories','CategoryController');
 Route::get('/categories_list/{user_id}','CategoryController@list');
 
+//groups options
+Route::resource('/groups','GroupsController');
+
 //profiles options
 Route::resource('/profiles','ProfilesController');
 Route::get('/my_profile', 'ProfilesController@show');
@@ -98,10 +101,10 @@ Route::get('/tournament_info/{slug}', 'TournamentsController@showTournament');
 //teams options
 Route::resource('/teams','TeamsController');
 Route::get('/teams_list/{tournament_id}','TeamsController@list');
+Route::get('/teams_list_by_branch/{tournament_id}/{branch}','TeamsController@listByBranch');
 Route::get('/update_team_status/{id}/{status}', 'TeamsController@updateStatus');
+Route::post('/teams/upload_image', 'TeamsController@uploadImage');
 //Route::put('/update_brand_website/{id}/{website}', 'BrandController@updateWebsite');
-
-
 
 //journeys
 Route::resource('/journeys','JourneysController');

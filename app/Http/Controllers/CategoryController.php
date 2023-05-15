@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 use DataTables;
 use DB;
-use App\Sports;
 
 class CategoryController extends Controller
 {
@@ -123,7 +122,7 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Category  $category
+     * @param  int 
      * @return boolean
      */
     public function show( $id)
@@ -140,7 +139,7 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse 
      */
     public function destroy($id)
     {

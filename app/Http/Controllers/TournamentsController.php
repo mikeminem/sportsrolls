@@ -282,7 +282,7 @@ class TournamentsController extends Controller
 
         //send the game details
         $games  = DB::table('games as g')
-        ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch', 'g.category_id')
+        ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch', 'g.category_id', 'g.type')
         ->join('teams as t1', 't1.id', '=', 'g.team1_id')
         ->join('teams as t2', 't2.id', '=', 'g.team2_id')
         ->join('categories as c', 'c.id', '=', 'g.category_id')        
@@ -334,6 +334,7 @@ class TournamentsController extends Controller
                             INNER JOIN journeys j on j.id = h.journey_id
                             WHERE h.category_id=" . $category->id . " and
                             h.status = 'Finalizado' and
+                            h.type = 'Temporada Regular' and
                             j.show_public ='Si' and
                             j.tournament_id = ". $tournament[0]->id ."
                     )
@@ -346,6 +347,7 @@ class TournamentsController extends Controller
                             INNER JOIN journeys j on j.id = v.journey_id
                             WHERE v.category_id=" . $category->id ." and
                             v.status = 'Finalizado' and
+                            v.type = 'Temporada Regular' and
                             j.show_public ='Si' and
                             j.tournament_id = ". $tournament[0]->id ."
                     )

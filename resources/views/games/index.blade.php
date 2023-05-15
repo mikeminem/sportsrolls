@@ -508,13 +508,14 @@
                 jQuery("#formModal").modal('show');
             });
 
-
             $(document).on("change", "#tournament_id", function (e) {
                 $("#tournament_id option:selected").each(function () {
                     var tournament=$(this).val();
 
                     if (tournament =="")
                     {
+                        $('#category_id').attr('required', true); 
+                        $('#branch').val('');
                         $("#category_id").empty();
                         $("#category_id").html('<option value="">Selecciona un torneo</option>');
                         $("#journey_id").empty();
@@ -527,6 +528,34 @@
                         getJourneys("journey_id",tournament,"");
                         getCategories("category_id",tournament);
 
+                    }
+                    
+                });
+            });
+
+            //branch
+            $(document).on("change", "#branch", function (e) {
+                const branch = $('#branch option:selected').val();
+                $('#category_id').attr('required', true); 
+
+
+                $("#tournament_id option:selected").each(function () {
+                    var tournament=$(this).val();
+
+                    if (tournament =="") {
+                        
+                        $('#category_id').attr('required', true); 
+                        $("#team1_id").empty();
+                        $("#team1_id").html('<option value="">Selecciona un torneo</option>');
+                        $("#team2_id").empty();
+                        $("#team2_id").html('<option valu="">Selecciona un torneo</option>');
+                    
+                    } else {
+                        if (branch.length > 0) {
+                        $('#category_id').attr('required', false); 
+                            getTeamsByBranch([ "team1_id", 'team2_id'], tournament, branch);
+                        }
+                        
                     }
                     
                 });

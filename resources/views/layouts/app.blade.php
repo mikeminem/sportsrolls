@@ -173,7 +173,7 @@
             }
         }
 
-        //getJourneys
+        //getTeams
         function getTeams(component, tournament, selected="") {
             var options = "";
 
@@ -199,6 +199,37 @@
                         }
                         $("#" + component).html(options);
                         
+                    },
+                });
+            }
+        }
+
+        function getTeamsByBranch(components, tournament, branch, selected="") {
+            var options = "";
+
+            if (tournament) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('teams_list_by_branch') }}/" + tournament + '/' + branch,
+                    dataType: "json",
+                    success: function (data) { 
+                        options += '<option value="">Selecciona</option>';
+                        var journaments = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                            journaments++;
+                        }
+                        
+                        if (journaments <0) {
+                            $.notify("No hay Equipos en este torneo, selecciona otro o agrega equipos al torneo", "error");
+                        }
+                        components.forEach( function(component) {
+                            $("#" + component).html(options);
+                        }) 
                     },
                 });
             }

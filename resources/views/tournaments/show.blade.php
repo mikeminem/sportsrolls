@@ -79,8 +79,8 @@
                                                         <th>Equipo Casa</th>
                                                         <th>-</th>
                                                         <th>Equipo Visitante</th>
-                                                        <th>Rama</th>
-                                                        <th>Categoria</th>
+                                                        <th>Rama / Categiría</th>
+                                                        <th>Tipo</th>
                                                         
                                                     </tr>
                                                 </thead>
@@ -124,8 +124,8 @@
                                                                     <td class="text-right">{{ $game->team1 }}</td>
                                                                     <th>VS </th>
                                                                     <td>{{ $game->team2 }}</td>
-                                                                    <td>{{ $game->branch }}</td>
-                                                                    <td>{{ $game->category }}</td>
+                                                                    <td>{{ $game->branch }} / {{ $game->category }}</td>
+                                                                    <td><span class="badge badge-danger"> {{ $game->type }} </span></td>
                                                                 </tr>
                                                             @else
                                                                 @php
@@ -151,8 +151,8 @@
                                                                     <td class="text-right">{{ $game->team1 }}</td>
                                                                     <th>VS </th>
                                                                     <td>{{ $game->team2 }}</td>
-                                                                    <td>{{ $game->branch }}</td>
-                                                                    <td>{{ $game->category }}</td>
+                                                                    <td>{{ $game->branch }} / {{ $game->category }}</td>
+                                                                    <td> <span class="badge badge-danger"> {{ $game->type }} </span></td>
                                                                 </tr>
                                                                 
                                                             @endif

@@ -1,5 +1,9 @@
 to create a migration
 
+crop an imagen and upload it
+https://www.webslesson.info/2018/03/image-crop-and-upload-using-jquery-with-php-ajax.html
+
+
 php artisan make:migration add_role_status_to_users_table --table=users
 
 https://github.com/Laraveles/spanish

@@ -21,15 +21,24 @@
                   <div class="carousel-item active">
                     <img class="mx-auto w-100 d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=777&fg=555&text=SportRoles.com" alt="SportRoles.com roles de juego y estadisticas">
                     <div class="carousel-caption" style="background:rgba(0, 0, 0, 0.8)">
-                      <h2>Bienvenido a Sport Roles</h2>
-                      <p>Administra tus ligas deportivas de una forma sencilla</p>
+                      <h2>CEMOZAC Campeones 44+ </h2>
+                      <p>
+                        Liga de Guadalupe felicita a CEMOZAC campeones en la categoría 44+
+                        <a class="btn btn-primary" href="https://www.sportroles.com/tournament_info/Liga-de-Veteranos-de-Guadalupe">
+                          Leer más ...
+                        </a>
+                      </p>
                     </div>
                   </div>
                   <div class="carousel-item">
-                    <img class="mx-auto w-100 d-block" src="{{ asset('images/imgAmericano.jpg')}}?auto=yes&bg=666&fg=444&text=SportRoles.com" alt="SportRoles.com roles de juego y estadisticas">
+                    <img class="mx-auto w-100 d-block" src="{{ asset('images/imgPhilies.jpeg')}}?auto=yes&bg=666&fg=444&text=SportRoles.com" alt="SportRoles.com roles de juego y estadisticas">
                     <div class="carousel-caption" style="background:rgba(0, 0, 0, 0.8)">
-                      <h2>SportRoles.com</h2>
-                      <p>Genera la tabla de posiciones de manera automática</p>
+                      <h2>Fhilies Campeones 39+</h2>
+                      <p>Liga de Guadalupe felicita a Philies campeones en la categoría 39+
+                        <a class="btn btn-primary" href="https://www.sportroles.com/tournament_info/Liga-de-Veteranos-de-Guadalupe">
+                          Leer más ...
+                        </a>
+                      </p>
                     </div>
                   </div>
                   <div class="carousel-item">

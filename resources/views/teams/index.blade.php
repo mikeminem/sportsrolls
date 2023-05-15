@@ -251,12 +251,79 @@
       </div>
     </div>
   </div>
+
   
+
+  {{-- dialog for picture --}}
+<!-- delete modal -->
+<div class="modal" id="pictureModal" >
+    <div class="modal-dialog modal-lg" >
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Foto del Equipo</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+  
+        <!-- Modal body -->
+        {{-- <form id="pictureForm" enctype="multipart/form-data"> --}}
+        <form id="pictureForm" >
+            
+            {{ csrf_field() }}
+            <input type="text" id="pictureId" name="pictureId" class="form-control"  value="0"> 
+
+            <div class="modal-body">
+                <h4>Selecciona la foto para el equipo  <mark><span class="text-blod" id="picture_name"></span></mark></h4>
+
+                <input class="form-control" type="file" name="upload_image" id="upload_image" accept="image/*" />
+                <br />
+                <!--div id="uploaded_image"></div -->
+                <!--div id="image_demo" style="width:350px; margin-top:30px"></div-->
+                <div id="image_demo"> </div>
+                    
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+               
+                <button type="submit" class="btn btn-success btn-lg"> <span class="fa fa-check"></span>  Guardar Foto</button>
+
+                <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
+                    <span class="fa fa-remove"></span> {{__('Cancel')}}
+                </button>
+            </div>
+        </form>
+  
+      </div>
+    </div>
+  </div>
+
+
 @endsection
 
 @section('js')
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.css" />
+
+
+
 <script type="text/javascript">
     jQuery(document).ready(function($){
+
+        $image_crop = $('#image_demo').croppie({
+            enableExif: true,
+            viewport: {
+                width:500,
+                height:400,
+                type:'square' //circle
+            },
+            boundary:{
+                width:600,
+                height:400,
+            }
+        });
             
             var Table = $('#table').DataTable({
                 "language": {
@@ -317,9 +384,6 @@
                 Table.columns(1).search(this.value).draw();
             });
 
-
-
-
             //get the category from the tournament selected
             $(document).on("change", "#tournament_id", function () {
                 var tournament = $('#tournament_id option:selected').val();
@@ -346,9 +410,7 @@
                 $("#category_id").html('<option value="">Selecciona</option>');
                 $("#sport").val("{{ Auth::user()->league->sport->name}}");
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
-
                 //$("#category_id").html(getCategories("{{ Auth::user()->id}}"));
-
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
             });
@@ -359,6 +421,68 @@
                 $('#row_name').text($(this).attr('data-name'));
                 $('#deleteForm').attr('action', $(this).attr('href'));
                 jQuery("#deleteModal").modal('show');
+            });
+
+            $(document).on("click", "#btnPicture", function (e) {
+                e.preventDefault();
+
+                $('#pictureId').val($(this).attr('data-id'));
+                $('#picture_name').text($(this).attr('data-name'));
+
+                jQuery.noConflict(); 
+                jQuery("#pictureModal").modal('show');
+            });
+
+            //$('.crop_image').click(function(event){
+
+            $(document).on("submit", "#pictureForm", function (e) {
+                e.preventDefault();
+
+                var data = $(this).serialize();
+
+                console.log(data);
+
+                //url: "{{ route('teams.store') }}",
+
+                // $image_crop.croppie('result', {
+                // type: 'canvas',
+                // size: 'viewport'
+                // }).then(function(response){
+                //     $.ajax({
+                //         url:" {{ url('teams/upload_image') }}",
+                //         type: "POST",
+                //         //data:{"image": response},
+                //         data: new FormData(this),
+                //         success:function(data)
+                //         {
+                //             jQuery('#pictureModal').modal('hide');
+                //             //$('#uploaded_image').html(data);
+                //         $.notify(data.message, data.type);
+
+
+                //         }
+                //     });
+                // });
+
+                //jQuery("#pictureModal").modal('toggle');
+                return false;
+
+            });
+
+
+            $('#upload_image').on('change', function(){
+                var reader = new FileReader();
+
+                reader.onload = function (event) {
+                
+                    $image_crop.croppie('bind', {
+                        url: event.target.result
+                    }).then(function(){
+                        console.log('jQuery bind complete');
+                    });
+                }
+                reader.readAsDataURL(this.files[0]);
+                //jQuery('#uploadimageModal').modal('show');
             });
 
             $(document).on("click", "#btnUpdate", function (e) {
