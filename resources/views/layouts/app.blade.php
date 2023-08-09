@@ -74,13 +74,17 @@
     </div-->
     <div id="app">
         @include('layouts.menu')
-
+        
         <main class="py-2 mb-5">
+
+            <div class="alert alert-danger text-center">
+                <i class="fa fa-warning"></i> <strong>Aviso!</strong> A todos los usuarios de la página, se les informa que cambiaremos de nombre de dominio de sportroles.com a deportezacatecas.com.
+              </div>
+
             @yield('content')
         </main>
 
         @include('layouts.footer')
-
     </div>
 
     <!--  Jquery -->
@@ -234,6 +238,42 @@
                 });
             }
         }
+
+        //getGroups
+        function getGroups(components, tournament, selected="") {
+            var options = "";
+
+            if (tournament) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('get_groups') }}/" + tournament,
+                    dataType: "json",
+                    success: function (data) { 
+                        options += '<option value="">Selecciona</option>';
+                        var journaments = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                            journaments++;
+                        }
+                        
+                        // if (journaments <0) {
+                        //     $.notify("No hay Grupos en este torneo, selecciona otro o agrega equipos al torneo", "error");
+                        // }
+                        components.forEach( function(component) {
+                            $("#" + component).html(options);
+                        }) 
+                    },
+                });
+            }
+        }
+
+
+
+
 
 
 </script>

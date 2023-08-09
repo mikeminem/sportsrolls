@@ -31,16 +31,21 @@ class GamesController extends Controller
             // WHERE
             // g.user_id = 3 and
             // g.is_deleted = 0
+            $rows = [];
+
+            if ($request->tournament) {
             
-            $rows = DB::table('games as g')
+                $rows = DB::table('games as g')
                     ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch', 'g.type')
                     ->join('teams as t1', 't1.id', '=', 'g.team1_id')
                     ->join('teams as t2', 't2.id', '=', 'g.team2_id')
                     ->join('categories as c', 'c.id', '=', 'g.category_id')        
                     ->where('g.is_deleted', 0)
                     ->where('g.user_id',Auth::user()->id)
+                    ->where('g.tournament_id', $request->tournament)
                     ->orderBy('g.id', 'desc')
-                    ->get();        
+                    ->get();     
+            }   
             
             return DataTables::of($rows)
                     ->addColumn('date_time', function($row) {
@@ -100,7 +105,7 @@ class GamesController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a> 
-                                    <a href="' . $routeDelete . '" title="Borrar Registro"  id="btnDelete"> 
+                                    <a href="' . $routeDelete . '" data-name="'. $row->id .'"  title="Borrar Registro"  id="btnDelete"> 
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
@@ -229,24 +234,24 @@ class GamesController extends Controller
     {
         //
         if (isset($id) && $id > 0) {
-            Journeys::where('id', $id)->update(['is_deleted' => 1 ]);
+            Games::where('id', $id)->update(['is_deleted' => 1 ]);
 
             return response()->json([
                 'type' => 'success',
-                'message' => 'La jornada se ha borrado!'
+                'message' => 'El Juego se ha borrado!'
             ]);
         }
 
         return response()->json([
             'type' => 'error',
-            'message' => 'Error al intentar borrar la jornada!'
+            'message' => 'Error al intentar borrar el Juego!'
         ]);
     }
 
     public function list ($tournament_id) {
         
         if ($tournament_id) {
-            $list = Journeys::where('tournament_id',$tournament_id)->get();
+            $list = Games::where('tournament_id',$tournament_id)->get();
             return (string) $list;
         }
 

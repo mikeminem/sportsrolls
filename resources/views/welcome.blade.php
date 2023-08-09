@@ -8,7 +8,7 @@
 
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid d-none d-md-block d-lg-block  d-xl-block">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -64,7 +64,7 @@
 
 <!-- start current torunaments-->
 
-<div class="container-fluid">
+<div class="container-fluid mt-5">
   <div class="row">
     <div class="col-md-12">
       <h1 class="title">Torneos más populares</h1>
@@ -122,7 +122,7 @@
 <!-- comming up torunaments-->
 
 @if (count($tournaments2)>0) 
-<div class="container-fluid m-1">
+<div class="container-fluid m-2">
   <div class="row">
     <div class="col-md-12 m-1">
       <h1 class="title">Próximos Torneos</h1>
@@ -161,17 +161,29 @@
               </div>
             </div>
           </div>
-
-            
           @endforeach
           
-        </div>
-      </div>
-    <br />
+  </div>
+</div>
+<br />
 
     @endif
 <!-- end comming up torunaments-->
 
+<!-- torunaments status -->
+
+<div class="container-fluid m-1">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="title">Nuestras Estadísticas</h1>
+    </div>
+        <div class="col-md-12">
+                @include('components.features',['links'=>0])
+        </div>
+  </div>
+</div>
+
+    
 
 
 @php

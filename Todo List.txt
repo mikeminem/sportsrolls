@@ -1,6 +1,62 @@
 Todo List
 
 
+
+
+//query for get the left games per team
+
+
+select t.id, t.name
+from teams t 
+where 
+t.id not in (select g.id from (
+    (select 
+		g.team1_id id
+		from games g
+		where
+		g.tournament_id = 7 and
+		g.status = 'Finalizado' and
+		g.type = 'Temporada Regular' and 
+		g.team2_id = 20)
+    UNION ALL (select 
+		g.team2_id id
+		from games g
+		where
+		g.tournament_id = 7 and
+		g.status = 'Finalizado' and
+		g.type = 'Temporada Regular' and 
+		g.team1_id = 20 )
+	) as g order by id) AND
+    t.tournament_id = 7 AND
+    t.id <> 20;
+
+
+
+    select t.id, t.name
+from teams t 
+where 
+t.id not in (select g.id from (
+    (select 
+		g.team1_id id
+		from games g
+		where
+		g.tournament_id = 7 and
+		g.status = 'Finalizado' and
+		g.type = 'Temporada Regular' and 
+		g.team2_id = 21 )
+    UNION ALL (select 
+		g.team2_id id
+		from games g
+		where
+		g.tournament_id = 7 and
+		g.status = 'Finalizado' and
+		g.type = 'Temporada Regular' and 
+		g.team1_id = 21 )
+	) as g order by id) AND
+    t.tournament_id = 7 AND
+    t.id <> 21;
+---
+
 Add this modal, to see what games the team has played 
 SELECT g.id, t1.name, g.score_team1, 'vs', g.score_team2, t2.name, g.status
 FROM games g

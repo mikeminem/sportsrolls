@@ -36,6 +36,7 @@ class SportController extends Controller
                             $image = '<img src="' . asset('sport/' . $row->image) . '" style="height:100px">';
 
                         return $image;
+
                     })->addColumn('action', function($row) {
 
                         $routeEdit = route('sports.show', $row->id);
@@ -88,10 +89,8 @@ class SportController extends Controller
 
 
         $path = "";
-
         if($request->file('image')){
             $path =  date('YmdHis') . '.' .$request->file('image')->extension();
-
             $request->file('image')->storeAs('public/sports', $path);
         }
 

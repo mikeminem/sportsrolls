@@ -275,7 +275,10 @@ class TournamentsController extends Controller
         //lets get the tournament info
         $tournament = Tournaments::where('slug', $slug)->get();
 
-        $teams = Teams::where('tournament_id', $tournament[0]->id)->orderby('name','asc')->get();
+        $teams = Teams::where('tournament_id', $tournament[0]->id)
+            ->where('is_deleted',0)
+            ->orderby('name','asc')
+            ->get();
 
         $clicks = $tournament[0]->clicks + 1;
         Tournaments::where('id', $tournament[0]->id)->update(['clicks' => $clicks ]);
@@ -355,14 +358,17 @@ class TournamentsController extends Controller
                 join teams t on t.id = score.team
                 where
                 t.status = 'Activo'
-                group by t.name
-                order by JG desc";
+                group by t.name ";
 
-            if (strlen($points)>0) {
-                $query .= ", PUNTOS desc";
+            if ( strlen($points)==0) {
+                $query .= 'ORDER BY JG desc, JP asc';
             }
 
-            $query .= ", DIF desc";
+            if (strlen($points)>0) {
+                $query .= 'ORDER BY PUNTOS desc';
+            }
+
+            $query .= ', DIF desc';
             
             $scores[$category->id] = DB::select( DB::raw( $query) );
         }

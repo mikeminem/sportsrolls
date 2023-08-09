@@ -12,7 +12,7 @@
 </div>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{  url('/') }}">
                     <img src="{{ asset('/images/imgLogo.png') }}" 
                         title="{{ config('app.name', 'Sport Roles') }}" 
                         alt="{{ config('app.name', 'Sport Roles') }}"
@@ -66,6 +66,10 @@
                         @else
 
                         <li class="nav-item">
+                            <a class="nav-link" href=" {{ url('/home') }} "><i class="fa fa-home"></i> {{ __('Home') }}</a>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-comments"></i> {{ __('Mensajes') }}</a>
                         </li>
 
@@ -80,7 +84,7 @@
                                         
                                         <div class="dropdown-divider"></div>
 
-                                        <a class="dropdown-item" href="{{ url('/tournaments') }}"><i class="fa fa-file"></i> {{ __('Tournaments') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/tournaments') }}"><i class="fa fa-trophy"></i> {{ __('Tournaments') }}</a>
 
                                         <a class="dropdown-item" href="{{ url('/categories') }}"><i class="fa fa-cubes"></i> {{ __('Categories') }}</a>
                                         <a class="dropdown-item" href="{{ url('/groups') }}"><i class="fa fa-circle-o"></i> {{ __('Groups') }}</a>
@@ -88,8 +92,8 @@
                                         <a class="dropdown-item" href="{{ url('/journeys')}}"><i class="fa fa-calendar"></i> {{ __('Journeys') }}</a>
                                         <a class="dropdown-item" href="{{ url('/games')}}"><i class="fa fa-tasks"></i> {{ __('Games') }}</a>
 
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{{ url('/news') }}"><i class="fa fa-newspaper-o"></i>  {{ __('News') }}</a>
+                                        {{-- <div class="dropdown-divider"></div> --}}
+                                        <a class="dropdown-item" href="{{ url('/alerts') }}"><i class="fa fa-warning"></i>  {{ __('Alerts') }}</a>
                                         
                                     </div>
                                 </li>

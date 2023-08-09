@@ -38,7 +38,7 @@
                             <div class="form-group">
                                 <label for="filterTournaments"><b>Torneos Activos</b></label>
                                 <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
-                                    <option value="">Selecciona</option>
+                                    <option value="">Selecciona...</option>
                                     @foreach($tournaments as $tournament)
                                         <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
                                     @endforeach
@@ -52,11 +52,19 @@
                                 <label for="filterCategories"><b>Categorías</b></label>
                                 <select class="form-control" required id="filterCategories" name="filterCategories"  >
                                     <option value="">Selecciona un torneo</option>
-                                    
-                                </select>
-                                
+                                </select>  
                             </div>
                         </div>
+
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="filterGroups"><b>Grupos</b></label>
+                                <select class="form-control" required id="filterGroups" name="filterGroups"  >
+                                    <option value="">Selecciona un torneo</option>
+                                </select>  
+                            </div>
+                        </div>
+
                     </div>
 
                     <hr />
@@ -67,9 +75,11 @@
                                 <tr>
                                     <th>Torneo</th>
                                     <th>Id Categoria</th>
+                                    <th>Id Grupo</th>
                                     <th>Nombre</th>
                                     <th>Contacto</th>
                                     <th>Categoría</th>
+                                    <th>Grupo</th>
                                     <th>Estado</th>
                                     <th width="20%"> - </th>
                                 </tr>
@@ -99,6 +109,7 @@
             <form id="Form" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="row">    
+
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>Nombre *</b></label>
@@ -120,24 +131,13 @@
 
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
-                                <label for="group"><b>Grupo *</b></label>
-                                <select class="form-control" required id="group" name="group"  >
-                                    <option value="Todos">Todos contra todos</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                    <option value="D">D</option>
-                                    <option value="E">E</option>
-                                    <option value="F">F</option>
-                                    <option value="G">G</option>
-                                    <option value="H">H</option>
-                                    <option value="I">I</option>
-                                    <option value="J">J</option>
-                                    <option value="K">K</option>
-                                    <option value="L">L</option>
-                                </select>  
+                                <label for="title"><b>Deporte *</b></label>
+                                <input type="text" class="form-control" readonly id="sport" name="sport">
+                                <input type="hidden" class="form-control" readonly id="sport_id" name="sport_id">
                             </div>
                         </div>
+
+                      
 
 
                         <div class="col-md-4 col-sm-12">
@@ -154,18 +154,19 @@
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>Deporte *</b></label>
-                                <input type="text" class="form-control" readonly id="sport" name="sport">
-                                <input type="hidden" class="form-control" readonly id="sport_id" name="sport_id">
+                                <label for="title"><b>Categoria *</b></label>
+                                <select class="form-control" required id="category_id" name="category_id">
+                                    <option value="">Selecciona un Torneo</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>Categoria *</b></label>
-                                <select class="form-control" required id="category_id" name="category_id">
-                                    <option value="">Selecciona</option>
-                                </select>
+                                <label for="group_id">Grupo</label>
+                                <select class="form-control" id="group_id" name="group_id"  >
+                                    <option value="Todos">Selecciona un torneo</option>
+                                </select>  
                             </div>
                         </div>
                     </div>
@@ -182,6 +183,19 @@
                             <div class="form-group">
                                 <label for="contact_phone"><b>Teléfono Contacto </b></label>
                                 <input type="text" class="form-control" id="contact_phone" name="contact_phone"  maxlength="10"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">    
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <label for="photo">Foto del Equipo</label>
+                                <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="preview()">
+                                <small><b>Tamaño de la imagene recomendada 800 x 600 px</b></small>
+                                <hr>
+                                <img id="teamPhoto" src="" width="400px" height="300px"/>
+
                             </div>
                         </div>
                     </div>
@@ -250,54 +264,7 @@
   
       </div>
     </div>
-  </div>
-
-  
-
-  {{-- dialog for picture --}}
-<!-- delete modal -->
-<div class="modal" id="pictureModal" >
-    <div class="modal-dialog modal-lg" >
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Foto del Equipo</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-  
-        <!-- Modal body -->
-        {{-- <form id="pictureForm" enctype="multipart/form-data"> --}}
-        <form id="pictureForm" >
-            
-            {{ csrf_field() }}
-            <input type="text" id="pictureId" name="pictureId" class="form-control"  value="0"> 
-
-            <div class="modal-body">
-                <h4>Selecciona la foto para el equipo  <mark><span class="text-blod" id="picture_name"></span></mark></h4>
-
-                <input class="form-control" type="file" name="upload_image" id="upload_image" accept="image/*" />
-                <br />
-                <!--div id="uploaded_image"></div -->
-                <!--div id="image_demo" style="width:350px; margin-top:30px"></div-->
-                <div id="image_demo"> </div>
-                    
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-               
-                <button type="submit" class="btn btn-success btn-lg"> <span class="fa fa-check"></span>  Guardar Foto</button>
-
-                <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
-                    <span class="fa fa-remove"></span> {{__('Cancel')}}
-                </button>
-            </div>
-        </form>
-  
-      </div>
-    </div>
-  </div>
+</div>
 
 
 @endsection
@@ -310,27 +277,22 @@
 
 
 <script type="text/javascript">
+        function preview() {
+            teamPhoto.src=URL.createObjectURL(event.target.files[0]);
+        }
+
     jQuery(document).ready(function($){
 
-        $image_crop = $('#image_demo').croppie({
-            enableExif: true,
-            viewport: {
-                width:500,
-                height:400,
-                type:'square' //circle
-            },
-            boundary:{
-                width:600,
-                height:400,
-            }
-        });
+        fetch_data();
+
+        function fetch_data(tournament = '') {
             
-            var Table = $('#table').DataTable({
+            $('#table').DataTable({
                 "language": {
                     "sProcessing":    "Procesando...",
                     "sLengthMenu":    "Mostrar _MENU_ registros",
                     "sZeroRecords":   "No se encontraron resultados",
-                    "sEmptyTable":    "No se encontró información",
+                    "sEmptyTable":    "No se encontró información / Selecciona un torneo",
                     "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
                     "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
                     "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
@@ -352,20 +314,29 @@
                 },
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('teams.index') }}',
+                ajax: {
+                    url: '{{ route('teams.index') }}',
+                    data: { tournament: tournament },
+                },
                 columns: [
                     { data: 'tournament_id', name: 'tournament_id', visible:false},
                     { data: 'category_id', name: 'category_id', visible:false},
+                    { data: 'group_id', name: 'group_id', visible:false},
                     { data: 'name', name: 'name'},
                     { data: 'contact', name: 'contact'},
                     { data: 'category', name: 'category'},
+                    { data: 'group', name: 'group'},
                     { data: 'status', name: 'status'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
+        }
 
             $(document).on("change", "#filterTournaments", function () {
-                Table.columns(0).search(this.value).draw();
+                //Table.columns(0).search(this.value).draw();
+                var tournament = $('#filterTournaments').val();
+                $('#table').DataTable().destroy();
+                fetch_data(tournament);
 
                 //we send the categories
                 var tournament=$(this).val();
@@ -373,32 +344,40 @@
                     {
                         $("#filterCategories").empty();
                         $("#filterCategories").html('<option value="">Selecciona un torneo</option>');
+
+                        $("#filterGroups").empty();
+                        $("#filterGroups").html('<option value="">Selecciona un torneo</option>');
                     }
                     else
                     {
                         getCategories("filterCategories",tournament);
+                        getGroups(['filterGroups'],tournament);
                     }
             });
 
             $(document).on("change", "#filterCategories", function () {
-                Table.columns(1).search(this.value).draw();
+                $('#table').DataTable().columns(1).search(this.value).draw();
+            });
+
+            $(document).on("change", "#filterGroups", function () {
+                $('#table').DataTable().columns(2).search(this.value).draw();
             });
 
             //get the category from the tournament selected
             $(document).on("change", "#tournament_id", function () {
                 var tournament = $('#tournament_id option:selected').val();
 
-                if (tournament =="")
-                {
+                if (tournament =="") {
                     $("#category_id").empty();
-                    $("#category_id").html('<option value="">Selecciona</option>');
-                }
-                else
-                {
-                    //$("#category_id").html(getCategories(tournament));
-                    getCategories("category_id",tournament);
+                    $("#category_id").html('<option value="">Selecciona un Torneo</option>');
 
+                    $("#group_id").empty();
+                    $("#group_id").html('<option value="">Selecciona un Torneo</option>');
+                } else {
+                    getCategories("category_id",tournament);
+                    getGroups(['group_id'],tournament);
                 } 
+
             });
                 
 
@@ -406,8 +385,14 @@
             $(document).on("click", "#btnAdd", function () {
                 $("#Form").trigger('reset');
                 $("#id").val("");
+                $("#teamPhoto").attr('src','');
+                
                 $("#category_id").empty();
-                $("#category_id").html('<option value="">Selecciona</option>');
+                $("#category_id").html('<option value="">Selecciona un torneo</option>');
+
+                $("#group_id").empty();
+                $("#group_id").html('<option value="">Selecciona un torneo</option>');
+
                 $("#sport").val("{{ Auth::user()->league->sport->name}}");
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
                 //$("#category_id").html(getCategories("{{ Auth::user()->id}}"));
@@ -415,75 +400,14 @@
                 jQuery("#formModal").modal('show');
             });
 
+
             $(document).on("click", "#btnDelete", function (e) {
                 e.preventDefault();
 
                 $('#row_name').text($(this).attr('data-name'));
                 $('#deleteForm').attr('action', $(this).attr('href'));
                 jQuery("#deleteModal").modal('show');
-            });
-
-            $(document).on("click", "#btnPicture", function (e) {
-                e.preventDefault();
-
-                $('#pictureId').val($(this).attr('data-id'));
-                $('#picture_name').text($(this).attr('data-name'));
-
-                jQuery.noConflict(); 
-                jQuery("#pictureModal").modal('show');
-            });
-
-            //$('.crop_image').click(function(event){
-
-            $(document).on("submit", "#pictureForm", function (e) {
-                e.preventDefault();
-
-                var data = $(this).serialize();
-
-                console.log(data);
-
-                //url: "{{ route('teams.store') }}",
-
-                // $image_crop.croppie('result', {
-                // type: 'canvas',
-                // size: 'viewport'
-                // }).then(function(response){
-                //     $.ajax({
-                //         url:" {{ url('teams/upload_image') }}",
-                //         type: "POST",
-                //         //data:{"image": response},
-                //         data: new FormData(this),
-                //         success:function(data)
-                //         {
-                //             jQuery('#pictureModal').modal('hide');
-                //             //$('#uploaded_image').html(data);
-                //         $.notify(data.message, data.type);
-
-
-                //         }
-                //     });
-                // });
-
-                //jQuery("#pictureModal").modal('toggle');
-                return false;
-
-            });
-
-
-            $('#upload_image').on('change', function(){
-                var reader = new FileReader();
-
-                reader.onload = function (event) {
-                
-                    $image_crop.croppie('bind', {
-                        url: event.target.result
-                    }).then(function(){
-                        console.log('jQuery bind complete');
-                    });
-                }
-                reader.readAsDataURL(this.files[0]);
-                //jQuery('#uploadimageModal').modal('show');
-            });
+            });  
 
             $(document).on("click", "#btnUpdate", function (e) {
                 e.preventDefault();
@@ -495,6 +419,8 @@
                     dataType: "json",
                     success: function (data) { 
                         var tournament_id = 0;
+                        console.log( data );
+
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
 
@@ -504,6 +430,7 @@
                         }
                         //$("#category_id").html(getCategories({{ Auth::user()->id }}, category_id));
                         getCategories("category_id",tournament_id, data["category_id"]);
+                        getGroups(['group_id'],tournament_id, data["group_id"]);
 
                         $("#sport").val("{{ Auth::user()->league->sport->name}}");
                         $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
@@ -517,7 +444,9 @@
             });
 
             $(document).on("click", "#btnRefresh", function () {
-                Table.ajax.reload();
+                //Table.ajax.reload();
+                $('#table').DataTable().ajax.reload();
+
             });
 
             $(document).on("submit", "#Form", function (e) {
@@ -546,7 +475,9 @@
                         
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('toggle');
-                        Table.ajax.reload();
+                        // Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+
                         $.notify(data.message, data.type);
                         
                     },
@@ -576,7 +507,9 @@
 
                         jQuery.noConflict(); 
                         jQuery("#deleteModal").modal('toggle');
-                        Table.ajax.reload();
+                        // Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+                        
                         $.notify(data.message, data.type);
 
                     },
@@ -615,39 +548,6 @@
         });
             
     });
-
-        
-
-        //global funcntions
-        // function getCategories(user, selected="") {
-        //     var options = "";
-
-        //     if (sport) {
-        //         $.ajax({
-        //             type: "GET",
-        //             url: "{{ url('categories_list') }}/" + user,
-        //             dataType: "json",
-        //             success: function (data) { 
-        //                 options = '<option value="">Selecciona</option>';
-        //                 var categories = -1
-        //                 for(obj in data) {
-        //                     if ( selected == data[obj]['id'] ) {
-        //                         options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
-        //                     } else {
-        //                         options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
-        //                     }
-        //                     categories++;
-        //                 }
-                        
-        //                 if (categories <0) {
-        //                     $.notify("No hay categorías en este torneo, selecciona otro o agrega categorias al torneo", "error");
-        //                 }
-        //                 $("#category_id").html(options);
-        //             },
-        //         });
-        //     }
-        //     return options;
-        // }
 
 </script>
 @endsection

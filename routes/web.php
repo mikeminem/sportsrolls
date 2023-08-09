@@ -58,6 +58,8 @@ Route::get('/categories_list/{user_id}','CategoryController@list');
 
 //groups options
 Route::resource('/groups','GroupsController');
+Route::get('/get_groups/{tournament_id}','GroupsController@getGroups');
+
 
 //profiles options
 Route::resource('/profiles','ProfilesController');
@@ -81,6 +83,20 @@ Route::get('photo/{filename}',function($filename){
 
 Route::get('sport/{filename}',function($filename){
     $path = storage_path("app/public/sports/$filename");
+
+    if (!\File::exists($path)) abort(404);
+
+    $file = \File::get($path);
+    $type = \File::mimeType($path);
+
+    $response = Response::make($file,200);
+    $response->header("Content-Type",$type);
+
+    return $response;
+});
+
+Route::get('team/{filename}',function($filename){
+    $path = storage_path("app/public/teams/$filename");
 
     if (!\File::exists($path)) abort(404);
 

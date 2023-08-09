@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <label for="filterTournaments"><b>Torneos Activos</b></label>
                                 <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
-                                    <option value="">Todas las Categorias</option>
+                                    <option value="">Selecciona...</option>
                                     @foreach($tournaments as $tournament)
                                         <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
                                     @endforeach
@@ -183,44 +183,54 @@
 <script type="text/javascript">
         jQuery(document).ready(function($){
             
-            var Table = $('#table').DataTable({
-                "language": {
-                    "sProcessing":    "Procesando...",
-                    "sLengthMenu":    "Mostrar _MENU_ registros",
-                    "sZeroRecords":   "No se encontraron resultados",
-                    "sEmptyTable":    "No se encontró información",
-                    "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix":   "",
-                    "sSearch":        "Buscar:",
-                    "sUrl":           "",
-                    "sInfoThousands":  ",",
-                    "sLoadingRecords": "...Cargando...",
-                    "oPaginate": {
-                        "sFirst":    "Primero",
-                        "sLast":    "Último",
-                        "sNext":    "Siguiente",
-                        "sPrevious": "Anterior"
+            fetch_data();
+
+            function fetch_data(tournament = '') {
+
+                $('#table').DataTable({
+                    "language": {
+                        "sProcessing":    "Procesando...",
+                        "sLengthMenu":    "Mostrar _MENU_ registros",
+                        "sZeroRecords":   "No se encontraron resultados",
+                        "sEmptyTable":    "No se encontró información / Selecciona un torneo",
+                        "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix":   "",
+                        "sSearch":        "Buscar:",
+                        "sUrl":           "",
+                        "sInfoThousands":  ",",
+                        "sLoadingRecords": "...Cargando...",
+                        "oPaginate": {
+                            "sFirst":    "Primero",
+                            "sLast":    "Último",
+                            "sNext":    "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        }
                     },
-                    "oAria": {
-                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                },
-                processing: true,
-                serverSide: true,
-                ajax: '{{ route('groups.index') }}',
-                columns: [
-                    { data: 'tournament', name: 'tournament',  visible:false},
-                    { data: 'name', name: 'name'},
-                    { data: 'notes', name: 'notes'},
-                    { data: 'action', name: 'action', orderable: false, searchable: false}
-                ]
-            });
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('groups.index') }}',
+                        data: { tournament: tournament }
+                    }, 
+                    columns: [
+                        { data: 'tournament', name: 'tournament',  visible:false},
+                        { data: 'name', name: 'name'},
+                        { data: 'notes', name: 'notes'},
+                        { data: 'action', name: 'action', orderable: false, searchable: false}
+                    ]
+                });
+            }
 
             $(document).on("change", "#filterTournaments", function () {
-                Table.columns(0).search(this.value).draw();
+                var tournament = $('#filterTournaments').val();
+                $('#table').DataTable().destroy();
+                fetch_data(tournament);
             });
 
             $(document).on("click", "#addRow", function () {
@@ -266,7 +276,8 @@
             });
 
             $(document).on("click", "#btnRefresh", function () {
-                Table.ajax.reload();
+                // Table.ajax.reload();
+                $('#table').DataTable().ajax.reload();
             });
 
             $(document).on("submit", "#updateForm", function (e) {
@@ -299,7 +310,9 @@
                         
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('toggle');
-                        Table.ajax.reload();
+                        // Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+
                         $.notify(data.message, data.type);
                         
                     },
@@ -329,7 +342,9 @@
 
                         jQuery.noConflict(); 
                         jQuery("#deleteModal").modal('toggle');
-                        Table.ajax.reload();
+                        //Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+
                         $.notify(data.message, data.type);
 
                     },

@@ -357,7 +357,20 @@
                                                         @if ($team->category_id == $category->id)
                                                             <tr>
                                                                 <td >
-                                                                    {{ $team->name }} 
+                                                                    <b>{{ $team->name }}</b> 
+                                                                    @if( $team->photo )
+                                                                            <br>
+                                                                            <img class="img img-fluid" src="{{ asset('team/' . $team->photo) }} " style="width=100%">
+                                                                            
+                                                                    @endif
+                                                                    <!--div class="text-right">
+
+                                                                        <span class="fa fa-heart"></span> 123
+                                                                        <span class="fa fa-thumbs-up"></span> 123
+                                                                        <span class="fa fa-thumbs-down"></span>34
+
+                                                                    </div-->
+
                                                                     @if ($team->status == 'Baja')
                                                                     <span class="badge badge-danger">Baja del torneo</span>
                                                                     @endif

@@ -110,3 +110,7 @@ if modal give us problems, just delete the backdrop element
     color: #fff;
     background-color: #000 !important;
 }
+
+.feature {
+	font-size: 7em;
+}

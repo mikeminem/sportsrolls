@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <label for="filterTournaments"><b>Torneos Activos</b></label>
                                 <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
-                                    <option value="">Todos los torneos</option>
+                                    <option value="">Selecciona...</option>
                                     @foreach($tournaments as $tournament)
                                         <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
                                     @endforeach
@@ -59,8 +59,7 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>torneo</th>
-                                    <th>Categoria</th>
-                                    <th width="20%">Nombre</th>
+                                    <th>Nombre</th>
                                     <th>Fecha Inicio</th>
                                     <th>Fecha Final</th>
                                     <th>Publicar en Página</th>
@@ -218,14 +217,18 @@
 @section('js')
 <script type="text/javascript">
         jQuery(document).ready(function($){
+
+            fetch_data();
+
+        function fetch_data(tournament = '') {
             
-            var Table = $('#table').DataTable({
+            $('#table').DataTable({
                 order: [[0, 'desc']],
                 "language": {
                     "sProcessing":    "Procesando...",
                     "sLengthMenu":    "Mostrar _MENU_ registros",
                     "sZeroRecords":   "No se encontraron resultados",
-                    "sEmptyTable":    "No se encontró información",
+                    "sEmptyTable":    "No se encontró información / Selecciona un torneo",
                     "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
                     "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
                     "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
@@ -247,7 +250,10 @@
                 },
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('journeys.index') }}',
+                ajax: {
+                    url: '{{ route('journeys.index') }}',
+                    data: { tournament: tournament },
+                },
                 columns: [
                     { data: 'id', name: 'id',  visible:false},
                     { data: 'tournament_id', name: 'tournament_id', visible:false},
@@ -259,9 +265,14 @@
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
+        }
 
             $(document).on("change", "#filterTournaments", function () {
-                Table.columns(1).search(this.value).draw();
+                //Table.columns(1).search(this.value).draw();
+                var tournament = $('#filterTournaments').val();
+                $('#table').DataTable().destroy();
+                fetch_data(tournament);
+
             });
 
             $(document).on("click", "#btnAdd", function () {
@@ -310,7 +321,8 @@
             });
 
             $(document).on("click", "#btnRefresh", function () {
-                Table.ajax.reload();
+                //Table.ajax.reload();
+                $('#table').DataTable().ajax.reload();
             });
 
             $(document).on("submit", "#updateForm", function (e) {
@@ -343,7 +355,9 @@
                         
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('toggle');
-                        Table.ajax.reload();
+                        // Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+
                         $.notify(data.message, data.type);
                         
                     },
@@ -373,7 +387,9 @@
 
                         jQuery.noConflict(); 
                         jQuery("#deleteModal").modal('toggle');
-                        Table.ajax.reload();
+                        // Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+                        
                         $.notify(data.message, data.type);
 
                     },

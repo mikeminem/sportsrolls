@@ -28,12 +28,19 @@ class GroupsController extends Controller
     {
         //
         if($request->ajax()){
-            $rows = DB::table('groups as g')
-                    ->join('tournaments as t', 't.id', '=', 'g.tournament_id')
-                    ->select('g.id', 'g.name', 'g.notes',  't.id as tournament', 'g.is_deleted')
-                    ->where('g.is_deleted', 0)
-                    ->where('g.user_id',Auth::user()->id)
-                    ->get();        
+
+            $rows = [];
+
+            if ( $request->tournament ) {
+
+                $rows = DB::table('groups as g')
+                        ->join('tournaments as t', 't.id', '=', 'g.tournament_id')
+                        ->select('g.id', 'g.name', 'g.notes',  't.id as tournament', 'g.is_deleted')
+                        ->where('g.is_deleted', 0)
+                        ->where('g.user_id',Auth::user()->id)
+                        ->where('t.id', $request->tournament)
+                        ->get();      
+            }  
             
             return DataTables::of($rows)
                     ->addColumn('action', function($row) {
@@ -176,21 +183,29 @@ class GroupsController extends Controller
      * @param  \App\Groups  $groups
      * @return \Illuminate\Http\JsonResponse 
      */
-    public function destroy( $id )
-    {
+    public function destroy( $id ) {
         //
         if (isset($id) && $id > 0) {
             Groups::where('id', $id)->update(['is_deleted' => 1 ]);
 
             return response()->json([
                 'type' => 'success',
-                'message' => 'La categoria se ha borrado!'
+                'message' => 'La grupo se ha borrado!'
             ]);
         }
 
         return response()->json([
             'type' => 'error',
-            'message' => 'Error al intentar borrar la categoria!'
+            'message' => 'Error al intentar borrar la grupo!'
         ]);
+    }
+
+    public function getGroups(int $tournament_id) {
+        if ($tournament_id) {
+            $list = Groups::where('tournament_id',$tournament_id)->where('is_deleted',0)->get();
+            return (string) $list;
+        }
+
+        return (string) false;
     }
 }

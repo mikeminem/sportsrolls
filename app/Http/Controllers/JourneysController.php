@@ -23,12 +23,18 @@ class JourneysController extends Controller
     public function index(Request $request)
     {
          if($request->ajax()){
-            $rows = DB::table('journeys as j')
-                    ->select('j.id', 'j.name', 'j.start_at', 'j.finish_at', 'j.tournament_id', 'j.sport_id', 'j.is_deleted', 'j.status', 'j.show_public')
-                    ->where('j.is_deleted', 0)
-                    ->where('j.user_id',Auth::user()->id)
-                    ->orderBy('j.id', 'desc')
-                    ->get();        
+
+            $rows = [];
+
+            if ( $request->tournament ) {
+                $rows = DB::table('journeys as j')
+                        ->select('j.id', 'j.name', 'j.start_at', 'j.finish_at', 'j.tournament_id', 'j.sport_id', 'j.is_deleted', 'j.status', 'j.show_public')
+                        ->where('j.is_deleted', 0)
+                        ->where('j.user_id',Auth::user()->id)
+                        ->where('j.tournament_id', $request->tournament)  
+                        ->orderBy('j.id', 'desc')
+                        ->get();    
+            }    
             
             return DataTables::of($rows)
                     ->addColumn('start_at', function($row) {

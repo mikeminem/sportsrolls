@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Groups;
 use App\Teams;
 use App\Tournaments;
 
@@ -27,18 +28,38 @@ class TeamsController extends Controller
         //
         if($request->ajax()){
             //send the grid rows
-            $rows = DB::table('teams as t')
-                    ->join('categories as c', 'c.id', '=', 't.category_id')
-                    ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted', 
-                    't.clicks', 't.prints', 't.category_id', 'c.name as category', 't.contact', 't.contact_phone', 't.status' )
-                    ->where('t.is_deleted', 0)
-                    ->where('t.user_id',Auth::user()->id)
-                    ->orderBy('t.id', 'desc')
-                    ->get();
+
+            $rows = [];
+
+            if ( $request->tournament ) {
+                $rows = DB::table('teams as t')
+                        ->join('categories as c', 'c.id', '=', 't.category_id')
+                        ->leftjoin('groups as g', 'g.id', '=', 't.group_id')
+                        ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted', 
+                        't.clicks', 't.prints', 't.category_id', 'c.name as category', 't.contact', 't.contact_phone', 't.status', 't.group_id', 'g.name as group', 't.photo' )
+                        ->where('t.is_deleted', 0)
+                        ->where('t.user_id',Auth::user()->id)
+                        ->where('t.tournament_id', $request->tournament)
+                        ->orderBy('t.id', 'desc')
+                        ->get();
+            }
 
             return DataTables::of($rows)
                     ->addColumn('contact', function ($row) {
                         return "<b>" . $row->contact . "</b><br>" . $row->contact_phone;
+                    })
+                    ->addColumn('group', function ($row) {
+                        return ($row->group) ?? '-';
+                    })
+                    ->addColumn('name', function($row) {
+
+                        $photo = '';
+
+                        if(!is_null($row->photo) && !empty($row->photo))
+                            $photo = '<img src="' . asset('team/' . $row->photo) . '" style="height:200px">';
+
+                        return $row->name . '<br />'  . $photo;
+                        
                     })
                     ->addColumn('status', function ($row) {
                         $combo = '<select id="cboStatus" class="form-control" data-id="'.$row->id.'">';
@@ -63,11 +84,11 @@ class TeamsController extends Controller
                         $routeEdit = route('teams.show', $row->id);
                         $routeDelete = route('teams.destroy', $row->id);
 
+                        //<a href="javascript:void(0)" data-toggle="tooltip" title="¡Agregar foto!" id="btnPicture" data-id="'.$row->id.'" data-name="'.$row->name.'">
+                        //<span class="fa fa-image tool"></span> </a>
+
                             $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
                                             <span class="fa fa-edit tool"></span>
-                                        </a>
-                                        <a href="javascript:void(0)" data-toggle="tooltip" title="¡Agregar foto!" id="btnPicture" data-id="'.$row->id.'" data-name="'.$row->name.'">
-                                            <span class="fa fa-image tool"></span>
                                         </a>
                                         <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
                                 <span class="fa fa-trash tool"></span>
@@ -75,7 +96,7 @@ class TeamsController extends Controller
 
                         return $links;
                     })
-                    ->rawColumns([ 'action', 'contact', 'status' ])
+                    ->rawColumns([ 'action', 'contact', 'status', 'name' ])
                     ->make(true); 
         }
 
@@ -86,22 +107,8 @@ class TeamsController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         //
@@ -137,18 +144,32 @@ class TeamsController extends Controller
             ]);
         }
 
+        $path = "";
+        if($request->file('photo')){
+            $path =  date('YmdHis') . '.' .$request->file('photo')->extension();
+            $request->file('photo')->storeAs('public/teams', $path);
+        }
+
 
         if (!isset($request->id) || empty($request->id)) {
             $model = new Teams($request->all());
             $model->user_id = Auth::user()->id;
+
+            if (!empty($path))
+                $model->photo = $path;
             
             if ($model->save())
                  return response()->json(['type' => 'success', 
                                  'message' => 'Se ha creado el Equipo!']);      
         } else {
             $model = Teams::find($request->id);
-            $lastImage = $model->image;
+            $lastImage = $model->photo;
             $model->fill($request->all());
+
+            if (!empty($path)) {
+                Storage::delete('public/teams/' . $lastImage);
+                $model->photo = $path;
+            }
 
             if ($model->update()) 
                 return response()->json(['type' => 'success', 
@@ -161,43 +182,15 @@ class TeamsController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Teams  $teams
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function show($id) {
         if ($id) {
-            $model = Teams::find($id);
-            return $model;
+            $model = Teams::select('id',  'name', 'description', 'branch', 'user_id', 'tournament_id', 'sport_id', 'category_id', 'is_deleted', 'clicks', 'prints', 
+            'contact', 'contact_phone', 'status', 'group_id')
+                ->find($id);
+            
+                return $model;
         }
         return false;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Teams  $teams
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Teams $teams)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Teams  $teams
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Teams $teams)
-    {
-        //
     }
 
     /**

@@ -24,13 +24,26 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
          if($request->ajax()){
-            $rows = DB::table('categories as c')
+
+            $rows = [];
+
+            if ( $request->tournament ) {
+                $rows = DB::table('categories as c')
                     ->join('sports as s', 's.id', '=', 'c.sport_id')
                     ->join('tournaments as t', 't.id', '=', 'c.tournament_id')
                     ->select('c.id', 'c.sport_id', 'c.name', 'c.overview', 's.name as nameSport', 'c.show_stats', 't.id as tournament')
                     ->where('c.is_deleted', 0)
                     ->where('c.user_id',Auth::user()->id)
-                    ->get();        
+                    ->where('t.id', $request->tournament)
+                    ->get();    
+            }
+            // $rows = DB::table('categories as c')
+            //         ->join('sports as s', 's.id', '=', 'c.sport_id')
+            //         ->join('tournaments as t', 't.id', '=', 'c.tournament_id')
+            //         ->select('c.id', 'c.sport_id', 'c.name', 'c.overview', 's.name as nameSport', 'c.show_stats', 't.id as tournament')
+            //         ->where('c.is_deleted', 0)
+            //         ->where('c.user_id',Auth::user()->id)
+            //         ->get();        
             
             return DataTables::of($rows)
                     ->addColumn('sport_id', function($row) {

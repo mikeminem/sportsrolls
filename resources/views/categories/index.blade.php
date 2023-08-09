@@ -37,12 +37,11 @@
                             <div class="form-group">
                                 <label for="filterTournaments"><b>Torneos Activos</b></label>
                                 <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
-                                    <option value="">Todas las Categorias</option>
+                                    <option value="">Selecciona...</option>
                                     @foreach($tournaments as $tournament)
                                         <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
                                     @endforeach
                                 </select>
-                                
                             </div>
                         </div>
                     <hr />
@@ -111,23 +110,6 @@
                                 <input type="text" class="form-control" id="name" name="name" required maxlength="80"> 
                             </div>
                         </div>
-
-                        
-
-                        <!--div class="col-md-4 col-sm-12">
-                            <div class="form-group">
-                                <label for="age_initial"><b>Edad Inicial *</b></label>
-                                <input type="number" class="form-control" id="age_initial" name="age_initial" required max="80" min="5"> 
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 col-sm-12">
-                            <div class="form-group">
-                                <label for="age_final"><b>Edad Final *</b></label>
-                                <input type="number" class="form-control" id="age_final" name="age_final" required max="80" min="5"> 
-                            </div>
-                        </div-->
-
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
@@ -218,46 +200,56 @@
 @section('js')
 <script type="text/javascript">
         jQuery(document).ready(function($){
+
+            fetch_data();
+
+            function fetch_data(tournament = '') {
             
-            var Table = $('#table').DataTable({
-                "language": {
-                    "sProcessing":    "Procesando...",
-                    "sLengthMenu":    "Mostrar _MENU_ registros",
-                    "sZeroRecords":   "No se encontraron resultados",
-                    "sEmptyTable":    "No se encontró información",
-                    "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix":   "",
-                    "sSearch":        "Buscar:",
-                    "sUrl":           "",
-                    "sInfoThousands":  ",",
-                    "sLoadingRecords": "...Cargando...",
-                    "oPaginate": {
-                        "sFirst":    "Primero",
-                        "sLast":    "Último",
-                        "sNext":    "Siguiente",
-                        "sPrevious": "Anterior"
+                $('#table').DataTable({
+                    "language": {
+                        "sProcessing":    "Procesando...",
+                        "sLengthMenu":    "Mostrar _MENU_ registros",
+                        "sZeroRecords":   "No se encontraron resultados",
+                        "sEmptyTable":    "No se encontró información / Selefcciona un torneo",
+                        "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix":   "",
+                        "sSearch":        "Buscar:",
+                        "sUrl":           "",
+                        "sInfoThousands":  ",",
+                        "sLoadingRecords": "...Cargando...",
+                        "oPaginate": {
+                            "sFirst":    "Primero",
+                            "sLast":    "Último",
+                            "sNext":    "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        }
                     },
-                    "oAria": {
-                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                },
-                processing: true,
-                serverSide: true,
-                ajax: '{{ route('categories.index') }}',
-                columns: [
-                    { data: 'tournament', name: 'tournament',  visible:false},
-                    { data: 'sport_id', name: 'sport_id'},
-                    { data: 'name', name: 'name'},
-                    { data: 'show_stats', name: 'show_stats'},
-                    { data: 'action', name: 'action', orderable: false, searchable: false}
-                ]
-            });
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('categories.index') }}',
+                        data: { tournament: tournament }
+                    },
+                    columns: [
+                        { data: 'tournament', name: 'tournament',  visible:false},
+                        { data: 'sport_id', name: 'sport_id'},
+                        { data: 'name', name: 'name'},
+                        { data: 'show_stats', name: 'show_stats'},
+                        { data: 'action', name: 'action', orderable: false, searchable: false}
+                    ]
+                });
+            }
 
             $(document).on("change", "#filterTournaments", function () {
-                Table.columns(0).search(this.value).draw();
+                var tournament = $('#filterTournaments').val();
+                $('#table').DataTable().destroy();
+                fetch_data(tournament);
             });
 
             $(document).on("click", "#AddCategory", function () {
@@ -305,7 +297,9 @@
             });
 
             $(document).on("click", "#btnRefresh", function () {
-                Table.ajax.reload();
+                //Table.ajax.reload();
+                $('#table').DataTable().ajax.reload();
+
             });
 
             $(document).on("submit", "#updateForm", function (e) {
@@ -338,7 +332,9 @@
                         
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('toggle');
-                        Table.ajax.reload();
+                        //Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+
                         $.notify(data.message, data.type);
                         
                     },
@@ -368,7 +364,9 @@
 
                         jQuery.noConflict(); 
                         jQuery("#deleteModal").modal('toggle');
-                        Table.ajax.reload();
+                        //Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+
                         $.notify(data.message, data.type);
 
                     },

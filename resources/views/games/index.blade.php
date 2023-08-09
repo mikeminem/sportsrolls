@@ -370,7 +370,7 @@
             @method('DELETE')
 
             <div class="modal-body">
-            <h4>¿Deseas borrar la categoria <mark><span class="text-blod" id="row_name"></span></mark>?</h4>
+            <h4>¿Deseas borrar el juego # <mark><span class="text-blod" id="row_name"></span></mark>?</h4>
             </div>
             {{ csrf_field() }}
 
@@ -397,14 +397,19 @@
 @section('js')
 <script type="text/javascript">
         jQuery(document).ready(function($){
+
+            fetch_data();
+
+        function fetch_data(tournament = '') {
+
             
-            var Table = $('#table').DataTable({
+            $('#table').DataTable({
                 order: [[10, 'desc']],
                 "language": {
                     "sProcessing":    "Procesando...",
                     "sLengthMenu":    "Mostrar _MENU_ registros",
-                    "sZeroRecords":   "No se encontraron resultados",
-                    "sEmptyTable":    "No se encontró información",
+                    "sZeroRecords":   "No se encontraron resultados ",
+                    "sEmptyTable":    "No se encontró información / Selecciona un torneo",
                     "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
                     "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
                     "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
@@ -426,7 +431,10 @@
                 },
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('games.index') }}',
+                ajax: {
+                    url: '{{ route('games.index') }}',
+                    data: { tournament: tournament },
+                }, 
                 columns: [
                     { data: 'tournament_id', name: 'tournament_id', visible:false},
                     { data: 'journey_id', name: 'journey_id', visible:false},
@@ -442,12 +450,17 @@
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
+        }
 
             //filters
             $(document).on("change", "#filterTournaments", function () {
-                Table.columns(0).search(this.value).draw();
-                    
+                //Table.columns(0).search(this.value).draw();
+                    //var tournament = $('#filterTournaments').val();
                     var tournament=$(this).val();
+
+                    $('#table').DataTable().destroy();
+                    fetch_data(tournament);
+                    
 
                     if (tournament =="")
                     {
@@ -465,16 +478,21 @@
             });
 
             $(document).on("change", "#filterJourneys", function () {
-                Table.columns(1).search(this.value).draw();
+                //Table.columns(1).search(this.value).draw();
+                $('#table').DataTable().columns(1).search(this.value).draw();
             });
 
             
             $(document).on("change", "#filterBranchs", function () {
-                Table.columns(6).search(this.value).draw();
+                //Table.columns(6).search(this.value).draw();
+                $('#table').DataTable().columns(6).search(this.value).draw();
+
             });
 
             $(document).on("change", "#filterCategories", function () {
-                Table.columns(7).search(this.value).draw();
+                //Table.columns(7).search(this.value).draw();
+                $('#table').DataTable().columns(7).search(this.value).draw();
+
             });
 
 
@@ -635,7 +653,8 @@
             });
 
             $(document).on("click", "#btnRefresh", function () {
-                Table.ajax.reload();
+                //Table.ajax.reload();
+                $('#table').DataTable().ajax.reload();
             });
 
             
@@ -662,7 +681,9 @@
                         
                         jQuery.noConflict(); 
                         jQuery("#scoreModal").modal('toggle');
-                        Table.ajax.reload();
+                        // Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+
                         $.notify(data.message, data.type);
                         
                     },
@@ -704,7 +725,8 @@
                         
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('toggle');
-                        Table.ajax.reload();
+                        // Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
                         $.notify(data.message, data.type);
                         
                     },
@@ -733,7 +755,9 @@
                         $("#deleteForm").trigger('reset');
                         jQuery.noConflict(); 
                         jQuery("#deleteModal").modal('toggle');
-                        Table.ajax.reload();
+                        // Table.ajax.reload();
+                        $('#table').DataTable().ajax.reload();
+
                         $.notify(data.message, data.type);
 
                     },
