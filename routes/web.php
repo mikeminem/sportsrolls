@@ -109,6 +109,20 @@ Route::get('team/{filename}',function($filename){
     return $response;
 });
 
+Route::get('sponsor/{filename}',function($filename){
+    $path = storage_path("app/public/sponsors/$filename");
+
+    if (!\File::exists($path)) abort(404);
+
+    $file = \File::get($path);
+    $type = \File::mimeType($path);
+
+    $response = Response::make($file,200);
+    $response->header("Content-Type",$type);
+
+    return $response;
+});
+
 //tournaments options
 Route::resource('/tournaments','TournamentsController');
 Route::post('/tournaments.start/{id}', 'TournamentsController@start');
@@ -129,3 +143,8 @@ Route::get('/journaments_list/{tournament_id}','JourneysController@list');
 //games
 Route::resource('/games','GamesController');
 Route::post('/score_game', 'GamesController@updateScore');
+
+
+//Sponsors options
+Route::resource('/sponsors','SponsorController');
+Route::get('/sponsors_list/{user_id}','SponsorController@list');

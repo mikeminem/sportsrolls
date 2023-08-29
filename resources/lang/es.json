@@ -41,8 +41,8 @@
     "News": "Noticias",
     "Branches": "Ramas",
     "Sports": "Deportes",
-    "Sport Catalogs": "Catalogos Deportes",
-    "Catalogs": "Catalogos",
+    "Sport Catalogs": "Catálogos Deportes",
+    "Catalogs": "Catálogos",
     "Report a Bug": "Reportar un error en el sistema",
     "Sports Leagues": "Ligas deportivas",
     "States": "Estados",
@@ -65,7 +65,8 @@
     "Delete": "Borrar",
     "Close": "Cerrar",
     "Start": "Iniciar",
-    "Category": "Categoria",
+    "Category": "Categoría",
     "Categories": "Categorías",
-    "Alerts":"Avisos"
+    "Alerts":"Avisos",
+    "Sponsors":"Patrocinadores"
 }

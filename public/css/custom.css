@@ -114,3 +114,20 @@ if modal give us problems, just delete the backdrop element
 .feature {
 	font-size: 7em;
 }
+
+.sponsors {
+	display: inline-block;
+	list-style: none;
+	margin: 2px auto;
+	text-align: center;
+}
+
+.sponsors li {
+	display: inline;
+	margin: 6px;
+}
+
+.sponsors li img {
+	border-radius: 8px;
+	border: 1px solid #eee;
+}

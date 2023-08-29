@@ -7,6 +7,7 @@ use App\Tournaments;
 use App\Teams;
 use App\Journeys;
 use App\Games;
+use App\Sponsor;
 
 class MainController extends Controller
 {
@@ -39,10 +40,10 @@ class MainController extends Controller
 
         $imageNumber = rand(1, 3);
 
-        //$teams       = Teams::whereIn('tournament_id', $tournaments)->get();
         $teams       = Teams::where('is_deleted', 0)->whereIn('tournament_id', $tournaments_arr)->get();
         $journeys    = Journeys::whereIn('tournament_id', $tournaments_arr)->get();
         $games       = Games::whereIn('tournament_id', $tournaments_arr)->get();
+        $sponsors    = Sponsor::where('show','Yes')->where('is_deleted',0)->get();
 
 
         return view('welcome', [
@@ -51,7 +52,8 @@ class MainController extends Controller
             'imageNumber'   => $imageNumber,
             'teams'         => $teams,
             'journeys'      => $journeys,
-            'games'         => $games
+            'games'         => $games,
+            'sponsors'      => $sponsors
         ]);
     }
 

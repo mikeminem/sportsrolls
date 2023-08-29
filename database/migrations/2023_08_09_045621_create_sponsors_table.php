@@ -18,6 +18,7 @@ class CreateSponsorsTable extends Migration
             $table->string('name',120);
             $table->string('image',120);
             $table->string('reference',240);
+            $table->enum('status',['Mostrar'=>'Mostrar','No Mostrar'=>'No Mostrar'])->default('No Mostrar');
             $table->integer('is_deleted')->default(0);
             $table->timestamps();
         });

@@ -183,6 +183,32 @@
   </div>
 </div>
 
+
+@if (count($sponsors)>0)
+  <div class="container-fluid mt-3">
+    {{-- <div class="row">
+          <div class="col-md-12 text-right">
+                <button class="btn btn-default">Patrocinadores</button>
+          </div>
+    </div> --}}
+   
+      <div class="row">
+        <div class="col-md-12 text-center">
+              <ul class="sponsors">
+                @foreach( $sponsors as $sponsor)
+                  <li>
+                    <img src="{{ asset('sponsor/' . $sponsor->image) }}" alt="{{ $sponsor->name }}" width="300">
+                  </li>
+                @endforeach
+              </ul>
+
+          </div>  
+      </div>  
+  </div>
+@endif
+
+</div>
+
     
 
 

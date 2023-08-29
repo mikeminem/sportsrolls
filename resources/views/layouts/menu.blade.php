@@ -135,8 +135,29 @@
 
                                         <a class="dropdown-item" href="#"><i class="fa fa-bank"></i> {{ __('Banks') }}</a>
 
+                                        <div class="dropdown-divider"></div>
+
+                                        <a class="dropdown-item" href="{{ url('/sponsors') }}"><i class="fa fa-coffee"></i> {{ __('Sponsors') }}</a>
+
                                     </div>
                                 </li>
+
+
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        <i class="fa fa-sitemap"></i> {{ __('Portal') }} <span class="caret"></span>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ url('/alerts') }}"><i class="fa fa-square"></i> {{ __('Alerts') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/page')}}"><i class="fa fa-file"></i> {{ __('WebContent') }}</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{ url('/sponsors')}}"><i class="fa fa-file"></i> {{ __('Sponsors') }}</a>
+
+                                    </div>
+                                </li>
+
+
                             @endif
 
                                 
