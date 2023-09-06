@@ -120,6 +120,7 @@ if modal give us problems, just delete the backdrop element
 	list-style: none;
 	margin: 2px auto;
 	text-align: center;
+	padding: 0px;
 }
 
 .sponsors li {

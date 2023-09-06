@@ -48,6 +48,19 @@
                         </div>
 
                         <div class="col-md-3 col-sm-12">
+
+                            <div class="form-group">
+                                <label for="filterBranch"><b>Rama</b></label>
+                                <select class="form-control" required id="filterBranch" name="filterBranch"  >
+                                    <option value="">Selecciona</option>
+                                    <option value="Varonil">Varonil</option>
+                                    <option value="Femenil">Femenil</option>
+                                    <option value="Mixto">Mixto</option>
+                                </select>  
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="filterCategories"><b>Categorías</b></label>
                                 <select class="form-control" required id="filterCategories" name="filterCategories"  >
@@ -78,6 +91,7 @@
                                     <th>Id Grupo</th>
                                     <th>Nombre</th>
                                     <th>Contacto</th>
+                                    <th>Rama</th>
                                     <th>Categoría</th>
                                     <th>Grupo</th>
                                     <th>Estado</th>
@@ -324,6 +338,7 @@
                     { data: 'group_id', name: 'group_id', visible:false},
                     { data: 'name', name: 'name'},
                     { data: 'contact', name: 'contact'},
+                    { data: 'branch', name: 'branch'},
                     { data: 'category', name: 'category'},
                     { data: 'group', name: 'group'},
                     { data: 'status', name: 'status'},
@@ -355,6 +370,10 @@
                     }
             });
 
+            $(document).on("change", "#filterBranch", function () {
+                $('#table').DataTable().columns(5).search(this.value).draw();
+            });
+
             $(document).on("change", "#filterCategories", function () {
                 $('#table').DataTable().columns(1).search(this.value).draw();
             });
@@ -363,7 +382,6 @@
                 $('#table').DataTable().columns(2).search(this.value).draw();
             });
 
-            //get the category from the tournament selected
             $(document).on("change", "#tournament_id", function () {
                 var tournament = $('#tournament_id option:selected').val();
 
@@ -379,8 +397,6 @@
                 } 
 
             });
-                
-
 
             $(document).on("click", "#btnAdd", function () {
                 $("#Form").trigger('reset');
@@ -521,7 +537,6 @@
                 return false;
             });
 
-            //mandamos activar o desactivar lo de mostrar en portal
         $(document).on("change", "#cboStatus", function () {
             $.ajaxSetup({
                 headers: {
@@ -534,10 +549,6 @@
                 url: "update_team_status/" + $(this).attr("data-id") + "/" + $(this).val(),
                 dataType: "json",
                 success: function (data) {
-                    // var response = "";
-                    // $.each(data.response, function (i, val) {
-                    //     response = response + val + "\n";
-                    // });
                     $.notify(data.response, data.results);
 
                 },
