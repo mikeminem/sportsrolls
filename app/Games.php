@@ -20,6 +20,7 @@ class Games extends Model
         'tournament_id', 
         'category_id',
         'journey_id',
+        'stadium_id',
         'team1_id',
         'team2_id',
         'is_deleted'

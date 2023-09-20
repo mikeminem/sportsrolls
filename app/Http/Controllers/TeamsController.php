@@ -229,6 +229,21 @@ class TeamsController extends Controller
         return (string) false;
     }
 
+
+    //getTeamsbyCategoryAndBranch
+    public function getTeamsbyCategoryAndBranch( $categoryId, $branch) 
+    {
+        if ($branch) {
+            $list = Teams::where('branch',$branch)
+                ->where('category_id', $categoryId)
+                ->where('status','Activo')
+                ->where('is_deleted',0)
+                ->orderby('name')->get(['id','name']);
+            return (string) $list;
+        }
+        return (string) false;
+    }
+
     /**
      * Get the list of Teams by branch id
      *
@@ -248,6 +263,7 @@ class TeamsController extends Controller
         }
         return (string) false;
     }
+
 
     public function updateStatus( $id,  $status) {
         Teams::where('id', $id)->update(['status' => $status]);

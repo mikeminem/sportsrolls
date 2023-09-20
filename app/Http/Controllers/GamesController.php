@@ -11,6 +11,7 @@ use DB;
 use App\Tournaments;
 use App\Games;
 use App\Category;
+use App\Stadiums;
 
 class GamesController extends Controller
 {
@@ -107,9 +108,7 @@ class GamesController extends Controller
                                     </a> 
                                     <a href="' . $routeDelete . '" data-name="'. $row->id .'"  title="Borrar Registro"  id="btnDelete"> 
                                         <span class="fa fa-trash tool"></span>
-                                    </a>';
-
-                                    
+                                    </a>';      
                         }
                                 
                         $links .= ' <a href="javascript:void(0)" data-id="' . $row->id . '" data-team1="' . $row->team1 . '" data-team2="' . $row->team2 . '" title="Capturar resultados" id="btnScore"> 
@@ -123,10 +122,16 @@ class GamesController extends Controller
                     ->make(true);
         }
 
-        $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->where('user_id',Auth::user()->id)->get(['id','title']);
-        //$categories = Category::where('user_id',Auth::user()->id)->where('is_deleted',0)->get();
+        $tournaments = Tournaments::where('is_deleted','0')
+            ->where('status','!=','Terminado')
+            ->where('user_id',Auth::user()->id)
+            ->get(['id','title']);
 
-        return view ('games.index', compact('tournaments'));
+        $stadiums = Stadiums::where('is_deleted','0')
+            ->where('user_id',Auth::user()->id)
+            ->get(['id','name']);
+
+        return view ('games.index', compact('tournaments', 'stadiums'));
     }
 
     /**

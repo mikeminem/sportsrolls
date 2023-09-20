@@ -112,8 +112,7 @@
 
 
      <script type="text/javascript">
-        //global funcntions
-        //get categories
+        
         function getCategories(component, tournament_id, selected="") {
             var options = "";
 
@@ -146,7 +145,6 @@
             return options;
         };
 
-        //getJourneys
         function getJourneys(component, tournament, selected="") {
             var options = "";
 
@@ -177,14 +175,44 @@
             }
         }
 
-        //getTeams
-        function getTeams(component, tournament, selected="") {
+        function getTeams(component, categoriId, selected="") {
             var options = "";
+            console.log("categoriId id", categoriId);
 
-            if (tournament) {
+            if (categoriId) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('teams_list') }}/" + tournament,
+                    url: "{{ url('teams_list') }}/" + categoriId,
+                    dataType: "json",
+                    success: function (data) { 
+                        options += '<option value="">Selecciona</option>';
+                        var journaments = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                            }
+                            journaments++;
+                        }
+                        
+                        if (journaments <0) {
+                            $.notify("No hay Equipos en este torneo, selecciona otro o agrega equipos al torneo", "error");
+                        }
+                        $("#" + component).html(options);
+                        
+                    },
+                });
+            }
+        }
+
+        function getTeamsByCategoryAndBranch(component, categoriId,  branch, selected="") {
+            var options = "";
+
+            if (categoriId && branch) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('getTeamsbyCategoryAndBranch') }}/" + categoriId + '/' + branch,
                     dataType: "json",
                     success: function (data) { 
                         options += '<option value="">Selecciona</option>';

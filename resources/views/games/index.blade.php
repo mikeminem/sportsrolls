@@ -167,6 +167,18 @@
                             </div>
                         </div>
 
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="stadium_id"><b>Sede (Estadio / Gimnasio) *</b></label>
+                                <select class="form-control" required id="stadium_id" name="stadium_id">
+                                    <option value="">Selecciona la sede</option>
+                                    @foreach($stadiums as $stadium)
+                                        <option value="{{ $stadium->id}}">{{ $stadium->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row">
@@ -556,12 +568,10 @@
                 const branch = $('#branch option:selected').val();
                 $('#category_id').attr('required', true); 
 
-
                 $("#tournament_id option:selected").each(function () {
                     var tournament=$(this).val();
 
                     if (tournament =="") {
-                        
                         $('#category_id').attr('required', true); 
                         $("#team1_id").empty();
                         $("#team1_id").html('<option value="">Selecciona un torneo</option>');
@@ -573,21 +583,32 @@
                         $('#category_id').attr('required', false); 
                             getTeamsByBranch([ "team1_id", 'team2_id'], tournament, branch);
                         }
-                        
                     }
                     
                 });
             });
 
             $(document).on("change", "#category_id", function (e) {
+
+                const branch = $('#branch option:selected').val();
+
+                if (branch === '') {
+                    $.notify("Selecciona una Rama", "error");
+                    return;
+                }
+
                 $("#category_id option:selected").each(function () {
-                    selected=$(this).val();
+                    categoryId=$(this).val();
+
+                    console.log("el valor de categoryId" , categoryId);
 
                     $("#team1_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
                     $("#team2_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
 
-                    getTeams("team1_id",selected);
-                    getTeams("team2_id",selected);
+                    //getTeams("team1_id",categoryId);
+                    //getTeams("team2_id",categoryId);
+                    getTeamsByCategoryAndBranch("team1_id", categoryId, branch );
+                    getTeamsByCategoryAndBranch("team2_id", categoryId, branch );
                     
                 });
             });

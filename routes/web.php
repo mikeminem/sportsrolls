@@ -130,7 +130,10 @@ Route::get('/tournament_info/{slug}', 'TournamentsController@showTournament');
 
 //teams options
 Route::resource('/teams','TeamsController');
-Route::get('/teams_list/{tournament_id}','TeamsController@list');
+Route::get('/teams_list/{category_id}','TeamsController@list');
+
+Route::get('/getTeamsbyCategoryAndBranch/{category_id}/{branch}','TeamsController@getTeamsbyCategoryAndBranch');
+
 Route::get('/teams_list_by_branch/{tournament_id}/{branch}','TeamsController@listByBranch');
 Route::get('/update_team_status/{id}/{status}', 'TeamsController@updateStatus');
 Route::post('/teams/upload_image', 'TeamsController@uploadImage');
