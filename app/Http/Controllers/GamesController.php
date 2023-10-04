@@ -37,10 +37,27 @@ class GamesController extends Controller
             if ($request->tournament) {
             
                 $rows = DB::table('games as g')
-                    ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch', 'g.type')
+                    ->select(
+                        'g.id', 
+                        't1.name as team1', 
+                        'g.score_team1', 
+                        'g.score_team2',  't2.name as team2', 
+                        'c.name as category', 
+                        'g.status' , 'g.notes', 
+                        'g.score_team1', 
+                        'g.score_team2', 
+                        'g.game_day', 
+                        'g.journey_id', 
+                        'g.game_time', 
+                        'g.tournament_id', 
+                        'g.branch', 
+                        'g.type',
+                        's.name as stadium'
+                    )
                     ->join('teams as t1', 't1.id', '=', 'g.team1_id')
                     ->join('teams as t2', 't2.id', '=', 'g.team2_id')
-                    ->join('categories as c', 'c.id', '=', 'g.category_id')        
+                    ->join('categories as c', 'c.id', '=', 'g.category_id')  
+                    ->leftJoin('stadiums as s', 's.id', '=', 'g.stadium_id')  
                     ->where('g.is_deleted', 0)
                     ->where('g.user_id',Auth::user()->id)
                     ->where('g.tournament_id', $request->tournament)
@@ -51,8 +68,10 @@ class GamesController extends Controller
             return DataTables::of($rows)
                     ->addColumn('date_time', function($row) {
                         $day = substr($row->game_day,8,2) . "/" . substr($row->game_day,5,2) . "/" . substr($row->game_day,0,4); 
-
                         return $day . '<br />' . $row->game_time ;
+                    })
+                    ->addColumn('stadium', function($row) {
+                        return $row->stadium ?? '--';  
                     })
                     ->addColumn( 'status', function($row) {
                         $status = $row->status;

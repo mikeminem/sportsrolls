@@ -69,9 +69,9 @@
                             <a class="nav-link" href=" {{ url('/home') }} "><i class="fa fa-home"></i> {{ __('Home') }}</a>
                         </li>
 
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-comments"></i> {{ __('Mensajes') }}</a>
-                        </li>
+                        </li> --}}
 
                             @if (Auth::user()->role == "Promoter")
                                 <li class="nav-item dropdown">
@@ -110,10 +110,8 @@
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ url('/sports') }}" title="Catálogo de Deportes"><i class="fa fa-cube"></i> {{ __('Sports') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/categories') }}"><i class="fa fa-cubes"></i> {{ __('Categories') }}</a>
-                                        <!--a class="dropdown-item" href="#"><i class="fa fa-venus-mars"></i> {{ __('Branches') }}</a-->
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{{ url('/states') }}"><i class="fa fa-trophy"></i> {{ __('Sports Leagues') }}</a>
+                                        <a class="dropdown-item" href="#"><i class="fa fa-trophy"></i> {{ __('Tournaments') }}</a>
                                         <a class="dropdown-item" href="#"><i class="fa fa-users"></i> {{ __('Players') }}</a>
                                     </div>
                                 </li>

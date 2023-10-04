@@ -95,7 +95,8 @@
                                     <th>Rama</th>
                                     <th>Categoría</th>
                                     <th>Tipo</th>
-                                    <th>Estado</th>
+                                    <th>Estadio</th>
+                                    <th>Estatus</th>
                                     <th>Id</th>
                                     
                                     <th> - </th>
@@ -457,6 +458,7 @@
                     { data: 'branch', name: 'branch'},
                     { data: 'category', name: 'category'},
                     { data: 'type', name: 'type'},
+                    { data: 'stadium', name: 'stadium'},
                     { data: 'status', name: 'status'},
                     { data: 'id', name: 'id', visible:false},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
