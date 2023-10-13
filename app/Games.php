@@ -30,6 +30,10 @@ class Games extends Model
         return $this->belongsTo('App\Tournaments');
     }
 
+    public function stadium() {
+        return $this->belongsTo('App\Stadiums');
+    }
+
     public static function getDate($date) {
         echo "";
     }

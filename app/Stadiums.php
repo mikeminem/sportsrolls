@@ -10,4 +10,9 @@ class Stadiums extends Model
     protected $fillable = [
         'code', 'name', 'address', 'manager', 'phone', 'notes', 'is_deleted', 'user_id'
     ];
+
+    public function games()
+    {
+        return $this->hasMany('App\Games');
+    }
 }

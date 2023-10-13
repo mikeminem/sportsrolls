@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use DataTables;
 use DB;
 use App\Sports;
+use App\Stadiums;
 use Illuminate\Support\Facades\DB as FacadesDB;
 
 class TournamentsController extends Controller
@@ -271,7 +272,6 @@ class TournamentsController extends Controller
         if (!$slug) {
             //lets send this to the tournaments list
         }
-
         //lets get the tournament info
         $tournament = Tournaments::where('slug', $slug)->get();
 
@@ -285,11 +285,28 @@ class TournamentsController extends Controller
 
         //send the game details
         $games  = DB::table('games as g')
-        ->select('g.id', 't1.name as team1', 'g.score_team1', 'g.score_team2',  't2.name as team2', 'c.name as category', 'g.status' , 'g.notes', 'g.score_team1', 'g.score_team2', 'g.game_day', 'g.journey_id', 'g.game_time', 'g.tournament_id', 'g.branch', 'g.category_id', 'g.type')
+        ->select('g.id',
+         't1.name as team1',
+         'g.score_team1',
+         'g.score_team2',
+          't2.name as team2',
+         'c.name as category',
+         'g.status' , 'g.notes',
+         'g.score_team1',
+         'g.score_team2',
+         'g.game_day',
+         'g.journey_id',
+         'g.game_time',
+         'g.tournament_id',
+         'g.branch', 
+         'g.category_id', 
+         's.name as stadium', 
+         'g.type')
         ->join('teams as t1', 't1.id', '=', 'g.team1_id')
         ->join('teams as t2', 't2.id', '=', 'g.team2_id')
         ->join('categories as c', 'c.id', '=', 'g.category_id')        
         ->join('journeys as j', 'j.id', '=', 'g.journey_id')        
+        ->leftJoin('stadiums as s', 's.id', '=', 'g.stadium_id')        
         ->where('g.is_deleted', 0)
         ->where('j.is_deleted', 0)
         ->where('j.show_public', "Si")
@@ -300,10 +317,9 @@ class TournamentsController extends Controller
         ->get();  
 
         $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->get();
-        
-        //lets send the score
-        $scores = array();
+        $stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
 
+        $scores = array();
 
         //build points section of the query!
         $points = "";
@@ -377,6 +393,7 @@ class TournamentsController extends Controller
             'tournament' => $tournament[0],
             'games'      => $games,
             'categories' => $categories,
+            'stadiums'   => $stadiums,
             'scores'     => $scores,
             'teams'      => $teams
         ]);

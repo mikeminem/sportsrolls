@@ -21,14 +21,11 @@
 
                     <div class="row text-right mb-3">
                         <div class="col-md-12">
-                            <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.sportroles.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
-
+                            <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.sportroles.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div
                             <a class="btn btn-primary whatsapp" href="whatsapp://send?text={{ url('tournament_info/' . $tournament->slug) }}"       data-action="share/whatsapp/share"  
                             target="_blank"><span class="fa fa-whatsapp"></span> Compartir </a>   
                         </div>
                     </div>
-
-                    
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-pills nav-justified">
@@ -45,10 +42,6 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#menu4">Equipos</a>
                         </li>
-                        <!--li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#menu5">Organizador</a>
-                        </li-->
-                        
                     </ul>
                     
                     <!-- Tab panes -->
@@ -72,7 +65,7 @@
 
                                     <h3 class="text-center">{{ $journey->name }}</h3>
                                         <div class="table-responsive">
-                                            <table class="table table-hover table-striped" id="table">
+                                            <table class="table table-hover table-rounded" id="table">
                                                 <thead>
                                                     <tr class="text-center">
                                                         <th> Hora</th>
@@ -80,6 +73,7 @@
                                                         <th>-</th>
                                                         <th>Equipo Visitante</th>
                                                         <th>Rama / Categiría</th>
+                                                        <th>Estadio</th>
                                                         <th>Tipo</th>
                                                         
                                                     </tr>
@@ -93,14 +87,13 @@
                                                     @foreach ($games as $game)
                                                         
                                                         @if($game->journey_id == $journey->id)
-                                                            
-
+    
                                                             @if ($change ==1)
                                                                 @php
                                                                     $day = $game->game_day;
                                                                 @endphp
                                                                 <tr >   
-                                                                    <td colspan="6" class="text-center table-success"><h4> 
+                                                                    <td colspan="7" class="text-center table-success"><h4> 
                                                                         @php
                                                                             $dayName = date('D', strtotime($day));
                                                                             $diassemana = array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
@@ -125,7 +118,8 @@
                                                                     <th>VS </th>
                                                                     <td>{{ $game->team2 }}</td>
                                                                     <td>{{ $game->branch }} / {{ $game->category }}</td>
-                                                                    <td><span class="badge badge-danger"> {{ $game->type }} </span></td>
+                                                                    <td>{{ ($game->stadium) ?? '---'  }}</td>
+                                                                    <td><span class="badge badge-default"> {{ $game->type }} </span></td>
                                                                 </tr>
                                                             @else
                                                                 @php
@@ -134,7 +128,7 @@
                                                                 @endphp
 
                                                                 <tr >   
-                                                                    <td colspan="6" class="text-center table-success"><h4> 
+                                                                    <td colspan="7" class="text-center table-success"><h4> 
                                                                         @php
                                                                             $dayName = date('D', strtotime($day));
                                                                             $diassemana = array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
@@ -152,7 +146,8 @@
                                                                     <th>VS </th>
                                                                     <td>{{ $game->team2 }}</td>
                                                                     <td>{{ $game->branch }} / {{ $game->category }}</td>
-                                                                    <td> <span class="badge badge-danger"> {{ $game->type }} </span></td>
+                                                                    <td>{{ ($game->stadium) ?? '---'  }}</td>
+                                                                    <td> <span class="badge badge-default"> {{ $game->type }} </span></td>
                                                                 </tr>
                                                                 
                                                             @endif
@@ -166,7 +161,9 @@
                                         </div>
 
                                         <p>
-                                             NOTA: {{ $journey->notes }}
+                                            <b>
+                                                NOTA: {{ ($journey->notes) ?? ' --- ' }}
+                                            </b>
                                         </p>
 
                                         @php
