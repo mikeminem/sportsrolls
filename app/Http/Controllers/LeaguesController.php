@@ -28,8 +28,6 @@ class LeaguesController extends Controller
      */
     public function store(Request $request)
     {
-        //
-
         $rules = [
             'name'      => 'required|max:120|min:10',
             'sport_id' => 'required'
@@ -53,20 +51,18 @@ class LeaguesController extends Controller
         }
 
         if ($request) {
-            $user_id = Auth::user()->id;
+            //$user_id = Auth::user()->id;
             $league = Leagues::find(Auth::user()->id);
-            if ($league) {
-                //update info
-                $model = Leagues::find(Auth::user()->id);
-                $model->fill($request->all());
 
-                if ($model->update()) 
+            if ($league) {
+                $league->fill($request->all());
+                
+                if ($league->update()) 
                     return response()->json([
                         'type' => 'success',
-                        'message' => 'Información de la liga guardada!'
+                        'message' => 'Información de la liga ha sido actualizada!'
                     ]);
             } else {
-                //New entry
                 $model = new Leagues($request->all());
                 $model->user_id = Auth::user()->id;
                 if ($model->save()) 
@@ -91,11 +87,10 @@ class LeaguesController extends Controller
      */
     public function show(Leagues $leagues)
     {
-        //
         $league = User::find(Auth::user()->id)->league;
         $sports = Sport::where('is_deleted',0)->get(['id', 'name']);
-
         $states = States::where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
+
         if ($league) {
             $municipalities = Municipalities::where('state_id',$league->state_id)->where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
         } else {
@@ -105,7 +100,7 @@ class LeaguesController extends Controller
         
         return view("leagues.league_info", [ 
             'league'            => $league,
-            'sports'            =>$sports,
+            'sports'            => $sports,
             'states'            => $states,
             'municipalities'    => $municipalities
         ]);

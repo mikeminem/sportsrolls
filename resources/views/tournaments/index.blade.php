@@ -118,10 +118,13 @@
                                 </label>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row">
 
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
-                                <label for="winner_points">Puntos Juego Ganado</label><br />
+                                <label for="winner_points">Juego Ganado</label><br />
                                 <!--input type="number" class="form-control" id="winner_points" name="winner_points" required maxlength="2" readonly --> 
                                 <select class="form-control" name="winner_points" id="winner_points" disabled >
                                     <option value="0">0</option>
@@ -135,7 +138,7 @@
 
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
-                                <label for="draw_points">Puntos Juego Empatado</label><br />
+                                <label for="draw_points">Juego Empatado</label><br />
                                 <!--input type="number" class="form-control" id="draw_points" name="draw_points" required maxlength="2" readonly -->
                                 <select class="form-control" name="draw_points" id="draw_points" disabled >
                                     <option value="-1">No Mostrar</option>
@@ -149,13 +152,57 @@
 
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
-                                <label for="loser_points">Puntos Juego Perdido</label><br />
+                                <label for="loser_points">Juego Perdido</label><br />
                                 <!--input type="number" class="form-control" id="loser_points" name="loser_points" required maxlength="2" readonly -->
                                 <select class="form-control" name="loser_points" id="loser_points" disabled >
                                     <option value="0">0</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>                                    
+                                </select> 
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="enable_penalties_scoring" name="enable_penalties_scoring"> <b>Opciones para futbol (penalties)</b>
+                                </label>
+                            </div>
+
+                            
+                        </div>
+
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <label for="winner_points">Juego Ganado</label><br />
+                                <!--input type="number" class="form-control" id="winner_points" name="winner_points" required maxlength="2" readonly --> 
+                                <select class="form-control" name="winner_points_penalties" id="winner_points_penalties" disabled >
+                                    <option value="-1">No Mostrar</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <label for="draw_points">Juego Perdido</label><br />
+                                <!--input type="number" class="form-control" id="draw_points" name="draw_points" required maxlength="2" readonly -->
+                                <select class="form-control" name="loser_points_penalties" id="loser_points_penalties" disabled >
+                                    <option value="-1">No Mostrar</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    
                                 </select> 
                             </div>
                         </div>
@@ -327,6 +374,22 @@
                 $("#sport_id").val("{{ Auth::user()->league->sport_id}}");
                 $("#sport").val("{{ Auth::user()->league->sport->name}}");
 
+                $('#winner_points').attr('disabled', true)
+                $('#loser_points').attr('disabled', true)
+                $('#draw_points').attr('disabled', true)
+                
+                //values
+                $('#winner_points').val('0');
+                $('#loser_points').val('0');
+                $('#draw_points').val('-1');
+
+                $('#winner_points_penalties').attr('disabled',true);
+                $('#loser_points_penalties').attr('disabled',true);
+
+                //values
+                $('#winner_points_penalties').val('-1');
+                $('#loser_points_penalties').val('-1');
+
 
                 jQuery.noConflict(); 
                 jQuery("#formModal").modal('show');
@@ -360,11 +423,27 @@
                     $('#winner_points').attr('disabled', true)
                     $('#loser_points').attr('disabled', true)
                     $('#draw_points').attr('disabled', true)
-
+                   
                     //values
                     $('#winner_points').val('0');
                     $('#loser_points').val('0');
                     $('#draw_points').val('-1');
+                   
+                }
+            });
+
+            $(document).on("click", "#enable_penalties_scoring", function (e) { 
+
+                if ($(this).is(":checked")) {
+                    $('#winner_points_penalties').removeAttr('disabled');
+                    $('#loser_points_penalties').removeAttr('disabled');
+                } else {
+                    $('#winner_points_penalties').attr('disabled',true);
+                    $('#loser_points_penalties').attr('disabled',true);
+
+                    //values
+                    $('#winner_points_penalties').val('-1');
+                    $('#loser_points_penalties').val('-1');
 
                 }
             });
@@ -386,18 +465,25 @@
                     url: $(this).attr("href"),
                     dataType: "json",
                     success: function (data) { 
-                        console.log(data)
+                        //console.log(data)
 
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
 
                             if (obj == "enable_points_system") {
-                                if (data[obj]=="Si") {
+                                if (data[obj] ==="Si") {
                                     $("#enable_points_system").prop('checked', true);
-                                    $('#winner_points').removeAttr('readonly');
-                                    $('#loser_points').removeAttr('readonly');
-                                    $('#draw_points').removeAttr('readonly');
+                                    $('#winner_points').removeAttr('disabled');
+                                    $('#loser_points').removeAttr('disabled');
+                                    $('#draw_points').removeAttr('disabled');
+                                }
+                            }
 
+                            if (obj == "enable_penalties_scoring") {
+                                if (data[obj] ==="Si") {
+                                    $("#enable_penalties_scoring").prop('checked', true);
+                                    $('#winner_points_penalties').removeAttr('disabled');
+                                    $('#loser_points_penalties').removeAttr('disabled');
                                 }
                             }
                         }

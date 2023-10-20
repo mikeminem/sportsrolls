@@ -110,7 +110,7 @@ class TournamentsController extends Controller
         ];
 
         $attributes = [
-            'title'     => 'Nombre ',
+            'title'     => 'Nombre',
             'summary'   => 'Descripción',
             'contacts'  => 'Contactos',
         ];
@@ -143,6 +143,7 @@ class TournamentsController extends Controller
             $model->user_id = Auth::user()->id;
             $model->start_day = date('Y-m-d');
             $model->slug = str_slug($model->title);
+
             if (isset($request->enable_points_system))  {
                 $model->enable_points_system = "Si";
             } else {
@@ -152,6 +153,13 @@ class TournamentsController extends Controller
                 $model->draw_points =-1;
             }
 
+            if (isset($request->enable_penalties_scoring))  {
+                $model->enable_penalties_scoring = "Si";
+            } else {
+                $model->enable_penalties_scoring = "No";
+                $model->winner_points_penalties =-1;
+                $model->loser_points_penalties =-1;
+            }
 
             if (!empty($path))
                 $model->image = $path;
@@ -165,6 +173,7 @@ class TournamentsController extends Controller
             $lastImage = $model->image;
             $model->fill($request->all());
             $model->slug = str_slug($model->title);
+
             if (isset($request->enable_points_system))  {
                 $model->enable_points_system = "Si";
             } else {
@@ -174,6 +183,13 @@ class TournamentsController extends Controller
                 $model->draw_points =-1;
             }
 
+            if (isset($request->enable_penalties_scoring))  {
+                $model->enable_penalties_scoring = "Si";
+            } else {
+                $model->enable_penalties_scoring = "No";
+                $model->winner_points_penalties =-1;
+                $model->loser_points_penalties =0-1;
+            }
 
             if (!empty($path)) {
                 Storage::delete('public/sports/' . $lastImage);
@@ -202,7 +218,20 @@ class TournamentsController extends Controller
     {
         //
         if ($id) {
-            $model = Tournaments::select('id', 'code', 'title', 'summary', 'contacts', 'status','sport_id', 'enable_points_system','winner_points', 'loser_points', 'draw_points')->find($id);
+            $model = Tournaments::select('id', 
+                'code', 
+                'title', 
+                'summary', 
+                'contacts', 
+                'status',
+                'sport_id', 
+                'enable_points_system',
+                'winner_points', 
+                'loser_points', 
+                'draw_points',
+                'winner_points_penalties',
+                'loser_points_penalties',
+                'enable_penalties_scoring')->find($id);
 
             if (!$model->code) {
                 $model->code =  strtoupper( str_random(8));

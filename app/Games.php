@@ -18,12 +18,14 @@ class Games extends Model
         'score_team2', 
         'user_id', 
         'tournament_id', 
-        'category_id',
+        'category_id',  
         'journey_id',
         'stadium_id',
         'team1_id',
         'team2_id',
-        'is_deleted'
+        'is_deleted',
+        'score_penalties_team1',
+        'score_penalties_team2',
     ];
 
     public function tournament() {
