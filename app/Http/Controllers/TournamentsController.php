@@ -330,7 +330,9 @@ class TournamentsController extends Controller
          'g.branch', 
          'g.category_id', 
          's.name as stadium', 
-         'g.type')
+         'g.type',
+         'score_penalties_team1',
+         'score_penalties_team2')
         ->join('teams as t1', 't1.id', '=', 'g.team1_id')
         ->join('teams as t2', 't2.id', '=', 'g.team2_id')
         ->join('categories as c', 'c.id', '=', 'g.category_id')        
@@ -351,7 +353,7 @@ class TournamentsController extends Controller
         $scores = array();
 
         //build points section of the query!
-        $points = "";
+        $points = '';
         if ($tournament[0]->enable_points_system == "Si"){
             $points = ", sum( case when PAF > PEC then " . $tournament[0]->winner_points . " else 0 end \n";
 
@@ -359,8 +361,22 @@ class TournamentsController extends Controller
                 $points .= " + case when PAF = PEC then " . $tournament[0]->draw_points . " else 0 end \n";
             }
                 
-            $points .= " + case when PAF < PEC then " . $tournament[0]->loser_points . " else 0 end ) as PUNTOS";
+            if ($tournament[0]->enable_points_system == "Si"
+                && $tournament[0]->enable_penalties_scoring == "No"){ 
+                    $points .= " + case when PAF < PEC then " . $tournament[0]->loser_points . " else 0 end ) as PUNTOS";
+            } else {
+                $points .= " + case when PPAF > PPEC then " . $tournament[0]->winner_points_penalties . " else 0 end \n";
+                
+                $points .= " + case when PPAF < PPEC then " . $tournament[0]->loser_points_penalties . " else 0 end ) as PUNTOS";
+
+            }
         }
+
+        // if ($tournament[0]->enable_penalties_scoring == "Si"){
+        //     $penalties = ", sum( case when PPAF > PPEC then " . $tournament[0]->winner_points_penalties . " else 0 end \n";
+                
+        //     $penalties .= " + case when PPAF < PPEC then " . $tournament[0]->loser_points_penalties . " else 0 end ) as PUNTOS_PENALTIES";
+        // }
         
         foreach ($categories as $category) {
             $query = "SELECT  t.name as team,
@@ -368,6 +384,8 @@ class TournamentsController extends Controller
                 count(case when PAF > PEC then 1 end) JG,
                 count(case when PAF < PEC then 1 end) JP,
                 count(case when PAF = PEC then 1 end) JE,
+                count(case when PPAF > PPEC then 1 end) JGP,
+                count(case when PPAF < PPEC then 1 end) JPP,
                 sum(score.PAF) as PAF,
                 sum(score.PEC) as PEC,
                 sum(score.PAF) - sum(score.PEC) as DIF
@@ -377,7 +395,9 @@ class TournamentsController extends Controller
                     (SELECT 
                             h.team1_id team, 
                             h.score_team1 PAF,
-                            h.score_team2 PEC
+                            h.score_team2 PEC,
+                            h.score_penalties_team1 PPAF,
+                            h.score_penalties_team2 PPEC
                             FROM games h
                             INNER JOIN journeys j on j.id = h.journey_id
                             WHERE h.category_id=" . $category->id . " and
@@ -390,7 +410,9 @@ class TournamentsController extends Controller
                     ( SELECT 
                             v.team2_id team,
                             v.score_team2 PEF,
-                            v.score_team1 PEC
+                            v.score_team1 PEC,
+                            v.score_penalties_team1 PPAF,
+                            v.score_penalties_team2 PPEC
                             FROM games v
                             INNER JOIN journeys j on j.id = v.journey_id
                             WHERE v.category_id=" . $category->id ." and
@@ -413,9 +435,8 @@ class TournamentsController extends Controller
                 $query .= 'ORDER BY PUNTOS desc';
             }
 
-            $query .= ', DIF desc';
-            
-            $scores[$category->id] = DB::select( DB::raw( $query) );
+            $query .= ', DIF desc'; 
+            $scores[$category->id] = DB::select( DB::raw( $query ) );
         }
 
         return view ('tournaments.show', [
@@ -426,8 +447,5 @@ class TournamentsController extends Controller
             'scores'     => $scores,
             'teams'      => $teams
         ]);
-
-
-
     }
 }

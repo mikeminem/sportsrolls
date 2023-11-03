@@ -291,7 +291,6 @@
                     <input type="hidden" class="form-control" id="idscore" name="id">
 
                     <div class="row">
-        
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="score_team1"><span id="team1score" >Equipo 1 </span> (Casa) * </label>
@@ -306,8 +305,30 @@
 
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row" id="penalties">
+                        <div class="col-md-12 col-sm-12">
+                            <b>Resultado en Penales en caso de aplicar</b>
+                        </div>
+        
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="score_penalties_team1"><span id="team1scorePenalties" >Equipo 1 </span> (Casa) * </label>
+                                <input type="number" class="form-control" id="score_penalties_team1" name="score_penalties_team1" >
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="score_penalties_team2"><span id="team2scorePenalties" >Equipo 2 </span> (Visitante) *</label>
+                                <input type="number" class="form-control" id="score_penalties_team2" name="score_penalties_team2" >
+
+                            </div>
+                        </div>
 
                     </div>
+
 
                     <div class="row">
         
@@ -333,7 +354,7 @@
                             <div class="form-group">
                                 <label for="game_day"><b>Notas</b></label>
                             
-                                <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+                                <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
                             </div>
                         </div>
                     </div>
@@ -618,11 +639,41 @@
             $(document).on("click", "#btnScore", function (e) {
 
                 e.preventDefault();
+
+                let penalties = $(this).attr("data-penalties");
+
                 $("#scoreForm").trigger('reset');
 
                 $("#idscore").val($(this).attr("data-id"));
+                $("#notes").val($(this).attr("data-notes"));
+                $("#status").val($(this).attr("data-status"));
+
                 $("#team1score").html($(this).attr("data-team1"));
                 $("#team2score").html($(this).attr("data-team2"));
+
+                $("#score_team1").val($(this).attr("data-score_team1"));
+                $("#score_team2").val($(this).attr("data-score_team2"));
+
+                $("#score_penalties_team1").val($(this).attr("data-score_penalties_team1"));
+                $("#score_penalties_team2").val($(this).attr("data-score_penalties_team2"));
+
+                $("#team1scorePenalties").html($(this).attr("data-team1"));
+                $("#team2scorePenalties").html($(this).attr("data-team2"));
+
+                $("#team1scorePenalties").html($(this).attr("data-team1"));
+                $("#team2scorePenalties").html($(this).attr("data-team2"));
+
+                if (penalties === 'Si') {
+                    $("#score_penalties_team1").attr("required", "true");
+                    $("#score_penalties_team2").attr("required", "true");
+                } else {
+                    $("#score_penalties_team1").attr("required", "false");
+                    $("#score_penalties_team2").attr("required", "false");
+                }
+
+
+
+                (penalties === 'Si') ? $('#penalties').show() : $('#penalties').hide();
 
                 jQuery.noConflict(); 
                 jQuery("#scoreModal").modal('show');    
@@ -684,6 +735,12 @@
             $(document).on("submit", "#scoreForm", function (e) {
 
                 e.preventDefault();
+
+                //I need to validate if the penalties flag is checked
+                if ($('#score_penalties_team1').val() === $('#score_penalties_team2').val() ) {
+                    $.notify('El resultado en panales no puede ser igual', 'error');
+                    return false;
+                }
 
                 $.ajax({
                     type: "POST",

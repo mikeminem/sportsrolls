@@ -21,8 +21,9 @@
 
                     <div class="row text-right mb-3">
                         <div class="col-md-12">
-                            <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.sportroles.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div
-                            <a class="btn btn-primary whatsapp" href="whatsapp://send?text={{ url('tournament_info/' . $tournament->slug) }}"       data-action="share/whatsapp/share"  
+                            <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.sportroles.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
+                            <a class="btn btn-primary whatsapp" 
+                                href="whatsapp://send?text={{ url('tournament_info/' . $tournament->slug) }}"  
                             target="_blank"><span class="fa fa-whatsapp"></span> Compartir </a>   
                         </div>
                     </div>
@@ -271,12 +272,21 @@
                                                         <th width="200px">Equipo</th>
                                                         <th width="20px">JJ</th>
                                                         <th width="20px">JG</th>
-                                                        @if ($tournament->draw_points>-1)
+                                                        @if ($tournament->draw_points > -1)
                                                             <th width="20px">JE</th>
                                                         @endif
                                                         <th width="20px">JP</th>
-                                                        <th width="20px">PF</th>
-                                                        <th width="20px">PC</th>
+                                                        @if ($tournament->enable_penalties_scoring === 'Si') 
+                                                            <th width="20px">JGP</th>
+                                                            <th width="20px">JPP</th>
+                                                        @endif
+                                                        @if ($tournament->sport->name === 'Futbol')
+                                                            <th width="20px">GF</th>
+                                                            <th width="20px">GC</th>
+                                                        @else
+                                                            <th width="20px">PF</th>
+                                                            <th width="20px">PC</th>
+                                                        @endif
                                                         <th width="20px">DIF</th>
                                                         @if ($tournament->enable_points_system=="Si")
                                                             <th width="20px">PTOs</th>
@@ -299,11 +309,21 @@
                                                                 <td class="text-center ">{{ $score->JE }}</td>
                                                             @endif
                                                             <td class="text-center ">{{ $score->JP }}</td>
+                                                            @if ($tournament->enable_penalties_scoring === 'Si') 
+                                                                <td class="text-center ">{{ $score->JGP }}</td>
+                                                                <td class="text-center ">{{ $score->JPP }}</td>
+                                                            @endif
                                                             <td class="text-center ">{{ $score->PAF }}</td>
                                                             <td class="text-center ">{{ $score->PEC }}</td>
                                                             <td class="text-center ">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
-                                                            @if (isset($score->PUNTOS))
+                                                            @if (isset($score->PUNTOS)
+                                                                && ($tournament->enable_points_system === 'Si'))
                                                                 <td class="text-center ">{{ $score->PUNTOS }}</td>
+                                                            @elseif (isset($score->PUNTOS)
+                                                                && isset($score->PUNTOS)
+                                                                && ($tournament->enable_penalties_scoring === 'Si'))
+                                                                <td class="text-center ">{{ $score->PUNTOS + $score->PUNTOS_PENALTIES }}</td>
+
                                                             @endif                                                                
                                                         </tr>
 

@@ -21,10 +21,10 @@
                   <div class="carousel-item active">
                     <img class="mx-auto w-100 d-block" src="{{ asset('images/imgMarcelino.jpeg')}}?auto=yes&bg=777&fg=555&text=SportRoles.com" alt="SportRoles.com roles de juego y estadisticas">
                     <div class="carousel-caption" style="background:rgba(0, 0, 0, 0.8)">
-                      <h2>CEMOZAC Campeones 44+ </h2>
+                      <h2>Golden League </h2>
                       <p>
-                        Liga de Guadalupe felicita a CEMOZAC campeones en la categoría 44+
-                        <a class="btn btn-primary" href="https://www.sportroles.com/tournament_info/Liga-de-Veteranos-de-Guadalupe">
+                        La mejor liga de futbol de Zacatecas - Las Estrellas del Futbol
+                        <a class="btn btn-primary" href="https://www.sportroles.com/tournament_info/golden-league-zacatecas">
                           Leer más ...
                         </a>
                       </p>

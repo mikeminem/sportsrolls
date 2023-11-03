@@ -2,6 +2,10 @@
 basico colors
 black burn: 191919
 secundary color: FF8C00 or 72CD35*/
+
+h5 {
+	margin-bottom: -5px !important;
+}
 a, .btn-link {
 	color: rgba(0,0,0,.5);
 }
@@ -76,7 +80,8 @@ if modal give us problems, just delete the backdrop element
   }
 
   .win {
-	  border-bottom: #FF8C00 solid 3px;
+	  border-bottom: #FF8C00 solid 4px;
+	  margin-bottom: -2px;
   }
 
   .games {

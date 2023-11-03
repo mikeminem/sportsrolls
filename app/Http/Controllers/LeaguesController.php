@@ -29,13 +29,21 @@ class LeaguesController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name'      => 'required|max:120|min:10',
-            'sport_id' => 'required'
+            'name'              => 'required|max:120|min:10',
+            'sport_id'          => 'required',
+            'state_id'          => 'required', 
+            'municipality_id'   => 'required',
+            'summary'           => 'required',
+            'slogan'            => 'required'
         ];
 
         $attributes = [
-            'name'      => 'Nombre de la liga',
-            'sport_id'  => 'Deporte'
+            'name'              => 'Nombre de la liga',
+            'sport_id'          => 'Deporte',
+            'state_id'          => 'Estado', 
+            'municipality_id'   => 'Municipio',
+            'summary'           => 'Acerca de',
+            'slogan'            => 'Subtitulo'
         ];
 
         //Validate the data
@@ -57,19 +65,23 @@ class LeaguesController extends Controller
             if ($league) {
                 $league->fill($request->all());
                 
-                if ($league->update()) 
+                if ($league->update()) {
                     return response()->json([
                         'type' => 'success',
                         'message' => 'Información de la liga ha sido actualizada!'
                     ]);
+                }
             } else {
                 $model = new Leagues($request->all());
                 $model->user_id = Auth::user()->id;
-                if ($model->save()) 
+                
+                if ($model->save()) {
                     return response()->json([
                         'type' => 'success',
                         'message' => 'Información de la liga guardada!'
                     ]);
+                }
+                    
             }
         }
 

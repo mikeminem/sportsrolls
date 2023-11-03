@@ -43,14 +43,14 @@
         
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
-                                        <label for="slogan">Subtítulo</label>
+                                        <label for="slogan">Subtítulo *</label>
                                         <input type="text" class="form-control" id="slogan" name="slogan" placeholder="Slogan" maxlength="80" value="{{ ($league)?$league->slogan:""}}">
                                     </div>
                                 </div>
         
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
-                                        <label for="summary">Acerca de</label>
+                                        <label for="summary">Acerca de * </label>
                                         <textarea class="form-control" id="summary" name="summary" placeholder="Acerca de la liga">{{ ($league)?$league->summary:""}}</textarea>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                     <div class="form-group">
                                         <label for="state_id"><b>Estado *</b></label>
                                         <select id="state_id" name="state_id" class="form-control">
-                                        <option id="">Selecciona</option>
+                                            <option value="" >Selecciona...</option>
                                         @if (isset($states))
                                             @foreach($states as $state)
                                             @if (isset($league))
