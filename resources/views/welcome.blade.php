@@ -67,7 +67,7 @@
 <div class="container-fluid mt-5">
   <div class="row">
     <div class="col-md-12">
-      <h1 class="title">Torneos más populares</h1>
+      <h1 class="title">Torneos</h1>
     </div>
 
       @if (count($tournaments)==0) 
@@ -78,10 +78,14 @@
           @foreach($tournaments as $tournament)
           <div class="col-md-3">
             <div class="card h-100">
-              @if($tournament->sport->image)
-                  <img class="card-img-top img-fluid" src="{{ asset('sport/' . $tournament->sport->image)}}" alt="{{ $tournament->title }}">
+              @if($tournament->user->league->logo1)
+                <img class="card-img-top img-fluid" src="{{ asset('league_logo/' . $tournament->user->league->logo1 )}}" alt="{{ $tournament->title }}">
               @else
-                  <img class="card-img-top" src="img_avatar1.png" alt="{{ $tournament->title }}">
+                @if($tournament->sport->image)
+                    <img class="card-img-top img-fluid" src="{{ asset('sport/' . $tournament->sport->image)}}" alt="{{ $tournament->title }}">
+                @else
+                    <img class="card-img-top" src="img_avatar1.png" alt="{{ $tournament->title }}">
+                @endif
               @endif
               <div class="card-body">
                 <h4 class="card-title">{{ $tournament->title }}</h4>

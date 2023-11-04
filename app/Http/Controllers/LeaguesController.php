@@ -11,6 +11,8 @@ use App\Municipalities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+
 
 class LeaguesController extends Controller
 {
@@ -46,9 +48,7 @@ class LeaguesController extends Controller
             'slogan'            => 'Subtitulo'
         ];
 
-        //Validate the data
         $validated = Validator::make($request->all(),$rules, [] , $attributes);
-
 
         if ($validated->fails()) {
             return response()->json([
@@ -58,12 +58,23 @@ class LeaguesController extends Controller
             ]);
         }
 
+        $imagePath = '';
+        if($request->file('logo1')){
+            $imagePath =  date('Ymd-His') . '.' .$request->file('logo1')->extension();
+            $request->file('logo1')->storeAs('public/league_logo', $imagePath);
+        }
+
         if ($request) {
-            //$user_id = Auth::user()->id;
             $league = Leagues::find(Auth::user()->id);
 
             if ($league) {
+                $lastImage = $league->logo1;
                 $league->fill($request->all());
+
+                if (!empty($imagePath)) {
+                    Storage::delete('public/league_logo/' . $lastImage);
+                    $league->logo1 = $imagePath;
+                }
                 
                 if ($league->update()) {
                     return response()->json([
@@ -74,6 +85,9 @@ class LeaguesController extends Controller
             } else {
                 $model = new Leagues($request->all());
                 $model->user_id = Auth::user()->id;
+
+                if (!empty($imagePath))
+                    $model->logo1 = $imagePath;  
                 
                 if ($model->save()) {
                     return response()->json([

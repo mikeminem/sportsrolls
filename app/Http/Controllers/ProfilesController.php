@@ -69,9 +69,8 @@ class ProfilesController extends Controller
         }
 
         if ($request) {
-            //$user_id = Auth::user()->id;
-            //$profile = Profiles::find(Auth::user()->id);
             $profile = User::find(Auth::user()->id)->profile;
+
             if ($profile) {
                 //update info
                 $model = User::find(Auth::user()->id)->profile;
@@ -79,7 +78,7 @@ class ProfilesController extends Controller
                 $model->fill($request->all());
 
                 if (!empty($path)) {
-                    Storage::delete('public/sports/' . $lastImage);
+                    Storage::delete('public/profiles/' . $lastImage);
                     $model->photo = $path;
                 }
 

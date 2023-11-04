@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <div class="text-left">
                         <h1>{{ __('League Info')}}</h1>
-                        <form id="frmLeague">
+                        <form id="frmLeague" enctype="multipart/form-data"  >
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
@@ -102,8 +102,6 @@
                                 </div>
                             </div>
 
-                            
-
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
@@ -145,6 +143,19 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="logo1">Logo Principal de la liga</label><br>
+                                        <small>La imagen debe de ser de 400x400px <br>
+                                        Para sustituir la imagen sólo selecciona el nuevo logo</small>
+                                        <br>
+                                            <input type="file" class="form-control" id="logo1" name="logo1" placeholder="Selecciona un logo" onchange="showMyImage(this)" >
+                                            <img id="thumbnil-logo" src="{{  asset("/league_logo/" . $league->logo1)  }}" alt="{{  $league->name  }}" width="400px" >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     Datos marcados con * son obligatorios
                                 </div>
@@ -179,7 +190,11 @@
                     type: "POST",
                     url: "leagues",
                     dataType: "json",
-                    data: $(this).serialize(),
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    //data: $(this).serialize(),
+                    data: new FormData(this),
                     success: function (data) {                
                         if (data.type == "error") {
                             var errors = "";
@@ -188,7 +203,7 @@
                             });
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
                             return false;
-                        }
+                        }   
                         $.notify(data.message, data.type);
                     },
                     error:function(){
@@ -239,6 +254,28 @@
         }
 
         });
+
+        function showMyImage(fileInput) {
+            var files = fileInput.files;
+        
+            for (var i = 0; i < files.length; i++) {           
+                var file = files[i];
+                var imageType = /image.*/;     
+                if (!file.type.match(imageType)) {
+                    continue;
+                }           
+                var img=document.getElementById("thumbnil-logo");            
+                img.file = file;    
+                var reader = new FileReader();
+                reader.onload = (function(aImg) { 
+                    return function(e) { 
+                        aImg.src = e.target.result; 
+                    }; 
+                })(img);
+                reader.readAsDataURL(file);
+            }    
+            files = null;
+        }
 
 </script>
 @endsection

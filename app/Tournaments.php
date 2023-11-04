@@ -35,6 +35,11 @@ class Tournaments extends Model
         return $this->belongsTo('App\Sports');
     }
 
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
     public function journeys()
     {
         return $this->hasMany('App\Journeys', "tournament_id","id" );

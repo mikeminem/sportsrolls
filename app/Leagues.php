@@ -20,6 +20,8 @@ class Leagues extends Model
         'sport_id', 
         'state_id', 
         'municipality_id',
+        'logo1',
+        'logo2',
     ];
 
 

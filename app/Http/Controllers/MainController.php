@@ -35,7 +35,7 @@ class MainController extends Controller
         foreach ($tournaments2 as $t) {
             $prints = 0;
             $prints = $t->prints+1;
-            Tournaments::where('id', $t->id)->where('is_deleted',0)->where('status','En Progreso')->update(['prints' => $prints ]);
+            Tournaments::where('id', $t->id)->where('is_deleted',0)->where('status','Por Empezar')->update(['prints' => $prints ]);
         }
 
         $imageNumber = rand(1, 3);
