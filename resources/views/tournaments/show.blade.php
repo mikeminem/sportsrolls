@@ -43,6 +43,9 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#menu4">Equipos</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#menu5">Archivo</a>
+                        </li>
                     </ul>
                     
                     <!-- Tab panes -->
@@ -60,11 +63,12 @@
                                 @endphp
                                 @foreach ($tournament->journeys as $journey)
 
-                                    @if( ($journey->status=="Abierto") && 
-                                    ($journey->show_public=="Si") && 
-                                    ($journey->is_deleted==0) )
+                                    @if( ($journey->status=="Abierto") 
+                                        && ($journey->show_public=="Si") 
+                                        && ($journey->is_deleted==0)
+                                        && ($journey->finish_at >= Date('Y-m-d')) )
 
-                                    <h3 class="text-center">{{ $journey->name }}</h3>
+                                        <h3 class="text-center">{{ $journey->name }}</h3>
                                         <div class="table-responsive">
                                             <table class="table table-hover table-rounded" id="table">
                                                 <thead>
@@ -175,7 +179,7 @@
 
                                 @if($i==0)
                                     <div class="alert alert-danger">
-                                        <strong>Nota!</strong> no se encontraron juegos agendados
+                                        <strong>Nota!</strong> no se encontraron juegos programados
                                     </div>    
                                 @endif
                                 
@@ -187,7 +191,7 @@
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <h1>Resultados de los juegos</h1>
+                                    <h1>Resultados</h1>
                                 </div>
                             </div>
 
@@ -217,14 +221,20 @@
                                                                 @if ($game->category_id == $category->id)
                                                                     <div class="match p-2">    
                                                                         @if(($game->score_team1 > $game->score_team2 ))
-                                                                            <b class="win">{{ $game->team1}} {{ $game->score_team1}}</b> <br>
+                                                                            <b class="win">{{ $game->team1}} {{ $game->score_team1}}</b> <br />
                                                                             {{ $game->team2}} {{ $game->score_team2}} 
                                                                         @elseif ($game->score_team1 < $game->score_team2)
                                                                             {{ $game->team1}} {{ $game->score_team1}} <br />
                                                                             <b class="win">{{ $game->team2}} {{ $game->score_team2}}</b>
                                                                         @else
-                                                                            {{ $game->team1}} {{ $game->score_team1}} <br>
-                                                                            {{ $game->team2}} {{ $game->score_team2}} 
+                                                                            @if ( $game->score_penalties_team1 > $game->score_penalties_team2 )
+                                                                                <b class="win">{{ $game->team1}} {{ $game->score_team1}} ({{ $game->score_penalties_team1}})</b> <br />
+                                                                                {{ $game->team2}} {{ $game->score_team2}} ({{ $game->score_penalties_team2}})
+                                                                            @else
+                                                                                {{ $game->team1}} {{ $game->score_team1}} ({{ $game->score_penalties_team1}}) <br />
+                                                                                <b class="win">{{ $game->team2}} {{ $game->score_team2}} ({{ $game->score_penalties_team2}})</b>
+                                                                            @endif
+                                                                          
                                                                         @endif
                                                                     </div>
                                                                 @endif
@@ -277,17 +287,17 @@
                                                         @endif
                                                         <th width="20px">JP</th>
                                                         @if ($tournament->enable_penalties_scoring === 'Si') 
-                                                            <th width="20px">JGP</th>
-                                                            <th width="20px">JPP</th>
+                                                            <th width="20px" class="hideColumn">JGP</th>
+                                                            <th width="20px" class="hideColumn">JPP</th>
                                                         @endif
                                                         @if ($tournament->sport->name === 'Futbol')
-                                                            <th width="20px">GF</th>
-                                                            <th width="20px">GC</th>
+                                                            <th width="20px" class="hideColumn">GF</th>
+                                                            <th width="20px" class="hideColumn">GC</th>
                                                         @else
-                                                            <th width="20px">PF</th>
-                                                            <th width="20px">PC</th>
+                                                            <th width="20px" class="hideColumn">PF</th>
+                                                            <th width="20px" class="hideColumn">PC</th>
                                                         @endif
-                                                        <th width="20px">DIF</th>
+                                                        <th width="20px" class="hideColumn">DIF</th>
                                                         @if ($tournament->enable_points_system=="Si")
                                                             <th width="20px">PTOs</th>
                                                         @endif
@@ -310,12 +320,12 @@
                                                             @endif
                                                             <td class="text-center ">{{ $score->JP }}</td>
                                                             @if ($tournament->enable_penalties_scoring === 'Si') 
-                                                                <td class="text-center ">{{ $score->JGP }}</td>
-                                                                <td class="text-center ">{{ $score->JPP }}</td>
+                                                                <td class="hideColumn text-center ">{{ $score->JGP }}</td>
+                                                                <td class="hideColumn text-center ">{{ $score->JPP }}</td>
                                                             @endif
-                                                            <td class="text-center ">{{ $score->PAF }}</td>
-                                                            <td class="text-center ">{{ $score->PEC }}</td>
-                                                            <td class="text-center ">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
+                                                            <td class="hideColumn text-center">{{ $score->PAF }}</td>
+                                                            <td class="hideColumn text-center">{{ $score->PEC }}</td>
+                                                            <td class="hideColumn text-center">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
                                                             @if (isset($score->PUNTOS)
                                                                 && ($tournament->enable_points_system === 'Si'))
                                                                 <td class="text-center ">{{ $score->PUNTOS }}</td>
@@ -408,6 +418,13 @@
                             </div>    
 
                             
+                        </div>
+                        <div class="tab-pane container fade" id="menu5">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h1>Histórico de torneos de la misma liga</h1>
+                                </div>
+                            </div>
                         </div>
                         {{-- <div class="tab-pane container fade" id="menu5">Comité organizador</div> --}}
 

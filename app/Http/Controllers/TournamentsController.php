@@ -357,7 +357,8 @@ class TournamentsController extends Controller
         if ($tournament[0]->enable_points_system == "Si"){
             $points = ", sum( case when PAF > PEC then " . $tournament[0]->winner_points . " else 0 end \n";
 
-            if ($tournament[0]->draw_points > -1){
+            if ($tournament[0]->draw_points > -1
+                && $tournament[0]->enable_penalties_scoring == "No" ){
                 $points .= " + case when PAF = PEC then " . $tournament[0]->draw_points . " else 0 end \n";
             }
                 
@@ -411,8 +412,8 @@ class TournamentsController extends Controller
                             v.team2_id team,
                             v.score_team2 PEF,
                             v.score_team1 PEC,
-                            v.score_penalties_team1 PPAF,
-                            v.score_penalties_team2 PPEC
+                            v.score_penalties_team2 PPAF,
+                            v.score_penalties_team1 PPEC
                             FROM games v
                             INNER JOIN journeys j on j.id = v.journey_id
                             WHERE v.category_id=" . $category->id ." and

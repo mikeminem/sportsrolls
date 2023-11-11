@@ -737,10 +737,10 @@
                 e.preventDefault();
 
                 //I need to validate if the penalties flag is checked
-                if ($('#score_penalties_team1').val() === $('#score_penalties_team2').val() ) {
-                    $.notify('El resultado en panales no puede ser igual', 'error');
-                    return false;
-                }
+                // if ($('#score_penalties_team1').val() === $('#score_penalties_team2').val() ) {
+                //     $.notify('El resultado en panales no puede ser igual', 'error');
+                //     return false;
+                // }
 
                 $.ajax({
                     type: "POST",

@@ -137,3 +137,33 @@ if modal give us problems, just delete the backdrop element
 	border-radius: 8px;
 	border: 1px solid #eee;
 }
+
+/* show or hide columns */
+/* @media screen and (max-width: 1225px) and (min-width: 1045px) {
+	.hideColumn{
+		display:none;
+	}
+}
+
+@media screen and (max-width: 1045px) and (min-width: 835px) {
+	.hideColumn{
+		display:none;
+	}
+	
+} */
+
+/* @media screen and (max-width: 565px) and (min-width: 300px) {
+	.hideColumn{
+		display:none;
+	}
+} */
+
+@media screen and (max-width: 1000px) {
+	.hideColumn{
+		display:none;
+	}
+}
+
+.card-body {
+	padding: 2px !important;
+}
