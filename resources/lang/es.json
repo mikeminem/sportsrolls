@@ -33,7 +33,7 @@
     "All rights reserved.":  "Todos los derechos reservados.",
     "Search": "Buscar", 
     "Players": "Jugadores",
-    "League Catalogs": "Catalogos de la liga",
+    "League Catalogs": "Catálogos de la liga",
     "Stadiums": "Estadios",
     "Tournaments": "Torneos",
     "Games": "Juegos",
@@ -67,6 +67,8 @@
     "Start": "Iniciar",
     "Category": "Categoría",
     "Categories": "Categorías",
-    "Alerts":"Avisos",
-    "Sponsors":"Patrocinadores"
+    "Alerts": "Avisos",
+    "Sponsors": "Patrocinadores",
+    "Pages": "Páginas",
+    "Page": "Página"
 }

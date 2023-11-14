@@ -23,21 +23,23 @@
                     </div>
                     @endif
 
-                    @include('components.features',['links'=>1])
+                    @if (Auth::user()->role == "Promotor")
+                        @include('components.features',['links'=>1])
 
-                    <div class="row">
-                        <dov class="col-3">
-                            <div class="form-group">
-                                <label for="filterTournaments"><b>Torneos Activos</b></label>
-                                <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
-                                    <option value="">Selecciona...</option>
-                                    @foreach($tournaments as $tournament)
-                                        <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </dov>
-                    </div>
+                        <div class="row">
+                            <dov class="col-3">
+                                <div class="form-group">
+                                    <label for="filterTournaments"><b>Torneos Activos</b></label>
+                                    <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
+                                        <option value="">Selecciona...</option>
+                                        @foreach($tournaments as $tournament)
+                                            <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </dov>
+                        </div>
+                    @endif
                     
                 </div>
             </div>

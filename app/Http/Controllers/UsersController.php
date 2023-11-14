@@ -23,7 +23,7 @@ class UsersController extends Controller
     {
          if($request->ajax()){
             $rows = DB::table('users as u')
-                    ->select('u.id', 'u.name', 'u.email', 'u.password', 'u.phone', 'u.role', 'u.active as active')
+                    ->select('u.id', 'u.name', 'u.last_name', 'u.email', 'u.password', 'u.phone', 'u.role', 'u.active as active')
                     ->where('u.is_deleted', 0)
                     ->get();        
             
@@ -62,11 +62,13 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name'   => 'required|max:120'
+            'name'   => 'required|max:120',
+            'last_name'   => 'required|max:120'
         ];
 
         $attributes = [
-            'name'   => 'Nombre'
+            'name'   => 'Nombre',
+            'last_name'   => 'Apelliidos'
         ];
 
         //Validate the data
@@ -76,7 +78,7 @@ class UsersController extends Controller
         if ($validated->fails()) {
             return response()->json([
                 'type' => 'error',
-                'message' => 'Error al intentar guardar el Deporte!',
+                'message' => 'Error al intentar guardar el Usuario!',
                 'errors' => $validated->errors()
             ]);
         }
@@ -94,7 +96,7 @@ class UsersController extends Controller
 
             if ($model->save())
                  return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado el deporte!']);      
+                                 'message' => 'Se ha creado el Usuario!']);      
         } else {
             $model = User::find($request->id);
             $model->fill($request->all());
@@ -103,12 +105,12 @@ class UsersController extends Controller
             
             if ($model->update()) 
                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado el deporte!']); 
+                                 'message' => 'Se ha modificado el Usuario!']); 
         }
 
         return response()->json([
             'type' => 'error',
-            'message' => 'Error al intentar guardar el Deporte!'
+            'message' => 'Error al intentar guardar el Usuario!'
         ]);
 
     }
@@ -123,7 +125,7 @@ class UsersController extends Controller
     {
         //
         if ($id) {
-            $User = User::select('id', 'name', 'email', 'password', 'phone', 'role', 'active')->find($id);
+            $User = User::select('id', 'name', 'last_name', 'email', 'password', 'phone', 'role', 'active')->find($id);
             
             return $User;
         }

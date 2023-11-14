@@ -145,9 +145,8 @@ Route::get('/tournament_info/{slug}', 'TournamentsController@showTournament');
 //teams options
 Route::resource('/teams','TeamsController');
 Route::get('/teams_list/{category_id}','TeamsController@list');
-
+Route::get('/teams_players/{id}','TeamsController@playersList');
 Route::get('/getTeamsbyCategoryAndBranch/{category_id}/{branch}','TeamsController@getTeamsbyCategoryAndBranch');
-
 Route::get('/teams_list_by_branch/{tournament_id}/{branch}','TeamsController@listByBranch');
 Route::get('/update_team_status/{id}/{status}', 'TeamsController@updateStatus');
 Route::post('/teams/upload_image', 'TeamsController@uploadImage');
@@ -165,3 +164,8 @@ Route::post('/score_game', 'GamesController@updateScore');
 //Sponsors options
 Route::resource('/sponsors','SponsorController');
 Route::get('/sponsors_list/{user_id}','SponsorController@list');
+
+//admin options
+//WebPagees
+Route::resource('/pages','PagesController');
+Route::get('/pages_list/{user_id}','PagesController@list');

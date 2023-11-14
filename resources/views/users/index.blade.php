@@ -39,6 +39,7 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
+                                    <th>Apellidos</th>
                                     <th>Correo</th>
                                     <th>Telefono</th>
                                     <th>Rol </th>
@@ -64,7 +65,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"> Datos del Deporte</h4>
+                <h4 class="modal-title"> Datos del Usuario</h4>
                 <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
             </div>
             <!--mandamos la forma-->
@@ -80,7 +81,14 @@
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="role"><b>Rol *</b></label>
+                                <label for="last_name"><b>Apellidos *</b></label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required maxlength="80"> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="role"><b>Rol / Perfil *</b></label>
                                 <select class="form-control" id="role" name="role" required>
                                     <option value="">Slecciona un Rol</option>
                                     <option value="Admin">Admin</option>
@@ -94,14 +102,14 @@
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="email"><b>Correo *</b></label>
+                                <label for="email"><b>Correo Electrónico *</b></label>
                                 <input type="email" class="form-control" id="email" name="email" required maxlength="80"> 
                             </div>
                         </div>
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="password"><b>Contrasenia</b></label>
+                                <label for="password"><b>Contraseña</b></label>
                                 <input type="password" class="form-control" id="password" name="password" maxlength="80"> 
                             </div>
                         </div>
@@ -228,6 +236,7 @@
                 columns: [
                     //{ data: 'code', name: 'code'},
                     { data: 'name', name: 'name'},
+                    { data: 'last_name', name: 'last_name'},
                     { data: 'email', name: 'email'},
                     { data: 'phone', name: 'phone'},
                     { data: 'role', name: 'role'},
@@ -261,8 +270,7 @@
                     url: $(this).attr("href"),
                     dataType: "json",
                     success: function (data) { 
-                        console.log(data)
-
+                        
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
                         }

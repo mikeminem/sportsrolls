@@ -90,9 +90,12 @@ class TeamsController extends Controller
                             $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
                                             <span class="fa fa-edit tool"></span>
                                         </a>
+                                        <a href="javascript:void(0)" data-id="'.$row->id .'" data-toggle="tooltip" title="Administrar Jugadorees!" id="btnPlayers">
+                                            <span class="fa fa-users tool"></span>
+                                        </a>
                                         <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
-                                <span class="fa fa-trash tool"></span>
-                            </a>';
+                                            <span class="fa fa-trash tool"></span>
+                                        </a>';
 
                         return $links;
                     })
