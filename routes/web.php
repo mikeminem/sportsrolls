@@ -169,3 +169,7 @@ Route::get('/sponsors_list/{user_id}','SponsorController@list');
 //WebPagees
 Route::resource('/pages','PagesController');
 Route::get('/pages_list/{user_id}','PagesController@list');
+
+//WebPagees
+Route::resource('/actions','ActionsController');
+Route::get('/actions_list/{user_id}','ActionsController@list');

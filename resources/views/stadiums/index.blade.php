@@ -63,7 +63,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"> Datos del Estadio</h4>
+                <h4 class="modal-title"> Datos del Estadio / Campo / Gimnasio</h4>
                 <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
             </div>
             <!--mandamos la forma-->

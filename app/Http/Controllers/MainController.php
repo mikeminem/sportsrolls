@@ -16,10 +16,12 @@ class MainController extends Controller
 
         $tournaments = Tournaments::where('is_deleted',0)
         ->where('status','En Progreso')
+        ->orderBy('clicks','desc')
         ->get();
 
         $tournaments2 = Tournaments::where('is_deleted',0)
         ->where('status','Por Empezar')
+        ->orderBy('clicks','desc')
         ->get();
 
         //we update the value of the prints

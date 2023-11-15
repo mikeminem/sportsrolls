@@ -34,7 +34,7 @@
     "Search": "Buscar", 
     "Players": "Jugadores",
     "League Catalogs": "Catálogos de la liga",
-    "Stadiums": "Estadios",
+    "Stadiums": "Estadios / Campos / Gimnasios",
     "Tournaments": "Torneos",
     "Games": "Juegos",
     "Teams": "Equipos",
@@ -70,5 +70,6 @@
     "Alerts": "Avisos",
     "Sponsors": "Patrocinadores",
     "Pages": "Páginas",
-    "Page": "Página"
+    "Page": "Página",
+    "Actions": "Acciones del Deporte"
 }

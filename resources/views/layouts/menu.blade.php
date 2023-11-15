@@ -110,6 +110,7 @@
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ url('/sports') }}" title="Catálogo de Deportes"><i class="fa fa-cube"></i> {{ __('Sports') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/actions') }}" title="Catálogo de Acciones"><i class="fa fa-gamepad"></i> {{ __('Actions') }}</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="#"><i class="fa fa-trophy"></i> {{ __('Tournaments') }}</a>
                                         <a class="dropdown-item" href="#"><i class="fa fa-users"></i> {{ __('Players') }}</a>

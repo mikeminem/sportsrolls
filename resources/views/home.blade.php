@@ -23,7 +23,7 @@
                     </div>
                     @endif
 
-                    @if (Auth::user()->role == "Promotor")
+                    @if (Auth::user()->role == "Promoter")
                         @include('components.features',['links'=>1])
 
                         <div class="row">
