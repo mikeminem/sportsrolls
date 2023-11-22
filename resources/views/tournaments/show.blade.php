@@ -119,9 +119,23 @@
                                                                 
                                                                 <tr class="{{ $game->status === "Suspendido" ? 'table-danger' : '' }}" >
                                                                     <td>{{ $game->game_time }}</td>
-                                                                    <td class="text-right">{{ $game->team1 }}</td>
+                                                                    <td class="text-right">
+                                                                        {{ $game->team1 }}
+                                                                        @if( $game->t1logo )
+                                                                            <img class="img img-fluid" src="{{ asset('team/' . $game->t1logo) }} " style="width=40px">
+                                                                        @else
+                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:30px">
+                                                                        @endif
+                                                                    </td>
                                                                     <th>VS </th>
-                                                                    <td>{{ $game->team2 }}</td>
+                                                                    <td>
+                                                                        @if( $game->t2logo )
+                                                                            <img class="img img-fluid" src="{{ asset('team/' . $game->t2logo) }} " style="width=40px">
+                                                                        @else
+                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:30px">
+                                                                        @endif
+                                                                        {{ $game->team2 }}
+                                                                    </td>
                                                                     <td>{{ $game->branch }} / {{ $game->category }}</td>
                                                                     <td>{{ ($game->stadium) ?? '---'  }}</td>
                                                                     <td><span class="badge badge-default"> {{ $game->type }} </span></td>
@@ -312,7 +326,14 @@
                                                     @foreach ( $scores[$category->id] as $score )
                                                         <tr>
                                                             <td class="text-center">{{ $lugar }}</td>
-                                                            <td >{{ $score->team }}</td>
+                                                            <td >
+                                                                @if( $score->logo )
+                                                                        <img class="img img-fluid" src="{{ asset('team/' . $score->logo) }} " style="width=40px">
+                                                                    @else
+                                                                        <img class="img" src="{{ asset('images/_shield.png') }} " style="width:30px">
+                                                                    @endif
+                                                                {{ $score->team }}
+                                                            </td>
                                                             <td class="text-center ">{{ $score->JJ }}</td>
                                                             <td class="text-center ">{{ $score->JG }}</td>
                                                             @if ($tournament->draw_points>-1)
@@ -384,6 +405,11 @@
                                                         @if ($team->category_id == $category->id)
                                                             <tr>
                                                                 <td >
+                                                                    @if( $team->logo )
+                                                                        <img class="img img-fluid" src="{{ asset('team/' . $team->logo) }} " style="width=40px">
+                                                                    @else
+                                                                        <img class="img" src="{{ asset('images/_shield.png') }} " style="width:30px">
+                                                                    @endif
                                                                     <b>{{ $team->name }}</b> 
                                                                     @if( $team->photo )
                                                                             <br>

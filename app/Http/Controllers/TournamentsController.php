@@ -316,9 +316,11 @@ class TournamentsController extends Controller
         $games  = DB::table('games as g')
         ->select('g.id',
          't1.name as team1',
+         't1.logo as t1logo',
          'g.score_team1',
          'g.score_team2',
-          't2.name as team2',
+         't2.name as team2',
+         't2.logo as t2logo',
          'c.name as category',
          'g.status' , 'g.notes',
          'g.score_team1',
@@ -331,8 +333,8 @@ class TournamentsController extends Controller
          'g.category_id', 
          's.name as stadium', 
          'g.type',
-         'score_penalties_team1',
-         'score_penalties_team2')
+         'g.score_penalties_team1',
+         'g.score_penalties_team2')
         ->join('teams as t1', 't1.id', '=', 'g.team1_id')
         ->join('teams as t2', 't2.id', '=', 'g.team2_id')
         ->join('categories as c', 'c.id', '=', 'g.category_id')        
@@ -390,7 +392,7 @@ class TournamentsController extends Controller
                 sum(score.PAF) as PAF,
                 sum(score.PEC) as PEC,
                 sum(score.PAF) - sum(score.PEC) as DIF
-                $points
+                $points, t.logo
                 FROM 
                 (
                     (SELECT 
@@ -422,21 +424,21 @@ class TournamentsController extends Controller
                             j.show_public ='Si' and
                             j.tournament_id = ". $tournament[0]->id ."
                     )
-                ) as score
-                join teams t on t.id = score.team
-                where
+                ) AS score
+                JOIN teams t on t.id = score.team
+                WHERE
                 t.status = 'Activo'
-                group by t.name ";
+                GROUP BY team ";
 
             if ( strlen($points)==0) {
                 $query .= 'ORDER BY JG desc, JP asc';
             }
 
             if (strlen($points)>0) {
-                $query .= 'ORDER BY PUNTOS desc';
+                $query .= 'ORDER BY PUNTOS DESC';
             }
 
-            $query .= ', DIF desc'; 
+            $query .= ', DIF DESC'; 
             $scores[$category->id] = DB::select( DB::raw( $query ) );
         }
 

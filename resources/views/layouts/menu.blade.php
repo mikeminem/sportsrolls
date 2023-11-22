@@ -83,12 +83,14 @@
                                         <a class="dropdown-item" href="{{ url('/stadiums') }}"><i class="fa fa-map-marker"></i>  {{ __('Stadiums') }}</a>
                                         
                                         <div class="dropdown-divider"></div>
-
                                         <a class="dropdown-item" href="{{ url('/tournaments') }}"><i class="fa fa-trophy"></i> {{ __('Tournaments') }}</a>
-
                                         <a class="dropdown-item" href="{{ url('/categories') }}"><i class="fa fa-cubes"></i> {{ __('Categories') }}</a>
                                         <a class="dropdown-item" href="{{ url('/groups') }}"><i class="fa fa-circle-o"></i> {{ __('Groups') }}</a>
+                                        <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ url('/teams') }}"><i class="fa fa-group"></i> {{ __('Teams') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/players') }}"><i class="fa fa-user"></i> {{ __('Players') }}</a>
+                                        <div class="dropdown-divider"></div>
+
                                         <a class="dropdown-item" href="{{ url('/journeys')}}"><i class="fa fa-calendar"></i> {{ __('Journeys') }}</a>
                                         <a class="dropdown-item" href="{{ url('/games')}}"><i class="fa fa-tasks"></i> {{ __('Games') }}</a>
 

@@ -200,6 +200,7 @@ class GamesController extends Controller
 
         $stadiums = Stadiums::where('is_deleted','0')
             ->where('user_id',Auth::user()->id)
+            ->orderBy('name','asc')
             ->get(['id','name']);
 
         return view ('games.index', compact('tournaments', 'stadiums'));

@@ -152,6 +152,10 @@ Route::get('/update_team_status/{id}/{status}', 'TeamsController@updateStatus');
 Route::post('/teams/upload_image', 'TeamsController@uploadImage');
 //Route::put('/update_brand_website/{id}/{website}', 'BrandController@updateWebsite');
 
+//players
+Route::resource('/players','PlayersController');
+Route::get('/players_list/{user_id}','PlayersController@list');
+
 //journeys
 Route::resource('/journeys','JourneysController');
 Route::get('/journaments_list/{tournament_id}','JourneysController@list');
