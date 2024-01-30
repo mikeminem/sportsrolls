@@ -77,9 +77,9 @@
         
         <main class="py-2 mb-5">
 
-            <div class="alert alert-danger text-center">
+            {{-- <div class="alert alert-danger text-center">
                 <i class="fa fa-warning"></i> <strong>Aviso!</strong> A todos los usuarios de la página, se les informa que cambiaremos de nombre de dominio de sportroles.com a deportezacatecas.com.
-              </div>
+              </div> --}}
 
             @yield('content')
         </main>

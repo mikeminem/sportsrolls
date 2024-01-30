@@ -153,6 +153,12 @@ class TeamsController extends Controller
             $request->file('photo')->storeAs('public/teams', $path);
         }
 
+        $pathLogo = "";
+        if($request->file('logo')){
+            $pathLogo =  date('YmdHis') . '.' .$request->file('logo')->extension();
+            $request->file('logo')->storeAs('public/logos', $pathLogo);
+        }
+
 
         if (!isset($request->id) || empty($request->id)) {
             $model = new Teams($request->all());
@@ -160,6 +166,9 @@ class TeamsController extends Controller
 
             if (!empty($path))
                 $model->photo = $path;
+
+            if (!empty($pathLogo))
+                $model->logo = $pathLogo;
             
             if ($model->save())
                  return response()->json(['type' => 'success', 
@@ -167,11 +176,17 @@ class TeamsController extends Controller
         } else {
             $model = Teams::find($request->id);
             $lastImage = $model->photo;
+            $lastLogo = $model->logo;
             $model->fill($request->all());
 
             if (!empty($path)) {
                 Storage::delete('public/teams/' . $lastImage);
                 $model->photo = $path;
+            }
+
+            if (!empty($pathLogo)) {
+                Storage::delete('public/logos/' . $lastLogo);
+                $model->logo = $pathLogo;
             }
 
             if ($model->update()) 

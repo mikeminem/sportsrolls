@@ -21,7 +21,7 @@
 
                     <div class="row text-right mb-3">
                         <div class="col-md-12">
-                            <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.sportroles.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
+                            <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.deportezacatecas.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
                             <a class="btn btn-primary whatsapp" 
                                 href="whatsapp://send?text={{ url('tournament_info/' . $tournament->slug) }}"  
                             target="_blank"><span class="fa fa-whatsapp"></span> Compartir </a>   
@@ -122,17 +122,17 @@
                                                                     <td class="text-right">
                                                                         {{ $game->team1 }}
                                                                         @if( $game->t1logo )
-                                                                            <img class="img img-fluid" src="{{ asset('team/' . $game->t1logo) }} " style="width=40px">
+                                                                            <img class="img" src="{{ asset('team_logo/' . $game->t1logo) }} " style="width:40px">
                                                                         @else
-                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:30px">
+                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
                                                                         @endif
                                                                     </td>
                                                                     <th>VS </th>
                                                                     <td>
                                                                         @if( $game->t2logo )
-                                                                            <img class="img img-fluid" src="{{ asset('team/' . $game->t2logo) }} " style="width=40px">
+                                                                            <img class="img" src="{{ asset('team_logo/' . $game->t2logo) }} " style="width:40px">
                                                                         @else
-                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:30px">
+                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
                                                                         @endif
                                                                         {{ $game->team2 }}
                                                                     </td>
@@ -161,9 +161,21 @@
 
                                                                 <tr class="{{ $game->status === "Suspendido" ? 'table-danger' : '' }}" >
                                                                     <td>{{ $game->game_time }}</td>
-                                                                    <td class="text-right">{{ $game->team1 }}</td>
+                                                                    <td class="text-right">{{ $game->team1 }} 
+                                                                        @if( $game->t1logo )
+                                                                            <img class="img" src="{{ asset('team_logo/' . $game->t1logo) }} " style="width:40px">
+                                                                        @else
+                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
+                                                                        @endif
+                                                                    </td>
                                                                     <th>VS </th>
-                                                                    <td>{{ $game->team2 }}</td>
+                                                                    <td>
+                                                                        @if( $game->t2logo )
+                                                                            <img class="img" src="{{ asset('team_logo/' . $game->t2logo) }} " style="width:40px">
+                                                                        @else
+                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
+                                                                        @endif
+                                                                        {{ $game->team2 }}</td>
                                                                     <td>{{ $game->branch }} / {{ $game->category }}</td>
                                                                     <td>{{ ($game->stadium) ?? '---'  }}</td>
                                                                     <td> <span class="badge badge-default"> {{ $game->type }} </span></td>
@@ -328,9 +340,9 @@
                                                             <td class="text-center">{{ $lugar }}</td>
                                                             <td >
                                                                 @if( $score->logo )
-                                                                        <img class="img img-fluid" src="{{ asset('team/' . $score->logo) }} " style="width=40px">
+                                                                        <img class="img" src="{{ asset('team_logo/' . $score->logo) }} " style="width:40px">
                                                                     @else
-                                                                        <img class="img" src="{{ asset('images/_shield.png') }} " style="width:30px">
+                                                                        <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
                                                                     @endif
                                                                 {{ $score->team }}
                                                             </td>
@@ -366,7 +378,7 @@
 
                                                 </tbody>
                                             </table>
-                                            <p><b>Fuente: Sport Roles: www.sportroles.com</b></p>
+                                            <p><b>Fuente: www.deportezacatecas.com</b></p>
                                         </div>
     
                                     </div>
@@ -406,9 +418,9 @@
                                                             <tr>
                                                                 <td >
                                                                     @if( $team->logo )
-                                                                        <img class="img img-fluid" src="{{ asset('team/' . $team->logo) }} " style="width=40px">
+                                                                        <img class="img" src="{{ asset('team_logo/' . $team->logo) }} " style="width:40px">
                                                                     @else
-                                                                        <img class="img" src="{{ asset('images/_shield.png') }} " style="width:30px">
+                                                                        <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
                                                                     @endif
                                                                     <b>{{ $team->name }}</b> 
                                                                     @if( $team->photo )

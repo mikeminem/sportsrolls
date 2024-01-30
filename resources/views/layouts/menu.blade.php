@@ -1,22 +1,23 @@
-<div class="container-fluid d-block d-sm-none top">
+<!--div class="container-fluid d-block d-sm-none top">
     <dov class="row">
         <div class="col-xs-12">
             <a class="navbar-brand" href="{{ url('/') }}">
                 <img src="{{ asset('/images/imgLogo.png') }}" 
-                    alt="{{ config('app.name', 'Sport Roles') }}" 
-                    title="{{ config('app.name', 'Sport Roles') }}"
+                    alt="{{ config('app.name', 'DeporteZacatecas.com') }}" 
+                    title="{{ config('app.name', 'DeporteZacatecas.com') }}"
                     class="img-fluid" >
             </a>
         </div>
     </dov>
-</div>
+</div-->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{  url('/') }}">
-                    <img src="{{ asset('/images/imgLogo.png') }}" 
-                        title="{{ config('app.name', 'Sport Roles') }}" 
-                        alt="{{ config('app.name', 'Sport Roles') }}"
-                        width="220px" class="d-none d-sm-block">
+                    <!--img src="{{ asset('/images/imgLogo.png') }}" 
+                        title="{{ config('app.name', 'DeporteZacatecas.com') }}" 
+                        alt="{{ config('app.name', 'DeporteZacatecas.com') }}"
+                        width="220px" class="d-none d-sm-block"-->
+                        <span class="brand-title">{{ config('app.name') }}</span>
 
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

@@ -204,6 +204,17 @@
                     <div class="row">    
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
+                                <label for="logo">Logo del Equipo</label>
+                                <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                                <small><b>Tamaño de la imagene recomendada 200 x 200 px</b></small>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">    
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
                                 <label for="photo">Foto del Equipo</label>
                                 <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="preview()">
                                 <small><b>Tamaño de la imagene recomendada 800 x 600 px</b></small>
@@ -402,6 +413,15 @@
                 $("#Form").trigger('reset');
                 $("#id").val("");
                 $("#teamPhoto").attr('src','');
+
+                let tournament = $('#filterTournaments').val();
+                if (tournament !="") { 
+                    getCategories("category_id",tournament);
+                    getGroups(['group_id'],tournament);
+                    $('#tournament_id').val(tournament);
+                }
+
+
                 
                 $("#category_id").empty();
                 $("#category_id").html('<option value="">Selecciona un torneo</option>');
@@ -435,7 +455,7 @@
                     dataType: "json",
                     success: function (data) { 
                         var tournament_id = 0;
-                        console.log( data );
+                        //console.log( data );
 
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);

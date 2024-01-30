@@ -167,3 +167,9 @@ if modal give us problems, just delete the backdrop element
 .card-body {
 	padding: 2px !important;
 }
+
+.brand-title {
+	font-size: 14px;
+	-webkit-text-stroke-width: 3px !important;
+  	-webkit-text-stroke-color: #FF8C00 !important;
+}
