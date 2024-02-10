@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\PageCategory;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +25,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        view()->composer("*", function($view)
+        {
+            $pageCategories = PageCategory::where('status','Mostrar')->get();
+            $view->with('pageCategories', $pageCategories);
+        });
+
+        
     }
 }

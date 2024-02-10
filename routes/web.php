@@ -66,6 +66,13 @@ Route::resource('/profiles','ProfilesController');
 Route::get('/my_profile', 'ProfilesController@show');
 Route::post('/delete_profile_photo', 'ProfilesController@destroy');
 
+//page categories
+//categories options
+Route::resource('/pagecategories','PageCategoryController');
+Route::get('/pagecategories_list/{user_id}','PageCategoryController@list');
+Route::get('/pagecategory/{slug}','PageCategoryController@showlist');
+
+
 //show photo profile
 Route::get('photo/{filename}',function($filename){
     $path = storage_path("app/public/profiles/$filename");

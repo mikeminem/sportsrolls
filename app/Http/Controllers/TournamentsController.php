@@ -64,9 +64,8 @@ class TournamentsController extends Controller
 
                         if ($row->status == 'Por Empezar') {
                             $links .= '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
-                                <span class="fa fa-edit tool">
-                                </span>
-                                </a><a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete"> 
+                                    <span class="fa fa-edit tool"></span></a>
+                                <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete"> 
                                 <span class="fa fa-trash tool"></span>
                             </a>
                             <a href="javascript:void(0)" title="Iniciar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="En Progreso" id="btnStatus"> 
@@ -75,7 +74,9 @@ class TournamentsController extends Controller
                         }
 
                         if ($row->status == 'En Progreso') {
-                            $links .= '<a href="javascript:void(0)" title="Terminar y archivar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="Terminado" id="btnStatus"> 
+                            $links .= '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
+                            <span class="fa fa-edit tool"></span></a>
+                                <a href="javascript:void(0)" title="Terminar y archivar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="Terminado" id="btnStatus"> 
                                         <span class="fa fa-stop tool"></span>
                                     </a>';
                         }

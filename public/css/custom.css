@@ -168,8 +168,9 @@ if modal give us problems, just delete the backdrop element
 	padding: 2px !important;
 }
 
-.brand-title {
+/* .brand-title {
+	color: #FFF !important;
 	font-size: 14px;
-	-webkit-text-stroke-width: 3px !important;
+	-webkit-text-stroke-width: 1px !important;
   	-webkit-text-stroke-color: #FF8C00 !important;
-}
+} */
