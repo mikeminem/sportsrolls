@@ -157,7 +157,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ url('/alerts') }}"><i class="fa fa-square"></i> {{ __('Alerts') }}</a>
                                         <a class="dropdown-item" href="{{ url('/pagecategories')}}"><i class="fa fa-file"></i> {{ __('PageCategories') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/webpages')}}"><i class="fa fa-file"></i> {{ __('Pages') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/webpages')}}"><i class="fa fa-file"></i> {{ __('WebPages') }}</a>
                                         <div class="dropdown-divider"></div>
 
                                         <div class="dropdown-divider"></div>

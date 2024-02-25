@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-md-6 text-right">
-            &copy; {{ date('Y') }} Sport Roles
+            &copy; 2022 - {{ date('Y') }} {{ config('app.name')  }}
         </div>
     </div>
 

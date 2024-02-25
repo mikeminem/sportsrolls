@@ -72,6 +72,10 @@ Route::resource('/pagecategories','PageCategoryController');
 Route::get('/pagecategories_list/{user_id}','PageCategoryController@list');
 Route::get('/pagecategory/{slug}','PageCategoryController@showlist');
 
+Route::resource('/webpages','WebPagesController');
+Route::get('/webpages/{user_id}','WebPagesController@list');
+//Route::get('/pagecategory/{slug}','PageCategoryController@showlist');
+
 
 //show photo profile
 Route::get('photo/{filename}',function($filename){
