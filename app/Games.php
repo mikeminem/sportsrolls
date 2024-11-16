@@ -26,6 +26,8 @@ class Games extends Model
         'is_deleted',
         'score_penalties_team1',
         'score_penalties_team2',
+        'code',
+        'access_code'
     ];
 
     public function tournament() {

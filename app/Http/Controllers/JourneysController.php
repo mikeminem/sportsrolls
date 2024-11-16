@@ -31,20 +31,37 @@ class JourneysController extends Controller
                         ->select('j.id', 'j.name', 'j.start_at', 'j.finish_at', 'j.tournament_id', 'j.sport_id', 'j.is_deleted', 'j.status', 'j.show_public')
                         ->where('j.is_deleted', 0)
                         ->where('j.user_id',Auth::user()->id)
-                        ->where('j.tournament_id', $request->tournament)  
+                        ->where('j.tournament_id', $request->tournament)
                         ->orderBy('j.id', 'desc')
-                        ->get();    
-            }    
-            
+                        ->get();
+            }
+
             return DataTables::of($rows)
                     ->addColumn('start_at', function($row) {
-                        return substr($row->start_at,8,2) . "/" . substr($row->start_at,5,2) . "/" . substr($row->start_at,0,4); 
+                        return substr($row->start_at,8,2) . "/" . substr($row->start_at,5,2) . "/" . substr($row->start_at,0,4);
                     })
                     ->addColumn('finish_at', function($row) {
-                        return substr($row->finish_at,8,2) . "/" . substr($row->finish_at,5,2) . "/" . substr($row->finish_at,0,4); 
+                        return substr($row->finish_at,8,2) . "/" . substr($row->finish_at,5,2) . "/" . substr($row->finish_at,0,4);
+                    })
+                    ->addColumn('status', function ($row) {
+                        $combo = '<select id="cboStatus" class="form-control" data-id="'.$row->id.'">';
+
+                        if ($row->status=='Abierto') {
+                            $combo .= '<option value="Abierto" selected>Abierto</opction>';
+                        } else {
+                            $combo .= '<option value="Abierto">Abierto</opction>';
+                        }
+
+                        if ($row->status=='Cerrado') {
+                            $combo .= '<option value="Cerrado" selected>Cerrado</opction>';
+                        } else {
+                            $combo .= '<option value="Cerrado">Cerrado</opction>';
+                        }
+
+                        $combo .= '</select>';
+                        return  $combo;
                     })
                     ->addColumn('action', function($row) {
-
                         $routeEdit = route('journeys.show', $row->id);
                         $routeDelete = route('journeys.destroy', $row->id);
 
@@ -52,13 +69,13 @@ class JourneysController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a>
-                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
+                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete">
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
                         return $links;
                     })
-                    ->rawColumns(['sport_id', 'action'])
+                    ->rawColumns(['sport_id', 'status', 'action'])
                     ->make(true);
         }
 
@@ -104,7 +121,7 @@ class JourneysController extends Controller
             $model = new Journeys($request->all());
             $model->user_id = Auth::user()->id;
             $model->status ="Abierto";
-            
+
             if ($model->save())
                 //set the new toruament to is current and the oldest to not current
                 Journeys::where('user_id', Auth::user()->id)
@@ -113,16 +130,16 @@ class JourneysController extends Controller
                     ->where('tournament_id',$model->tournament_id)
                     ->where('status','Abierto')->update(['status' => "Cerrado" ]);
 
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado la jornada!']);      
+                 return response()->json(['type' => 'success',
+                                 'message' => 'Se ha creado la jornada!']);
         } else {
             $model = Journeys::find($request->id);
             $model->fill($request->all());
 
-            
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado la jornada!']); 
+
+            if ($model->update())
+                return response()->json(['type' => 'success',
+                                 'message' => 'Se ha modificado la jornada!']);
         }
 
         return response()->json([
@@ -143,7 +160,7 @@ class JourneysController extends Controller
         //
         if ($id) {
             $category = Journeys::select('id', 'name', 'notes', 'start_at', 'finish_at', 'tournament_id', 'sport_id', 'is_deleted', 'status','show_public')->find($id);
-            
+
             return $category;
         }
         return false;
@@ -174,12 +191,17 @@ class JourneysController extends Controller
     }
 
     public function list ($tournament_id) {
-        
+
         if ($tournament_id) {
             $list = Journeys::where('tournament_id',$tournament_id)->where('is_deleted',0)->orderby('id','desc')->get();
             return (string) $list;
         }
 
         return (string) false;
+    }
+
+    public function updateStatus( $id,  $status) {
+        Journeys::where('id', $id)->update(['status' => $status]);
+        return response()->json(['results' => 'success', 'response' => ['¡El estado de la jornada se ha modificado!']]);
     }
 }

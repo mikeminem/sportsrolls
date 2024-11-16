@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\WebPage;
+use App\Tournaments;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class WebPagesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['showWebPage']]);
     }
     /**
      * Display a listing of the resource.
@@ -58,7 +59,17 @@ class WebPagesController extends Controller
                     ->rawColumns(['image', 'action'])
                     ->make(true);
         }
-        return view ('webpages.index');
+
+        $tournaments = [];
+        if (Auth::user()->role === 'Admin') {
+            $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->get(['id','title']);
+        } else {
+            $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->where('user_id',Auth::user()->id)->get(['id','title']);
+        }
+        
+        return view ('webpages.index', [
+            'tournaments' => $tournaments
+        ]);
     }
 
     /**
@@ -75,7 +86,7 @@ class WebPagesController extends Controller
             'content'       => 'required',
             'status'        => 'required',
             'type'          => 'required',
-            'location'      => 'required',
+            'location'      => 'required'
         ];
 
         $attributes = [
@@ -84,8 +95,7 @@ class WebPagesController extends Controller
             'content'       => 'Contenido es obligatorio',
             'status'        => 'Estatus es obligatorio',
             'type'          => 'Tipo es obligatorio',
-            'location'      => 'Ubicación es obligatorio',
-    
+            'location'      => 'Ubicación es obligatorio'
         ];
 
         //Validate the data
@@ -163,7 +173,8 @@ class WebPagesController extends Controller
                 'content',
                 'status',
                 'type',
-                'location'
+                'location',
+                'tournament_id'
             )->find($id);
         }
         return false;
@@ -179,17 +190,29 @@ class WebPagesController extends Controller
     public function destroy($id)
     {
         if (isset($id) && $id > 0) {
-            Sponsor::where('id', $id)->update(['is_deleted' => 1 ]);
+            WebPage::where('id', $id)->update(['is_deleted' => 1 ]);
 
             return response()->json([
                 'type' => 'success',
-                'message' => 'El patronciador se ha borrado!'
+                'message' => 'La página  se ha borrado!'
             ]);
         }
 
         return response()->json([
             'type' => 'error',
             'message' => 'Error al intentar borrar El patronciador!'
+        ]);
+    }
+
+    public function showWebPage($slug) 
+    {
+        if (!$slug) {
+            return view('errors.501');
+        }
+
+        $webpage = WebPage::where('slug', $slug)->get();
+        return view('webpages.show', [
+            'webpage' => $webpage[0]
         ]);
     }
 }

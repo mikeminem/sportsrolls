@@ -20,9 +20,9 @@ class TeamsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['list']]);
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -40,8 +40,9 @@ class TeamsController extends Controller
                 $rows = DB::table('teams as t')
                         ->join('categories as c', 'c.id', '=', 't.category_id')
                         ->leftjoin('groups as g', 'g.id', '=', 't.group_id')
-                        ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted', 
-                        't.clicks', 't.prints', 't.category_id', 'c.name as category', 't.contact', 't.contact_phone', 't.status', 't.group_id', 'g.name as group', 't.photo' )
+                        ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted',
+                            't.clicks', 't.prints', 't.category_id', 'c.name as category', 't.contact', 't.contact_phone', 't.status', 't.group_id',
+                            'g.name as group', 't.photo', 't.logo' )
                         ->where('t.is_deleted', 0)
                         ->where('t.user_id',Auth::user()->id)
                         ->where('t.tournament_id', $request->tournament)
@@ -58,13 +59,16 @@ class TeamsController extends Controller
                     })
                     ->addColumn('name', function($row) {
 
-                        $photo = '';
+                        $logo = '<img class="img" src="'. asset('images/_shield.png') . '" style="width:40px">';
+                        if(!is_null($row->logo) && !empty($row->logo))
+                             $logo = '<img src="' . asset('team_logo/' . $row->logo) . '" style="height:40px">';
 
-                        if(!is_null($row->photo) && !empty($row->photo))
-                            $photo = '<img src="' . asset('team/' . $row->photo) . '" style="height:200px">';
+                        // $photo = '';
+                        // if(!is_null($row->photo) && !empty($row->photo))
+                        //     $photo = '<img src="' . asset('team/' . $row->photo) . '" style="height:200px">';
 
-                        return $row->name . '<br />'  . $photo;
-                        
+                        return $logo . ' ' . $row->name;
+
                     })
                     ->addColumn('status', function ($row) {
                         $combo = '<select id="cboStatus" class="form-control" data-id="'.$row->id.'">';
@@ -98,14 +102,14 @@ class TeamsController extends Controller
                                         <a href="javascript:void(0)" data-id="'.$row->id .'" data-toggle="tooltip" title="Administrar Jugadorees!" id="btnPlayers">
                                             <span class="fa fa-users tool"></span>
                                         </a>
-                                        <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
+                                        <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete">
                                             <span class="fa fa-trash tool"></span>
                                         </a>';
 
                         return $links;
                     })
                     ->rawColumns([ 'action', 'contact', 'status', 'name' ])
-                    ->make(true); 
+                    ->make(true);
         }
 
         $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->where('user_id',Auth::user()->id)->get(['id','title']);
@@ -174,10 +178,10 @@ class TeamsController extends Controller
 
             if (!empty($pathLogo))
                 $model->logo = $pathLogo;
-            
+
             if ($model->save())
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado el Equipo!']);      
+                 return response()->json(['type' => 'success',
+                                 'message' => 'Se ha creado el Equipo!']);
         } else {
             $model = Teams::find($request->id);
             $lastImage = $model->photo;
@@ -194,9 +198,9 @@ class TeamsController extends Controller
                 $model->logo = $pathLogo;
             }
 
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado el Equipo!']); 
+            if ($model->update())
+                return response()->json(['type' => 'success',
+                                 'message' => 'Se ha modificado el Equipo!']);
         }
 
         return response()->json([
@@ -207,10 +211,10 @@ class TeamsController extends Controller
 
     public function show($id) {
         if ($id) {
-            $model = Teams::select('id',  'name', 'description', 'branch', 'user_id', 'tournament_id', 'sport_id', 'category_id', 'is_deleted', 'clicks', 'prints', 
+            $model = Teams::select('id',  'name', 'description', 'branch', 'user_id', 'tournament_id', 'sport_id', 'category_id', 'is_deleted', 'clicks', 'prints',
             'contact', 'contact_phone', 'status', 'group_id')
                 ->find($id);
-            
+
                 return $model;
         }
         return false;
@@ -241,7 +245,7 @@ class TeamsController extends Controller
     }
 
     public function list($category_id) {
-        
+
         if ($category_id) {
             $list = Teams::where('category_id',$category_id)
                 ->where('status','Activo')
@@ -254,7 +258,7 @@ class TeamsController extends Controller
 
 
     //getTeamsbyCategoryAndBranch
-    public function getTeamsbyCategoryAndBranch( $categoryId, $branch) 
+    public function getTeamsbyCategoryAndBranch( $categoryId, $branch)
     {
         if ($branch) {
             $list = Teams::where('branch',$branch)
@@ -275,7 +279,7 @@ class TeamsController extends Controller
      * @return string
      */
     public function listByBranch($tournament, $branch) {
-        
+
         if ($branch) {
             $list = Teams::where('branch',$branch)
                 ->where('tournament_id', $tournament)

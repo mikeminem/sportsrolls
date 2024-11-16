@@ -33,7 +33,7 @@ class LeaguesController extends Controller
         $rules = [
             'name'              => 'required|max:120|min:10',
             'sport_id'          => 'required',
-            'state_id'          => 'required', 
+            'state_id'          => 'required',
             'municipality_id'   => 'required',
             'summary'           => 'required',
             'slogan'            => 'required'
@@ -42,7 +42,7 @@ class LeaguesController extends Controller
         $attributes = [
             'name'              => 'Nombre de la liga',
             'sport_id'          => 'Deporte',
-            'state_id'          => 'Estado', 
+            'state_id'          => 'Estado',
             'municipality_id'   => 'Municipio',
             'summary'           => 'Acerca de',
             'slogan'            => 'Subtitulo'
@@ -75,7 +75,7 @@ class LeaguesController extends Controller
                     Storage::delete('public/league_logo/' . $lastImage);
                     $league->logo1 = $imagePath;
                 }
-                
+
                 if ($league->update()) {
                     return response()->json([
                         'type' => 'success',
@@ -87,15 +87,15 @@ class LeaguesController extends Controller
                 $model->user_id = Auth::user()->id;
 
                 if (!empty($imagePath))
-                    $model->logo1 = $imagePath;  
-                
+                    $model->logo1 = $imagePath;
+
                 if ($model->save()) {
                     return response()->json([
                         'type' => 'success',
                         'message' => 'Información de la liga guardada!'
                     ]);
                 }
-                    
+
             }
         }
 
@@ -123,8 +123,8 @@ class LeaguesController extends Controller
             $league = new User();
             $municipalities = Municipalities::where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
         }
-        
-        return view("leagues.league_info", [ 
+
+        return view("leagues.league_info", [
             'league'            => $league,
             'sports'            => $sports,
             'states'            => $states,

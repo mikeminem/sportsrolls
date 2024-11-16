@@ -18,7 +18,7 @@ class GamesController extends Controller
     //
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['showGame', 'data_entry']]);
     }
 
     public function index(Request $request)
@@ -46,22 +46,26 @@ class GamesController extends Controller
                         'c.name as category', 
                         'g.status' , 
                         'g.notes', 
+                        'g.team1_id', 
+                        'g.team2_id', 
                         'g.score_team1', 
                         'g.score_team2', 
                         'g.game_day', 
                         'g.journey_id', 
                         'g.game_time', 
                         'g.tournament_id', 
+                        'g.category_id', 
                         'g.branch', 
                         'g.type',
                         's.name as stadium',
                         'g.score_penalties_team1',
                         'g.score_penalties_team2',
-                        't.enable_penalties_scoring'
+                        't.enable_penalties_scoring',
+                        'g.access_code'
                     )
                     ->join('teams as t1', 't1.id', '=', 'g.team1_id')
                     ->join('teams as t2', 't2.id', '=', 'g.team2_id')
-                    ->join('categories as c', 'c.id', '=', 'g.category_id')  
+                    ->leftJoin('categories as c', 'c.id', '=', 'g.category_id')  
                     ->join('tournaments as t', 't.id', '=', 'g.tournament_id')  
                     ->leftJoin('stadiums as s', 's.id', '=', 'g.stadium_id')  
                     ->where('g.is_deleted', 0)
@@ -72,6 +76,9 @@ class GamesController extends Controller
             }   
             
             return DataTables::of($rows)
+                    ->addColumn('access_code', function($row) {
+                        return '<b>' . $row->access_code . '</br>';
+                    })
                     ->addColumn('date_time', function($row) {
                         $day = substr($row->game_day,8,2) . "/" . substr($row->game_day,5,2) . "/" . substr($row->game_day,0,4); 
                         return $day . '<br />' . $row->game_time ;
@@ -153,22 +160,40 @@ class GamesController extends Controller
                         return $result; 
                     })
                     ->addColumn('action', function($row) {
-
                         
-                        $links = '';
-                        if ($row->status != "Finalizado") {
-                            
-                            $routeEdit = route('games.show', $row->id);
-                            $routeDelete = route('games.destroy', $row->id);
+                        $links          = '';
+                        $routeEdit      = route('games.show', $row->id);
+                        //$routeHistory   = route('game_history', $row->code);
+                        $routeDelete    = route('games.destroy', $row->id);
+                        
+                        //if ($row->status != "Finalizado") {
 
                             $links .= '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
                                         <span class="fa fa-edit tool">
                                         </span>
-                                    </a> 
-                                    <a href="' . $routeDelete . '" data-name="'. $row->id .'"  title="Borrar Registro"  id="btnDelete"> 
-                                        <span class="fa fa-trash tool"></span>
-                                    </a>';      
-                        }
+                                    </a>';   
+                        //}
+
+                        // if ($row->status == "Finalizado") {
+                        //     $links .= '<a href="javascript:void(0)" data-toggle="tooltip" 
+                        //                     data-id="' . $row->id . '" 
+                        //                     data-notes="' . $row->notes . '" 
+                        //                     data-status="' . $row->status . '" 
+                        //                     data-team1="' . $row->team1 . '" 
+                        //                     data-team2="' . $row->team2 . '" 
+                        //                     data-team1_id="' . $row->team1_id . '" 
+                        //                     data-team2_id="' . $row->team2_id . '" 
+                        //                     data-score_team1="' . $row->score_team1 . '" 
+                        //                     data-score_team2="' . $row->score_team2 . '" 
+                        //                     data-score_penalties_team1="' . $row->score_penalties_team1 . '" 
+                        //                     data-score_penalties_team2="' . $row->score_penalties_team2 . '" 
+                        //                     data-penalties="'. $row->enable_penalties_scoring .'" 
+                        //                     title="Capturar Historia!" 
+                        //                     id="btnHistory">
+                        //                 <span class="fa fa-history tool">
+                        //                 </span>
+                        //             </a>';   
+                        // }
                                 
                         $links .= ' <a href="javascript:void(0)" 
                             data-id="' . $row->id . '" 
@@ -184,12 +209,15 @@ class GamesController extends Controller
                             title="Capturar resultados" 
                             id="btnScore"> 
                         <span class="fa fa-calculator tool"></span>
+                        </a>
+                        <a href="' . $routeDelete . '" data-name="'. $row->id .'"  title="Borrar Registro"  id="btnDelete"> 
+                            <span class="fa fa-trash tool"></span>
                         </a>';
                         
                         return $links;
                         
                     })
-                    ->rawColumns(['date_time', 'status', 'game_time','score', 'action'])
+                    ->rawColumns(['access_code', 'date_time', 'status', 'game_time','score', 'action'])
                     ->make(true);
         }
 
@@ -218,7 +246,7 @@ class GamesController extends Controller
             'tournament_id'     => 'required',
             'journey_id'        => 'required',
             'branch'            => 'required',
-            'category_id'       => 'required',
+            //'category_id'       => 'required',
             'game_day'          => 'required',
             'game_time'         => 'required',
             'team1_id'          => 'required',
@@ -258,8 +286,11 @@ class GamesController extends Controller
 
 
         if (!isset($request->id) || empty($request->id)) {
-            $model = new Games($request->all());
-            $model->user_id = Auth::user()->id;
+            $model              = new Games($request->all());
+            $model->user_id     = Auth::user()->id;
+            $model->code        = strtoupper( str_random(8));
+            $model->access_code = strtoupper( str_random(6));
+
             
             if ($model->save())
                  return response()->json(['type' => 'success', 
@@ -268,6 +299,13 @@ class GamesController extends Controller
             $model = Games::find($request->id);
             $model->fill($request->all());
 
+            if (!$model->code) {
+                $model->code    = strtoupper( str_random(8));
+            }
+
+            if (!$model->access_code) {
+                $model->access_code    = strtoupper( str_random(6));
+            }
             
             if ($model->update()) 
                 return response()->json(['type' => 'success', 
@@ -353,6 +391,17 @@ class GamesController extends Controller
         ]);
     }
 
+    public function showGame(Request $request) {
+        
+        echo 'Holis' . $request->code;
+        if (!$request->code) {
+            return false;
+        }
+
+        //show the game page
+        return view('games.show');
+    }
+
     public function standings() {
         // SELECT  t.name as team,
         // count('x') as JJ,
@@ -388,4 +437,36 @@ class GamesController extends Controller
         // order by JG desc, JP asc, DIF desc
 
     }
+
+    function data_entry(Request $request) {
+        if (!$request->access_code) {
+            return response()->json([
+                'access'=>'false',
+                'type'=>'error',
+                'message' => 'Algo salió mal para accesar a editar el juego'
+            ]);
+        }
+
+        $access_code = $request->access_code;
+
+        $has_access = Games::where('access_code', $access_code)->get(['id']);
+
+
+        if (count($has_access) === 0) {
+            return response()->json([
+                'access'=>'false',
+                'type'=>'error',
+                'message' => 'Algo salió mal para accesar a editar el juego'
+            ]);
+        }
+
+        return response()->json([
+            'access'=>'true',
+            'type'=>'success',
+            'message' => 'Bienvenido al modo de edición del juego'
+        ]);;
+
+        
+    }
+
 }

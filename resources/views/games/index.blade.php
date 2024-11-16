@@ -89,11 +89,13 @@
                                     <th>Torneo</th>
                                     <th>Jornada</th>
                                     <th>Fecha / Hora</th>
+                                    <th>Código de Acceso</th>
                                     <th>Equipo 1 (Visitante)</th>
                                     <th>Marcador</th>
                                     <th>Equipo 2 (Casa)</th>
                                     <th>Rama</th>
                                     <th>Categoría</th>
+                                    <th>Category ID</th>
                                     <th>Tipo</th>
                                     <th>Estadio</th>
                                     <th>Estatus</th>
@@ -197,8 +199,8 @@
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>Categoria *</b></label>
-                                <select class="form-control" required id="category_id" name="category_id">
+                                <label for="title"><b>Categoria</b></label>
+                                <select class="form-control" id="category_id" name="category_id">
                                     <option value="">Selecciona un torneo</option>
                                  
                                 </select>
@@ -423,7 +425,119 @@
       </div>
     </div>
   </div>	
+<!-- end of the delete modal -->
 
+
+<!-- delete modal -->
+<div class="modal fade" id="historyModal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">{{ __('Registry game logs') }}</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->   
+            <div class="modal-body">                
+                <div class="row mb-1">
+                    <div class="col-4 text-center">
+                        <h3><span id="team1_name" >Equipo 1</span> (Casa)</h3>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h2><span id="score_team1_h">0 </span> -  <span id="score_team2_h">0</span> </h2>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h3><span id="team2_name" >Equipo 2</span> (Casa)</h3>
+                    </div>
+                </div>
+                <hr />
+
+                <div class="row mb-1">
+                    <div class="col-12 text-left">
+
+                        <form id="frmAddAction">
+                            <input type="text" name="game_id" id="game_id">
+                            <input type="text" name="tournament_id" id="tournament_id">
+
+                            <div class="row">
+                                <div class="col-3 text-left">
+                                    <div class="form-group">
+                                        <label for="team">Team</label>
+                                        <select class="form-control" id="cboTeam" name="cboTeam">
+                                            <option value="">{{ __('Select') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-3 text-left">
+                                    <div class="form-group">
+                                        <label for="player">Player</label>
+                                        <select class="form-control" id="cboPlayer" name="cboPlayer"> 
+                                            <option value="">{{ __('Select') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-3 text-left">
+                                    <div class="form-group">
+                                        <label for="action">Action</label>
+                                        <select class="form-control" id="cboAction" name="cboAction"> 
+                                            <option value="">{{ __('Select') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-3 text-left d-flex flex-row  mt-auto">
+                                        <button type="submit" class="btn btn-primary">  <span class="fa fa-save"></span> {{ __('Save') }}</button>
+                                </div>
+
+                            </div>
+                            {{ csrf_field() }}
+                                        
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>{{ __('Player Name') }}</th>
+                                    <th>{{ __('Action') }}</th>
+                                    <th>{{ __('Affect score') }}</th>
+                                    <th> - </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td colspan="5">{{ __('There are not actions registered yet') }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+            
+
+            <!-- Modal footer -->
+            <div class="modal-footer">                
+                <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
+                    <span class="fa fa-remove"></span> {{__('Close')}}
+                </button>
+            </div>
+        
+  
+      </div>
+    </div>
+  </div>	
 <!-- end of the delete modal -->
 
 @endsection
@@ -473,11 +587,13 @@
                     { data: 'tournament_id', name: 'tournament_id', visible:false},
                     { data: 'journey_id', name: 'journey_id', visible:false},
                     { data: 'date_time', name: 'date_time'},
+                    { data: 'access_code', name: 'access_code'},
                     { data: 'team1', name: 'team1', className: "text-right"},
                     { data: 'score', name: 'score', className: "text-center"},
                     { data: 'team2', name: 'team2'},
                     { data: 'branch', name: 'branch'},
                     { data: 'category', name: 'category'},
+                    { data: 'category_id', name: 'category_id', visible:false},
                     { data: 'type', name: 'type'},
                     { data: 'stadium', name: 'stadium'},
                     { data: 'status', name: 'status'},
@@ -497,15 +613,12 @@
                     fetch_data(tournament);
                     
 
-                    if (tournament =="")
-                    {
+                    if (tournament =="") {
                         $("#filterCategories").empty();
                         $("#filterCategories").html('<option value="">Selecciona un torneo</option>');
                         $("#filterJourneys").empty();
                         $("#filterJourneys").html('<option valu="">Selecciona un torneo</option>');
-                    }
-                    else
-                    {
+                    } else {
                         getJourneys("filterJourneys",tournament,"");
                         getCategories("filterCategories",tournament);
                     }
@@ -520,13 +633,13 @@
             
             $(document).on("change", "#filterBranchs", function () {
                 //Table.columns(6).search(this.value).draw();
-                $('#table').DataTable().columns(6).search(this.value).draw();
+                $('#table').DataTable().columns(7).search(this.value).draw();
 
             });
 
             $(document).on("change", "#filterCategories", function () {
                 //Table.columns(7).search(this.value).draw();
-                $('#table').DataTable().columns(7).search(this.value).draw();
+                $('#table').DataTable().columns(9).search(this.value).draw();
 
             });
 
@@ -623,7 +736,7 @@
                 $("#category_id option:selected").each(function () {
                     categoryId=$(this).val();
 
-                    console.log("el valor de categoryId" , categoryId);
+                    //console.log("el valor de categoryId" , categoryId);
 
                     $("#team1_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
                     $("#team2_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
@@ -848,6 +961,69 @@
 
                 return false;
             });
+
+            //btnHistory
+            $(document).on("click", "#btnHistory", function (e) {
+                e.preventDefault();
+
+                //$('#historyForm').attr('action', $(this).attr('href'));
+                let team1_id = $(this).attr("data-team1_id");
+                let team1_name = $(this).attr("data-team1");
+                let team2_id = $(this).attr("data-team2_id");
+                let team2_name = $(this).attr("data-team2");
+
+
+                $("#idgame").val($(this).attr("data-id"));
+                $("#notes").val($(this).attr("data-notes"));
+                $("#status").val($(this).attr("data-status"));
+
+                $("#team1_name").html($(this).attr("data-team1"));
+                $("#team2_name").html($(this).attr("data-team2"));
+
+                $("#score_team1_h").html($(this).attr("data-score_team1"));
+                $("#score_team2_h").html($(this).attr("data-score_team2"));
+
+                //populate cboTeam dropdown
+                $("#cboTeam").empty();
+                $("#cboTeam").append('<option value="">{{ __("Select") }}</option>');
+                $("#cboTeam").append('<option value="' + team1_id + '">' + team1_name + '</option>');
+                $("#cboTeam").append('<option value="' + team2_id + '">' + team2_name + '</option>');
+
+
+                $("#score_penalties_team1").val($(this).attr("data-score_penalties_team1"));
+                $("#score_penalties_team2").val($(this).attr("data-score_penalties_team2"));
+
+                $("#team1scorePenalties").html($(this).attr("data-team1"));
+                $("#team2scorePenalties").html($(this).attr("data-team2"));
+
+                $("#team1scorePenalties").html($(this).attr("data-team1"));
+                $("#team2scorePenalties").html($(this).attr("data-team2"));
+
+                if (penalties === 'Si') {
+                    $("#score_penalties_team1").attr("required", "true");
+                    $("#score_penalties_team2").attr("required", "true");
+                } else {
+                    $("#score_penalties_team1").attr("required", "false");
+                    $("#score_penalties_team2").attr("required", "false");
+                }
+
+                (penalties === 'Si') ? $('#penalties').show() : $('#penalties').hide();
+                jQuery("#historyModal").modal('show');
+            });
+
+
+            $(document).on("change", "#cboTeam", function (e) {
+                let teamId = $(this).val();
+
+                if (teamId == "") {
+                    $("#cboPlayer").empty();
+                    $("#cboPlayer").html("<option value=''>{{ __('Select a Team') }}</option>");
+                } else {
+                    //getPlayers('cboPlayer', teamId,'');
+                }
+            });
+
+
         });
 
 </script>

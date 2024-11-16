@@ -18,7 +18,7 @@
 Route::get('/', 'MainController@index')->name('index');
 
 //Auth::routes(['register' => false]);
-Auth::routes(['register' => false, 'password.request' => false, 'password.reset' => false]);
+Auth::routes(['register' => true, 'password.request' => false, 'password.reset' => false]);
 
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -74,7 +74,7 @@ Route::get('/pagecategory/{slug}','PageCategoryController@showlist');
 
 Route::resource('/webpages','WebPagesController');
 Route::get('/webpages/{user_id}','WebPagesController@list');
-//Route::get('/pagecategory/{slug}','PageCategoryController@showlist');
+Route::get('/webpage/{slug}','WebPagesController@showWebPage');
 
 
 //show photo profile
@@ -162,10 +162,45 @@ Route::get('league_logo/{filename}',function($filename){
     return $response;
 });
 
+Route::get('web_pages/{filename}',function($filename){
+    $path = storage_path("app/public/web_pages/$filename");
+
+    if (!\File::exists($path)) abort(404);
+
+    $file = \File::get($path);
+    $type = \File::mimeType($path);
+
+    $response = Response::make($file,200);
+    $response->header("Content-Type",$type);
+
+    return $response;
+});
+
+//players photos
+Route::get('players_photos/{filename}',function($filename){
+    $path = storage_path("app/public/players_photos/$filename");
+
+    if (!\File::exists($path)) abort(404);
+
+    $file = \File::get($path);
+    $type = \File::mimeType($path);
+
+    $response = Response::make($file,200);
+    $response->header("Content-Type",$type);
+
+    return $response;
+});
+
 //tournaments options
 Route::resource('/tournaments','TournamentsController');
 Route::post('/tournaments.start/{id}', 'TournamentsController@start');
-Route::get('/tournament_info/{slug}', 'TournamentsController@showTournament');
+Route::get('/tournament_info/{slug}', 'TournamentsController@frontPage');
+Route::get('/tournament_info/{slug}/results', 'TournamentsController@results');
+Route::get('/tournament_info/{slug}/calendar', 'TournamentsController@calendar');
+Route::get('/tournament_info/{slug}/standings', 'TournamentsController@standings');
+Route::get('/tournament_info/{slug}/teams', 'TournamentsController@teams');
+Route::get('/tournament_info/{slug}/game/{code}', 'TournamentsController@game');
+
 
 //teams options
 Route::resource('/teams','TeamsController');
@@ -177,17 +212,25 @@ Route::get('/update_team_status/{id}/{status}', 'TeamsController@updateStatus');
 Route::post('/teams/upload_image', 'TeamsController@uploadImage');
 //Route::put('/update_brand_website/{id}/{website}', 'BrandController@updateWebsite');
 
-//players
 Route::resource('/players','PlayersController');
-Route::get('/players_list/{user_id}','PlayersController@list');
+Route::get('/playerss_list/{user_id}','PlayersController@list');
+
+//roster players
+Route::resource('/rosters','RosterController');
+Route::get('/rosters_list/{user_id}','RosterController@list');
 
 //journeys
 Route::resource('/journeys','JourneysController');
 Route::get('/journaments_list/{tournament_id}','JourneysController@list');
+Route::get('/update_journey_status/{id}/{status}', 'JourneysController@updateStatus');
 
 //games
 Route::resource('/games','GamesController');
 Route::post('/score_game', 'GamesController@updateScore');
+Route::get('/show_game/{code}', 'GamesController@showGame');
+Route::get('/game_history/{code}', 'GamesController@gameHistory');
+Route::post('/game_data_entry', 'GamesController@data_entry');
+
 
 
 //Sponsors options

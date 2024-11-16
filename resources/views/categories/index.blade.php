@@ -255,6 +255,11 @@
             $(document).on("click", "#AddCategory", function () {
                 $("#updateForm").trigger('reset');
                 $("#id").val("");
+                
+                let tournament = $('#filterTournaments').val();
+                if (tournament !="") { 
+                    $('#tournament_id').val(tournament);
+                }
 
                 $("#sport").val("{{ Auth::user()->league->sport->name}}");
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");

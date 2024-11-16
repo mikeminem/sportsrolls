@@ -8,7 +8,7 @@
                     <div class="card-body">
                         I'm an example component.
                         using a counter example
-                        <!-- {{ counter }} -->
+                        {{ counter }}
                     </div>
                 </div>
             </div>
@@ -18,19 +18,20 @@
 
 <script>
     export default {
-        //name: 'ExampleComponent',
-        // mounted() {
-        //     console.log('Component mounted.')
-        // }
+        name: 'ExampleComponent',
+        mounted() {
+            console.log('Component mounted.')
+        },
 
-        // setup() {
-        //     const counter = ref(0);
-        //     console.log( counter );
+        setup() {
+            // const counter = ref(0);
+            const counter = 0;
+            console.log( counter );
 
-        //     return {
-        //         counter,
-        //     }
+            return {
+                counter,
+            }
 
-        // }
+        }
     }
 </script>

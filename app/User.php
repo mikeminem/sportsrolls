@@ -47,6 +47,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Tournaments');
     }
 
+    public function rosters()
+    {
+        return $this->hasMany('App\Roster');
+    }
+
     public function profile()
     {
         return $this->hasOne('App\Profiles');

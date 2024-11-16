@@ -1,11 +1,11 @@
-<div class="container-fluid copyright">
+<div class="container-fluid copyright text-center">
     <div class="row">
         <div class="col-md-6">
-            A mis padres Juan y Linda <span class="fa fa-heart"><span></span>
+            Developed by Dezoft.com <span class="fa fa-heart"></span>
         </div>
 
-        <div class="col-md-6 text-right">
-            &copy; 2022 - {{ date('Y') }} {{ config('app.name')  }}
+        <div class="col-md-6">
+            &copy; 2002 - {{ date('Y') }} {{ config('app.name')  }}
         </div>
     </div>
 

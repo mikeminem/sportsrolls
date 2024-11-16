@@ -8,6 +8,7 @@ use App\Teams;
 use App\Journeys;
 use App\Games;
 use App\Sponsor;
+use App\WebPage;
 
 class MainController extends Controller
 {
@@ -47,6 +48,9 @@ class MainController extends Controller
         $games       = Games::whereIn('tournament_id', $tournaments_arr)->get();
         $sponsors    = Sponsor::where('show','Yes')->where('is_deleted',0)->get();
 
+        $webContents = WebPage::where('status','Aprobado')->where('is_deleted',0)->orderBy('created_at', 'desc')->get();
+
+
 
         return view('welcome', [
             'tournaments'   => $tournaments,
@@ -55,7 +59,8 @@ class MainController extends Controller
             'teams'         => $teams,
             'journeys'      => $journeys,
             'games'         => $games,
-            'sponsors'      => $sponsors
+            'sponsors'      => $sponsors,
+            'webContents'   => $webContents
         ]);
     }
 

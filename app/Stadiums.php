@@ -8,7 +8,14 @@ class Stadiums extends Model
 {
     //
     protected $fillable = [
-        'code', 'name', 'address', 'manager', 'phone', 'notes', 'is_deleted', 'user_id'
+        'code',
+        'name',
+        'address',
+        'manager',
+        'phone',
+        'notes',
+        'is_deleted',
+        'user_id'
     ];
 
     public function games()

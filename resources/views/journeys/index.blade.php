@@ -16,9 +16,9 @@
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
-                        <a role="button" 
-                            class="btn btn-primary" 
-                            href="javascript:void(0);" 
+                        <a role="button"
+                            class="btn btn-primary"
+                            href="javascript:void(0);"
                             id="btnAdd"
                              >
                             <span class="fa fa-plus"></span> {{ __("New")}}
@@ -46,7 +46,7 @@
                                         <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
                                     @endforeach
                                 </select>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -67,9 +67,9 @@
                                     <th> - </th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-        
+
                             </tbody>
                         </table>
                     </div>
@@ -86,7 +86,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"> Datos de la Jornada / Fecha</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
+                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
             </div>
             <!--mandamos la forma-->
             <form id="updateForm" enctype="multipart/form-data">
@@ -108,7 +108,7 @@
                         <div class="col-md-8 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>Nombre *</b></label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="80"> 
+                                <input type="text" class="form-control" id="name" name="name" required maxlength="80">
                                 <input type="hidden" class="form-control" readonly id="sport_id" name="sport_id">
 
                             </div>
@@ -117,14 +117,14 @@
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="start_at"><b>Fecha Inicio *</b></label>
-                                <input type="date" class="form-control" id="start_at" name="start_at" required max="80" min="5"> 
+                                <input type="date" class="form-control" id="start_at" name="start_at" required max="80" min="5">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="finish_at"><b>Fecha Fin *</b></label>
-                                <input type="date" class="form-control" id="finish_at" name="finish_at" required max="80" min="5"> 
+                                <input type="date" class="form-control" id="finish_at" name="finish_at" required max="80" min="5">
                             </div>
                         </div>
 
@@ -141,7 +141,8 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="notes"><b>Nota</b></label>
-                                <input type="text" class="form-control" id="notes" name="notes"> 
+                                <textarea name="notes" id="notes" cols="30" rows="10" class="form-control"></textarea>
+                                {{-- <input type="text" class="form-control" id="notes" name="notes"> --}}
                             </div>
                         </div>
 
@@ -160,7 +161,7 @@
                         {{ csrf_field() }}
 
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
+                                <span class="fa fa-save"></span>
                                 {{__('Save')}}
                             </button>
 
@@ -180,13 +181,13 @@
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Borrar Rregistro</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deleteForm">
@@ -200,7 +201,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -208,10 +209,10 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 @endsection
 
 @section('js')
@@ -221,7 +222,7 @@
             fetch_data();
 
         function fetch_data(tournament = '') {
-            
+
             $('#table').DataTable({
                 order: [[0, 'desc']],
                 "language": {
@@ -278,10 +279,15 @@
             $(document).on("click", "#btnAdd", function () {
                 $("#updateForm").trigger('reset');
                 $("#id").val("");
-                
+
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
-                jQuery.noConflict(); 
+                let tournament = $('#filterTournaments').val();
+                if (tournament !="") {
+                    $('#tournament_id').val(tournament);
+                }
+
+                jQuery.noConflict();
                 jQuery("#formModal").modal('show');
             });
 
@@ -301,7 +307,7 @@
                     type: "GET",
                     url: $(this).attr("href"),
                     dataType: "json",
-                    success: function (data) { 
+                    success: function (data) {
                         console.log(data)
 
                         for(obj in data) {
@@ -312,7 +318,7 @@
                             }
                         }
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('show');
                     },
                 });
@@ -336,30 +342,30 @@
                     cache: false,
                     processData: false,
                     data: new FormData(this),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
                             var errors = "";
                             $.each(data.errors, function (i, val) {
                                 errors = errors  +  val + "\n";
                             });
-                            
+
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
                             $.notify('hello !!', {
                                 style: 'happyblue'
                             });
-                            
+
                             return false;
                         }
 
                         $("#updateForm").trigger('reset');
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('toggle');
                         // Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
 
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("Hubo un error al intentar agregar el registro", "error");
@@ -382,14 +388,14 @@
                             $.notify(data.message + "\n" + errors, data.type);
                             return false;
                         }
-                        
+
                         $("#deleteForm").trigger('reset');
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deleteModal").modal('toggle');
                         // Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
-                        
+
                         $.notify(data.message, data.type);
 
                     },
@@ -400,6 +406,27 @@
 
                 return false;
             });
+
+            $(document).on("change", "#cboStatus", function () {
+            $.ajaxSetup({
+                headers: {
+                'X-CSSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "update_journey_status/" + $(this).attr("data-id") + "/" + $(this).val(),
+                dataType: "json",
+                success: function (data) {
+                    $.notify(data.response, data.results);
+
+                },
+                error: function() {
+                    $.notify("Hubo un error al intentar actualizar el registro", "error");
+                },
+            });
+        });
         });
 
 </script>

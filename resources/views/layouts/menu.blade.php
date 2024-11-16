@@ -13,12 +13,12 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{  url('/') }}">
-                    <!--img src="{{ asset('/images/imgLogo.png') }}" 
-                        title="{{ config('app.name', 'DeporteZacatecas.com') }}" 
-                        alt="{{ config('app.name', 'DeporteZacatecas.com') }}"
-                        width="220px" class="d-none d-sm-block"-->
-                        <span class="brand-title">{{ config('app.name') }}</span>
-
+                    <img src="{{ asset('/images/dz_logo.png') }}" 
+                        title="{{ config('app.name', 'Regresar al inicio') }}" 
+                        alt="{{ config('app.name', 'Regresar al inicio') }}"
+                        width="160px" 
+                    >
+                    {{-- class="d-none d-sm-block" --}}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -91,6 +91,8 @@
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ url('/stadiums') }}"><i class="fa fa-map-marker"></i>  {{ __('Stadiums') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/players') }}"><i class="fa fa-users"></i> {{ __('Players') }}</a>
+
                                         
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ url('/tournaments') }}"><i class="fa fa-trophy"></i> {{ __('Tournaments') }}</a>
@@ -98,7 +100,7 @@
                                         <a class="dropdown-item" href="{{ url('/groups') }}"><i class="fa fa-circle-o"></i> {{ __('Groups') }}</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ url('/teams') }}"><i class="fa fa-group"></i> {{ __('Teams') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/players') }}"><i class="fa fa-user"></i> {{ __('Players') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/rosters') }}"><i class="fa fa-user"></i> {{ __('Roster / Players') }}</a>
                                         <div class="dropdown-divider"></div>
 
                                         <a class="dropdown-item" href="{{ url('/journeys')}}"><i class="fa fa-calendar"></i> {{ __('Journeys') }}</a>

@@ -38,7 +38,7 @@
                             <a class="nav-link" data-toggle="tab" href="#menu2"><span class="fa fa-list"></span> Resultados</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#menu3"><span class="fa fa-list-ol"></span> Tabla de Posiciones</a>
+                            <a class="nav-link" data-toggle="tab" href="#menu3"><span class="fa fa-list-ol"></span> Posiciones</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#menu4">Equipos</a>
@@ -61,7 +61,7 @@
                                 @php
                                     $i=0;
                                 @endphp
-                                @foreach ($tournament->journeys as $journey)
+                                @foreach ($journeys as $journey)
 
                                     @if( ($journey->status=="Abierto") 
                                         && ($journey->show_public=="Si") 
@@ -220,65 +220,84 @@
                                     <h1>Resultados</h1>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="filterJourneys"><b>Jornadas</b></label>
+                                        <select class="form-control" required id="filterJourneys" name="filterJourneys"  >
+                                            <option value="">Todas</option>
+                                                @foreach($journeys as $journey)
+                                                    <option value="{{ $journey->id }}">{{ $journey->name }}</option>
+                                                @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="filterCategories"><b>Categorías</b></label>
+                                        <select class="form-control" required id="filterCategories" name="filterCategories"  >
+                                            <option value="">Todas</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="filterTeams"><b>Equipos</b></label>
+                                        <select class="form-control" required id="filterTeams" name="filterTeams"  >
+                                            <option value="">Selecciona una Categoría</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 align-self-center">
+                                   <button  class="btn btn-primary" id="btnBuscar">
+                                    <span class="fa fa-search"></span> Buscar
+                                   </button>
+                                </div>
+                            </div>
 
                             <div class="row">
-                                @foreach ($tournament->journeys as $journey)
+                                @foreach ($journeys as $journey)
 
                                     @if (($journey->is_deleted == 0) && 
                                          ($journey->show_public == "Si") )
-                                        <div class="col-md-4">
-                                            <p>
-                                                <h3> {{ $journey->name }}</h3>
+                                        <div class="col-md-12">
+                                                <h4> {{ $journey->name }}</h4>
 
                                                 @foreach ($categories as $category)
                                                     <h5>Categoría {{ $category->name}}</h5>
-                                                    <div class="games">
                                                         @php 
                                                             $i=0;
                                                         @endphp
-                                                    @foreach ($games as $game)
-                                                    
-                                                            @if (($game->journey_id == $journey->id) && ($game->status == "Finalizado"))
-                                                                
-                                                                @php 
-                                                                    $i++;
-                                                                @endphp
+                                                        <div class="row">
+                                                            @foreach ($games as $game)
+                                                                    @if (($game->journey_id == $journey->id) && ($game->status == "Finalizado"))
                                                                         
-                                                                @if ($game->category_id == $category->id)
-                                                                    <div class="match p-2">    
-                                                                        @if(($game->score_team1 > $game->score_team2 ))
-                                                                            <b class="win">{{ $game->team1}} {{ $game->score_team1}}</b> <br />
-                                                                            {{ $game->team2}} {{ $game->score_team2}} 
-                                                                        @elseif ($game->score_team1 < $game->score_team2)
-                                                                            {{ $game->team1}} {{ $game->score_team1}} <br />
-                                                                            <b class="win">{{ $game->team2}} {{ $game->score_team2}}</b>
-                                                                        @else
-                                                                            @if ( $game->score_penalties_team1 > $game->score_penalties_team2 )
-                                                                                <b class="win">{{ $game->team1}} {{ $game->score_team1}} ({{ $game->score_penalties_team1}})</b> <br />
-                                                                                {{ $game->team2}} {{ $game->score_team2}} ({{ $game->score_penalties_team2}})
-                                                                            @else
-                                                                                {{ $game->team1}} {{ $game->score_team1}} ({{ $game->score_penalties_team1}}) <br />
-                                                                                <b class="win">{{ $game->team2}} {{ $game->score_team2}} ({{ $game->score_penalties_team2}})</b>
-                                                                            @endif
-                                                                          
+                                                                        @php 
+                                                                            $i++;
+                                                                        @endphp
+                                                                                
+                                                                        @if ($game->category_id == $category->id)
+                                                                            @include('components/btnGame')
                                                                         @endif
-                                                                    </div>
-                                                                @endif
-                                                            @endif    
-                                                    @endforeach
-                                                    </div>
-                                                    <br />
+                                                                    @endif    
+                                                            @endforeach
+                                                        </div>
+                                                    
                                                 @endforeach
 
                                                 @if ($i==0)
                                                 <div class="alert alert-danger">
                                                     <strong>Nota!</strong> no se encontraron resultados en esta jornada
                                                 </div>
-                                                @endif
-                                                
-                                            </p>
-
+                                                @endif  
                                         </div>
+                                        <hr />
                                     @endif
                                 @endforeach
                             </div>
@@ -478,7 +497,30 @@
 @section('js')
 <script type="text/javascript">
     jQuery(document).ready(function($){
-        
+
+        $('#filterCategories').change( function () {
+            // const branch = $('#branch option:selected').val();
+
+            // if (branch === '') {
+            //     $.notify("Selecciona una Rama", "error");
+            //     return;
+            // }
+
+            $("#filterCategories option:selected").each(function () {
+                categoryId=$(this).val();
+
+                $("#filterTeams").html('<option value="">Selecciona una cateogría</option>');
+
+                getTeams("filterTeams",categoryId);
+                // getTeamsByCategoryAndBranch("team1_id", categoryId, branch );
+                // getTeamsByCategoryAndBranch("team2_id", categoryId, branch );
+                
+            });
+        })
+
+        $('#btnBuscar').click( function () {
+            alert('Vamos a buscar')
+        })
     });
 
 </script>

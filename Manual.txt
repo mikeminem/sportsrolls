@@ -58,7 +58,7 @@ $ composer require yajra/laravel-datatables-oracle:"~8.0"
 		'DataTables' => Yajra\DataTables\Facades\DataTables::class,
 
 
-	finally 
+	finally
 	php artisan vendor:publish --provider="Yajra\DataTables\DataTablesServiceProvider"
 
 
@@ -70,7 +70,7 @@ follow the steps there
 
 
 
-Font Awesome from 
+Font Awesome from
 https://fontawesome.com/v4.7/icons/
 
 
@@ -118,3 +118,63 @@ https://developers.facebook.com/docs/plugins/share-button/
 <meta property="og:title"         content="Your Website Title" />
 <meta property="og:description"   content="Your description" />
 <meta property="og:image"         content="https://www.your-domain.com/path/image.jpg" />
+
+
+for create and validate the mexican curp
+https://github.com/ripper2hl/curp?tab=readme-ov-file
+
+
+
+Standing table jQuery
+SELECT t.id, t.category_id, t.name as team,
+                count('x') as JJ,
+                count(case when PAF > PEC then 1 end) JG,
+                count(case when PAF < PEC then 1 end) JP,
+                count(case when PAF = PEC then 1 end) JE,
+                count(case when PPAF > PPEC then 1 end) JGP,
+                count(case when PPAF < PPEC then 1 end) JPP,
+                sum(score.PAF) as PAF,
+                sum(score.PEC) as PEC,
+                sum(score.PAF) - sum(score.PEC) as DIF
+                , sum( case when PAF > PEC then 3 else 0 end
+ + case when PPAF > PPEC then 2 else 0 end
+ + case when PPAF < PPEC then 1 else 0 end ) as PUNTOS, t.logo, t.id
+                FROM
+                (
+                    (SELECT
+                            h.team1_id team,
+                            h.score_team1 PAF,
+                            h.score_team2 PEC,
+                            h.score_penalties_team1 PPAF,
+                            h.score_penalties_team2 PPEC
+                            FROM games h
+                            INNER JOIN journeys j on j.id = h.journey_id
+                            WHERE
+                            h.status = 'Finalizado' and
+                            h.is_deleted = 0 and
+                            h.type = 'Temporada Regular' and
+                            j.show_public ='Si' and
+                            j.tournament_id = 9
+                    )
+                UNION ALL
+                    ( SELECT
+                            v.team2_id team,
+                            v.score_team2 PEF,
+                            v.score_team1 PEC,
+                            v.score_penalties_team2 PPAF,
+                            v.score_penalties_team1 PPEC
+                            FROM games v
+                            INNER JOIN journeys j on j.id = v.journey_id
+                            WHERE
+                            v.status = 'Finalizado' and
+                            v.is_deleted = 0 and
+                            v.type = 'Temporada Regular' and
+                            j.show_public ='Si' and
+                            j.tournament_id = 9
+                    )
+                ) AS score
+                JOIN teams t on t.id = score.team
+                WHERE
+                t.status = 'Activo'
+                and t.id = 25
+                GROUP BY team ORDER BY PUNTOS DESC, DIF DESC

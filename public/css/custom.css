@@ -3,8 +3,20 @@ basico colors
 black burn: 191919
 secundary color: FF8C00 or 72CD35*/
 
+body {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+
 h5 {
 	margin-bottom: -5px !important;
+}
+
+a {
+	text-decoration: none !important;
 }
 a, .btn-link {
 	color: rgba(0,0,0,.5);
@@ -71,7 +83,8 @@ if modal give us problems, just delete the backdrop element
   }
 
   .copyright {
-	position: fixed;
+	/* position: fixed; */
+	position:fixed;
   	bottom: 0;
 	background-color: #191919;
 	margin-top: 20px;
@@ -165,12 +178,58 @@ if modal give us problems, just delete the backdrop element
 }
 
 .card-body {
-	padding: 2px !important;
+	padding: 10px !important;
 }
 
-/* .brand-title {
-	color: #FFF !important;
-	font-size: 14px;
-	-webkit-text-stroke-width: 1px !important;
-  	-webkit-text-stroke-color: #FF8C00 !important;
-} */
+.btnDZ {
+	text-decoration: none;
+	color: #000;
+	width: 100% !important;
+}
+
+.btnDZ:hover {
+	text-decoration: none;
+}
+
+.btnDZ:hover>.card {
+	background-color: #eee;
+}
+
+
+.header {
+	background-color: #FF8C00;
+	color: #FFF;
+}
+
+.carousel-caption {
+	right: 0px !important;
+	left: 0px !important;
+}
+
+
+/*for the table of standings*/
+
+.table-standings { 
+	width:100%;
+	text-align: center;
+	/* min-width: 260px;
+  	min-height:200px; */
+	background-image:url('../images/dz_logo_gray.png');
+	/* background-repeat: no-repeat; */
+	/* background-position: center center; */
+	font-weight: bolder;
+}
+
+.cover {
+	position:relative;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	width:100%;
+	height:100%;
+	background:transparent;
+   z-index:100;
+
+  }
+

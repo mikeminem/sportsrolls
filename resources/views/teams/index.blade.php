@@ -89,7 +89,7 @@
                                     <th>Torneo</th>
                                     <th>Id Categoria</th>
                                     <th>Id Grupo</th>
-                                    <th>Nombre</th>
+                                    <th style="width: 200px">Nombre</th>
                                     <th>Contacto</th>
                                     <th>Rama</th>
                                     <th>Categoría</th>

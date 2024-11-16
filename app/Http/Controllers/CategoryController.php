@@ -18,7 +18,7 @@ class CategoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['list']]);
     }
 
     public function index(Request $request)
@@ -35,7 +35,7 @@ class CategoryController extends Controller
                     ->where('c.is_deleted', 0)
                     ->where('c.user_id',Auth::user()->id)
                     ->where('t.id', $request->tournament)
-                    ->get();    
+                    ->get();
             }
             // $rows = DB::table('categories as c')
             //         ->join('sports as s', 's.id', '=', 'c.sport_id')
@@ -43,8 +43,8 @@ class CategoryController extends Controller
             //         ->select('c.id', 'c.sport_id', 'c.name', 'c.overview', 's.name as nameSport', 'c.show_stats', 't.id as tournament')
             //         ->where('c.is_deleted', 0)
             //         ->where('c.user_id',Auth::user()->id)
-            //         ->get();        
-            
+            //         ->get();
+
             return DataTables::of($rows)
                     ->addColumn('sport_id', function($row) {
 
@@ -58,7 +58,7 @@ class CategoryController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a>
-                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
+                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete">
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
@@ -111,18 +111,18 @@ class CategoryController extends Controller
         if (!isset($request->id) || empty($request->id)) {
             $model = new Category($request->all());
             $model->user_id = Auth::user()->id;
-            
+
             if ($model->save())
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado la categoria!']);      
+                 return response()->json(['type' => 'success',
+                                 'message' => 'Se ha creado la categoria!']);
         } else {
             $model = Category::find($request->id);
             $model->fill($request->all());
 
-            
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado la categoria!']); 
+
+            if ($model->update())
+                return response()->json(['type' => 'success',
+                                 'message' => 'Se ha modificado la categoria!']);
         }
 
         return response()->json([
@@ -135,7 +135,7 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int 
+     * @param  int
      * @return boolean
      */
     public function show( $id)
@@ -152,7 +152,7 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Category  $category
-     * @return \Illuminate\Http\JsonResponse 
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
@@ -173,7 +173,7 @@ class CategoryController extends Controller
     }
 
     public function list ($tournament_id) {
-        
+
         if ($tournament_id) {
             $list = Category::where('tournament_id',$tournament_id)->where('is_deleted',0)->get();
             return (string) $list;
