@@ -19,6 +19,8 @@
     <meta name="copyright" content="Copyright DeporteZacatecas.com" />
     <meta name="revisit-after" content="1 days" />
     <meta http-equiv="cache-control" content="no-cache"/>
+    <link rel="icon" href="{{ asset('images/icoDeporteZacatecas.png') }}" type="image/x-icon">
+
 
 
     <!--social media metas-->
@@ -283,6 +285,8 @@
     <!-- DataTables -->
     {{-- <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script> --}}
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

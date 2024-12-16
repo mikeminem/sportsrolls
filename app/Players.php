@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Players extends Model
 {
@@ -23,7 +24,14 @@ class Players extends Model
         'is_validated',
         'is_deleted',
         'state_id',
-        'municipality_id',
-        'blod_type'
+        //'municipality_id',
+        'blood_type',
+        'access_pin'
     ];
+
+
+    public function roster(): HasMany
+    {
+        return $this->hasMany('App\Roster');
+    }
 }

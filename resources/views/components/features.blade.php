@@ -1,5 +1,5 @@
 <div class="row mt-5" >
-    <div class="col-md-3 col-sm-6 d-flex align-items-stretch">
+    <div class="col-md-3 col-sm-6 col-6 d-flex align-items-stretch">
         <div class="card text-center w-100 border-0">
             <div class="card-body">
                 <i class="fa fa-trophy feature"></i>
@@ -10,12 +10,12 @@
                 @else
                     {{ __('Tournaments') }}
                 @endif
-                
+
             </div>
           </div>
     </div>
 
-    <div class="col-md-3 col-sm-6 d-flex align-items-stretch">
+    <div class="col-md-3 col-sm-6 col-6 d-flex align-items-stretch">
         <div class="card text-center w-100 border-0">
             <div class="card-body">
                 <i class="fa fa-group feature"></i>
@@ -25,15 +25,15 @@
                     <a href="{{ url('teams') }}">Equipos Activos</a>
                 @else
                 {{ __('Teams') }}
-                    
+
                 @endif
-                
-               
+
+
             </div>
           </div>
     </div>
 
-    <div class="col-md-3 col-sm-6 d-flex align-items-stretch">
+    <div class="col-md-3 col-sm-6 col-6 d-flex align-items-stretch">
         <div class="card text-center w-100 border-0">
             <div class="card-body">
                 <i class="fa fa-calendar feature"></i>
@@ -44,12 +44,12 @@
                 @else
                     Jornadas
                 @endif
-                
+
             </div>
           </div>
     </div>
 
-    <div class="col-md-3 col-sm-6 d-flex align-items-stretch">
+    <div class="col-md-3 col-sm-6 col-6 d-flex align-items-stretch">
         <div class="card text-center w-100 border-0">
             <div class="card-body">
                 <i class="fa fa-tasks feature"></i>
@@ -59,9 +59,9 @@
                     <a href="{{ url('games') }}">Juegos Programados</a>
                 @else
                 {{ __('Games') }}
-                    
+
                 @endif
-               
+
             </div>
           </div>
     </div>

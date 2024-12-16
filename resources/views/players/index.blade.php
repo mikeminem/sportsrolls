@@ -41,8 +41,11 @@
                                 <tr>
                                     <th>{{ __("Photo") }}</th>
                                     <th>{{ __("Player") }}</th>
+                                    <th>{{ __("Last Name 1") }}</th>
+                                    <th>{{ __("Last Name 2") }}</th>
                                     <th>{{ __("Phone") }}</th>
                                     <th>{{ __("Call in case of emergency") }}</th>
+                                    <th>{{ __("Blood Type") }}</th>
                                     <th>{{ __("Status") }}</th>
                                     <th> - </th>
                                 </tr>
@@ -61,7 +64,7 @@
 
 <!-- Modal Form -->
 <div id="formModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg mw-100 w-100">
+    <div class="modal-dialog modal-xl w-auto" >
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -72,13 +75,6 @@
             <form id="updateForm" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="row">
-
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="curp"><b>CURP *</b></label>
-                                <input type="text" class="form-control" id="curp" name="curp" required maxlength="45" >
-                            </div>
-                        </div>
 
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
@@ -107,20 +103,23 @@
                                 <label for="state_id"><b>Estado *</b></label>
                                 <select id="state_id" name="state_id" class="form-control" required>
                                     <option value="1">Selecciona</option>
+                                    @foreach ($states as $state )
+                                        <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-12">
+                        {{-- <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="municipality_id"><b>Municipio</b></label>
                                 <select id="municipality_id" name="municipality_id" class="form-control" required>
                                     <option value="1">Selecciona un Estado</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-md-2 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="dob"><b>Fecha de Nacimiento *</b></label>
                                 <input type="date" class="form-control" id="dob" name="dob" required >
@@ -128,22 +127,29 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-6">
+                        <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="gender"><b>Genero al Nacer * </b></label>
                                 <select id="gender" name="gender" class="form-control" required>
                                     <option value="">Selecciona</option>
-                                    <option value="F">Femenino</option>
-                                    <option value="M">Masculino</option>
+                                    <option value="F">FEMENINO</option>
+                                    <option value="M">MASCULINO</option>
                                 </select>
 
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="curp"><b>CURP *</b></label>
+                                <input type="text" class="form-control" id="curp" name="curp" required maxlength="45" disabled >
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="age"><b>Edad</b></label>
-                                <input type="text" class="form-control" id="age" name="age" required readonly >
+                                <input type="text" class="form-control" id="age" name="age" required disabled >
                             </div>
                         </div>
 
@@ -165,8 +171,8 @@
                         <div class="col-md-2 col-sm-12">
                             <div class="form-group">
                                 {{-- A+, A-, B+, B-, AB+, AB-, O+ y O- --}}
-                                <label for="blood_type"><b>Tipo de Sangre</b></label>
-                                <select id="blood_type" name="blod_type" class="form-control" required>
+                                <label for="blood_type"><b>Tipo de Sangre * </b></label>
+                                <select id="blood_type" name="blood_type" class="form-control" required>
                                     <option value="">Selecciona</option>
                                     <option value="A+">A+</option>
                                     <option value="A-">A-</option>
@@ -182,8 +188,8 @@
 
                         <div class="col-md-2 col-sm-12">
                             <div class="form-group">
-                                <label for="access_pin"><b>Pin de acceso</b></label>
-                                <input type="text" class="form-control" id="access_pin" name="access_pin" required maxlength="4">
+                                <label for="access_pin"><b>Pin de acceso *</b></label>
+                                <input type="text" class="form-control" id="access_pin" name="access_pin" maxlength="4" required>
                             </div>
                         </div>
 
@@ -210,7 +216,7 @@
                         </div>
 
                         <div class="col-md-6 col-sm-6">
-                            <img id="player_photo" src="{{ asset('images/No-photo-m.png') }}" class="img-fluid img-thumbnai" alt="{{ __('Player Photo') }}">
+                            <img id="player_photo" src="{{ asset('images/No-photo-m.png') }}" class="img-fluid img-thumbnai" alt="{{ __('Player Photo') }}" width="220px">
                             <div class="form-group">
                                 <label for="photo"><b>Foto del Jugador</b></label>
                                 <input type="file"
@@ -334,8 +340,11 @@
                     columns: [
                         { data: 'photo', name: 'photo'},
                         { data: 'names', name: 'names'},
+                        { data: 'last_name1', name: 'last_name1'},
+                        { data: 'last_name2', name: 'last_name2'},
                         { data: 'phone', name: 'phone'},
                         { data: 'emergency_name', name: 'emergency_name'},
+                        { data: 'blood_type', name: 'blood_type'},
                         { data: 'status', name: 'status'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ]
@@ -392,15 +401,13 @@
                         let image = '';
 
                         for(obj in data) {
-                            $("#" + obj).val(data[obj]);
 
-                            if (obj == "tournament_id"){
-                                tournament_id = data[obj];
+                            if (obj != 'photo') {
+                                $("#" + obj).val(data[obj]);
                             }
 
-                            if (obj == "image") {
+                            if (obj == "photo") {
                                 image = data[obj];
-                                console.log('image', image);
                                 if (image) {
                                     $("#player_photo").attr("src","players_photos/" + image);
                                 } else {
@@ -409,13 +416,18 @@
                                 }
                             }
 
-                            if (obj == 'category_id') {
-                                category_id = data[obj];
-                                //getTeams("team_id",category_id);
-                            }
                         }
-                        getTeams("team_id",category_id, data['team_id']);
 
+                        //calculate the age
+                        var today = new Date();
+                        var birthDate = new Date($('#dob').val());
+                        var age = today.getFullYear() - birthDate.getFullYear();
+                        var m = today.getMonth() - birthDate.getMonth();
+                        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                            age--;
+                        }
+                        $('#age').val(age);
+                        //getTeams("team_id",category_id, data['team_id']);
                         //$("#sport").val("{{ Auth::user()->league->sport->name}}");
                         //$("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 

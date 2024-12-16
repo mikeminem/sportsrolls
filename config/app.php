@@ -68,7 +68,8 @@ return [
     */
 
     'timezone' => 'UTC',
-
+    //“America/Mexico_City”.
+    'timezone' => 'America/Mexico_City',
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
@@ -80,7 +81,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'es',
 
     /*
     |--------------------------------------------------------------------------

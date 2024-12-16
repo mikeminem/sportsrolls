@@ -31,7 +31,7 @@
     "If you did not receive the email": "Si no has recibido el email",
     "click here to request another": "pulsa aquí para que te enviemos otro",
     "All rights reserved.":  "Todos los derechos reservados.",
-    "Search": "Buscar", 
+    "Search": "Buscar",
     "Players": "Jugadores",
     "League Catalogs": "Catálogos de la liga",
     "Stadiums": "Estadios / Campos / Gimnasios",
@@ -75,7 +75,10 @@
     "PageCategories": "Categorías de Páginas",
     "WebPages": "Contenidos Web",
     "Game Info": "Información del Juego",
-    
+
     "First Name": "Nombres",
-    "Last Name": "Apellidos"
+    "Last Name": "Apellidos",
+
+    "Players": "Jugadoes"
+
 }

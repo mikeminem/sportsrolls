@@ -17,28 +17,28 @@
                     </div>
 
                     <div class="col-md-8 col-sm-8 col-8 text-center my-auto">
-                        <h3>{{ $tournament->title }}</h3>
+                        <b>{{ $tournament->title }}</b>
                         <p class="m-3">
-                            {{ $tournament->sport->name }} 
+                            {{ $tournament->sport->name }}
                             <br>
-                        
+
                                 <span class="fa fa-list"></span>
                                 @php
                                 $prints = $tournament->prints;
                                 if ($prints>=1000) {
                                     $prints = number_format($prints /1000,1) . "K";
                                 }
-                                @endphp   
-                                {{ $prints }} 
+                                @endphp
+                                {{ $prints }}
                                 <span class="fa fa-eye"></span>
                                 @php
                                 $clicks = $tournament->clicks;
                                 if ($clicks>=1000) {
                                     $clicks = number_format($clicks /1000,1) . "K";
                                 }
-                                @endphp   
+                                @endphp
                                 {{ $clicks }}
-                            
+
                         </p>
                     </div>
 

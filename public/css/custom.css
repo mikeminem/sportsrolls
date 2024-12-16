@@ -48,7 +48,7 @@ if modal give us problems, just delete the backdrop element
 .modal-backdrop {
 	display:none;
 	z-index: -100;
-	
+
 }*/
 
 
@@ -78,6 +78,11 @@ if modal give us problems, just delete the backdrop element
 	  width: auto;
   }
 
+  .table-standings td, .table-standings th {
+    padding: .2rem !important;
+    vertical-align: middle !important;
+}
+
   .jumbotron {
 	border-bottom: 4px solid #FF8C00;
   }
@@ -101,7 +106,7 @@ if modal give us problems, just delete the backdrop element
 	  border-right: #343a40 .5px solid;
   }
 
-  .banner {	
+  .banner {
 	  background-color: #343a40;
   }
 
@@ -110,7 +115,7 @@ if modal give us problems, just delete the backdrop element
 	  font-size: 4em;
 	  color:#fff;
 	  font-weight: bolder;
-	  
+
 	  -webkit-text-stroke: 2px black;
 }
 
@@ -152,7 +157,7 @@ if modal give us problems, just delete the backdrop element
 }
 
 /* show or hide columns */
-/* @media screen and (max-width: 1225px) and (min-width: 1045px) {
+@media screen and (max-width: 1225px) and (min-width: 1045px) {
 	.hideColumn{
 		display:none;
 	}
@@ -162,14 +167,14 @@ if modal give us problems, just delete the backdrop element
 	.hideColumn{
 		display:none;
 	}
-	
-} */
 
-/* @media screen and (max-width: 565px) and (min-width: 300px) {
+}
+
+@media screen and (max-width: 565px) and (min-width: 300px) {
 	.hideColumn{
 		display:none;
 	}
-} */
+}
 
 @media screen and (max-width: 1000px) {
 	.hideColumn{
@@ -209,7 +214,7 @@ if modal give us problems, just delete the backdrop element
 
 /*for the table of standings*/
 
-.table-standings { 
+.table-standings {
 	width:100%;
 	text-align: center;
 	/* min-width: 260px;

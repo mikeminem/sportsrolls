@@ -10,8 +10,8 @@
     <div class="row">
         <div class="col-md-12">
             {{-- image header --}}
-            <div class="text-center" 
-            style="background-image: url('{{ asset('web_pages/' . $webpage->image) }}'); 
+            <div class="text-center"
+            style="background-image: url('{{ asset('web_pages/' . $webpage->image) }}');
                 background-size: cover;
                 background-repeat: no-repeat;
                 /* background-attachment: fixed; */
@@ -19,7 +19,7 @@
                 background-position-x: center;
                 background-position-y: center;
                 vertical-align: middle;
-                height: 400px;  ">                
+                height: 600px;  ">
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
                     </div>
                     {!! $webpage->content !!}
 
-                   
+
                 </div>
             </div>
         </div>
@@ -50,6 +50,6 @@
 <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
 
 <script type="text/javascript">
-        
+
 </script>
 @endsection

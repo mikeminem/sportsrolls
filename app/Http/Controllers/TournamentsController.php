@@ -716,7 +716,7 @@ class TournamentsController extends Controller
             ->where('show_public','Si')
             ->where('status','Abierto')
             ->where('start_at','<=', date('Y-m-d 00:00'))
-            ->where('finish_at','>=', date('Y-m-d 23:59') )
+            ->where('finish_at','>', date('Y-m-d 23:59') )
             ->orderBy('id','desc')
             ->get();
 

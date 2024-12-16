@@ -30,7 +30,7 @@
                                             <table class="table table-striped table-standings" id="table">
                                                 <thead inert>
                                                     <tr class="text-center">
-                                                        <th width="20px">{{ __('Lugar') }}</th>
+                                                        <th width="20px">{{ __('#') }}</th>
                                                         <th width="200px" class="text-left">{{ __('Equipo') }}</th>
                                                         <th width="20px">JJ</th>
                                                         <th width="20px">JG</th>
@@ -38,25 +38,25 @@
                                                             <th width="20px">JE</th>
                                                         @endif
                                                         <th width="20px">JP</th>
-                                                        @if ($tournament->enable_penalties_scoring === 'Si') 
+                                                        @if ($tournament->enable_penalties_scoring === 'Si')
                                                             <th width="20px">JGP</th>
                                                             <th width="20px">JPP</th>
                                                         @endif
                                                         @if ($tournament->sport->name === 'Futbol')
-                                                            <th width="20px">GF</th>
-                                                            <th width="20px">GC</th>
+                                                            <th width="20px" class="hideColumn">GF</th>
+                                                            <th width="20px" class="hideColumn">GC</th>
                                                         @else
-                                                            <th width="20px">PF</th>
-                                                            <th width="20px">PC</th>
+                                                            <th width="20px" class="hideColumn">PF</th>
+                                                            <th width="20px" class="hideColumn">PC</th>
                                                         @endif
                                                         <th width="20px">DIF</th>
                                                         @if ($tournament->enable_points_system=="Si")
                                                             <th width="20px">PTOs</th>
                                                         @endif
-                                                        
+
                                                     </tr>
                                                 </thead>
-                            
+
                                                 <tbody inert>
                                                     @php
                                                         $lugar = 1;
@@ -67,9 +67,9 @@
                                                                 <td class="text-left">{{ $lugar }}</td>
                                                                 <td class="text-left">
                                                                     @if( $score->logo )
-                                                                            <img class="img" src="{{ asset('team_logo/' . $score->logo) }} " style="width:40px">
+                                                                            <img class="img" src="{{ asset('team_logo/' . $score->logo) }} " style="width:24px">
                                                                         @else
-                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
+                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:24px">
                                                                         @endif
                                                                     {{ $score->team }}
                                                                 </td>
@@ -79,12 +79,12 @@
                                                                     <td class="text-center ">{{ $score->JE }}</td>
                                                                 @endif
                                                                 <td class="text-center ">{{ $score->JP }}</td>
-                                                                @if ($tournament->enable_penalties_scoring === 'Si') 
+                                                                @if ($tournament->enable_penalties_scoring === 'Si')
                                                                     <td class="text-center ">{{ $score->JGP }}</td>
                                                                     <td class="text-center ">{{ $score->JPP }}</td>
                                                                 @endif
-                                                                <td class="text-center">{{ $score->PAF }}</td>
-                                                                <td class="text-center">{{ $score->PEC }}</td>
+                                                                <td class="text-center hideColumn">{{ $score->PAF }}</td>
+                                                                <td class="text-center hideColumn">{{ $score->PEC }}</td>
                                                                 <td class="text-center">{{ $score->DIF > 0 ? '+' : '' }}{{ $score->DIF }}</td>
                                                                 @if (isset($score->PUNTOS)
                                                                     && ($tournament->enable_points_system === 'Si'))
@@ -94,42 +94,42 @@
                                                                     && ($tournament->enable_penalties_scoring === 'Si'))
                                                                     <td class="text-center ">{{ $score->PUNTOS + $score->PUNTOS_PENALTIES }}</td>
 
-                                                                @endif                                                                
+                                                                @endif
                                                             </tr>
-                                                    
+
                                                             @php
                                                                 $lugar++;
                                                             @endphp
                                                         @endif
-                                                                                                
+
                                                     @endforeach
 
                                                 </tbody>
                                             </table>
-                                            
+
                                         </div>
-    
+
                                     </div>
-                                </div>    
+                                </div>
 
                                 @endif
                             @endforeach
 
 
 
-                            
-                            <div class="fb-share-button" 
-                                data-href="{{ url('tournament_info/' . $tournament->slug) }}" 
+
+                            <div class="fb-share-button"
+                                data-href="{{ url('tournament_info/' . $tournament->slug) }}"
                                 data-layout="button_count" data-size="large">
-                                <a target="_blank" 
-                                    href="https://www.facebook.com/sharer/sharer.php?u={{ url('tournament_info/' . $tournament->slug) }}&amp;src=sdkpreparse" 
+                                <a target="_blank"
+                                    href="https://www.facebook.com/sharer/sharer.php?u={{ url('tournament_info/' . $tournament->slug) }}&amp;src=sdkpreparse"
                                     class="fb-xfbml-parse-ignore">
                                     Compartir
                                 </a>
                             </div>
-                            <a class="btn btn-primary whatsapp" 
-                                href="whatsapp://send?text={{ url('tournament_info/' . $tournament->slug) }}"  
-                            target="_blank"><span class="fa fa-whatsapp"></span> Share </a>   
+                            <a class="btn btn-primary whatsapp"
+                                href="whatsapp://send?text={{ url('tournament_info/' . $tournament->slug) }}"
+                            target="_blank"><span class="fa fa-whatsapp"></span> Share </a>
                         </div>
                     </div>
 
@@ -160,7 +160,7 @@
                 getTeams("filterTeams",categoryId);
                 // getTeamsByCategoryAndBranch("team1_id", categoryId, branch );
                 // getTeamsByCategoryAndBranch("team2_id", categoryId, branch );
-                
+
             });
         })
 
