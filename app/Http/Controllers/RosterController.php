@@ -31,51 +31,52 @@ class RosterController extends Controller
             $rows = [];
 
             if ( $request->tournament ) {
-                
+
                 $rows = DB::table('rosters as r')
-                    //->join('users as u', 'u.id', '=', 'r.player_id')
+                    ->join('players as p', 'p.id', '=', 'r.player_id')
                     ->join('teams as t', 't.id', '=', 'r.team_id')
                     ->select(
-                        'r.id', 
-                        'r.number', 
-                        'r.positions', 
-                        'r.name', 
-                        'r.last_name', 
-                        'r.phone', 
-                        't.name as team', 
-                        'r.tournament_id as tournament', 
-                        'r.status', 
+                        'r.id',
+                        'r.number',
+                        'r.positions',
+                        'p.names',
+                        'p.last_name1',
+                        'p.last_name2',
+                        'p.phone',
+                        't.name as team',
+                        'r.tournament_id as tournament',
+                        'r.status',
                         'r.team_id',
                         'r.category_id',
-                        'r.emergency_call',
-                        'r.emergency_phone',
-                        'r.dob',
-                        'r.image'
+                        'p.emergency_name',
+                        'p.emergency_phone',
+                        'p.dob',
+                        'p.photo'
                     )
                     ->where('r.is_deleted', 0)
                     //->where('r.user_id',Auth::user()->id)
                     ->where('r.tournament_id', $request->tournament)
-                    ->get();    
-                
-            }     
-            
+                    ->get();
+
+            }
+
             return DataTables::of($rows)
-                    ->addColumn('image', function($row) {
+                    ->addColumn('photo', function($row) {
 
                         $image = '<img class="img" src="'. asset('images/No-photo-m.png') . '" style="width:100px">';
-                        if(!is_null($row->image) && !empty($row->image))
-                             $image = '<img src="' . asset('players_photos/' . $row->image) . '" style="height:100px">';
-                    
+                        if(!is_null($row->photo) && !empty($row->photo))
+                             $image = '<img src="' . asset('players_photos/' . $row->photo) . '" style="height:100px">';
+
                         return $image;
                     })
                     ->addColumn('player', function($row) {
 
-                        return  $row->last_name . ', ' . $row->name . ' <b>player #' . $row->number . '</b>  ';
+                        return  $row->last_name1 . ' ' . $row->last_name2 . ', ' . $row->names . ' <b>player #' . $row->number . '</b>  ';
                     })
                     ->addColumn('emergency_call', function($row) {
-                        return  $row->emergency_call . '<br> ' . $row->emergency_phone;
+                        return  $row->emergency_name. '<br> ' . $row->emergency_phone;
                     })
-                    
+
                     ->addColumn('action', function($row) {
 
                         $routeEdit = route('rosters.show', $row->id);
@@ -85,13 +86,13 @@ class RosterController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a>
-                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
+                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->names.'" id="btnDelete">
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
                         return $links;
                     })
-                    ->rawColumns(['image', 'player', 'emergency_call', 'action'])
+                    ->rawColumns(['photo', 'player', 'emergency_call', 'action'])
                     ->make(true);
         }
 
@@ -165,10 +166,10 @@ class RosterController extends Controller
             //     echo $e->getMessage();
             //     die();
             // }
-                
+
             if ($model->save())
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Player saved!']);      
+                 return response()->json(['type' => 'success',
+                                 'message' => 'Player saved!']);
         } else {
             //update
             $model = Roster::find($request->id);
@@ -179,10 +180,10 @@ class RosterController extends Controller
                 Storage::delete('public/players_photos/' . $lastphoto);
                 $model->image = $pathphoto;
             }
-            
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Player updated!']); 
+
+            if ($model->update())
+                return response()->json(['type' => 'success',
+                                 'message' => 'Player updated!']);
         }
 
         return response()->json([
@@ -195,7 +196,7 @@ class RosterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int 
+     * @param  int
      * @return boolean
      */
     public function show( $id)
@@ -204,16 +205,16 @@ class RosterController extends Controller
         if ($id) {
             $row = Roster::select(
                 'id',
-                'team_id', 
-                'user_id', 
-                //'player_id', 
-                'number', 
-                //'positions', 
-                'status', 
-                'category_id', 
-                'is_deleted', 
+                'team_id',
+                'user_id',
+                //'player_id',
+                'number',
+                //'positions',
+                'status',
+                'category_id',
+                'is_deleted',
                 'tournament_id',
-                'name', 
+                'name',
                 'last_name',
                 'phone',
                 'emergency_call',
@@ -230,7 +231,7 @@ class RosterController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Category  $category
-     * @return \Illuminate\Http\JsonResponse 
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {

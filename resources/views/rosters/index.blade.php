@@ -12,13 +12,13 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text-left">
-                        <h1>{{ __('Players Roster')}}</h1>
+                        <h1>{{ __('Roster')}}</h1>
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
-                        <a role="button" 
-                            class="btn btn-primary" 
-                            href="javascript:void(0);" 
+                        <a role="button"
+                            class="btn btn-primary"
+                            href="javascript:void(0);"
                             id="AddRoster"
                              >
                             <span class="fa fa-plus"></span> {{ __("New")}}
@@ -50,7 +50,7 @@
                                 <div class="form-group">
                                     <label for="filterCategories"><b>{{ __("Categories") }}</b></label>
                                     <select class="form-control" required id="filterCategories" name="filterCategories"  >
-                                        <option value="">{{ __("Select a Tournament") }}...</option>                                    
+                                        <option value="">{{ __("Select a Tournament") }}...</option>
                                     </select>
                                 </div>
                             </div>
@@ -59,13 +59,13 @@
                                 <div class="form-group">
                                     <label for="filterTeams"><b>{{ __("Teams") }}</b></label>
                                     <select class="form-control" required id="filterTeams" name="filterTeams"  >
-                                        <option value="">{{ __("Select a Tournament") }}...</option>                                    
+                                        <option value="">{{ __("Select a Tournament") }}...</option>
                                     </select>
                                 </div>
                             </div>
 
                         </div>
-                            
+
                     <hr />
 
                     <div class="table-responsive">
@@ -84,9 +84,9 @@
                                     <th> - </th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-        
+
                             </tbody>
                         </table>
                     </div>
@@ -103,7 +103,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"> {{ __("Player information") }}</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
+                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
             </div>
             <!--mandamos la forma-->
             <form id="updateForm" enctype="multipart/form-data">
@@ -127,7 +127,7 @@
                                 <label for="title"><b>{{ __("Category") }} *</b></label>
                                 <select class="form-control" required id="category_id" name="category_id">
                                     <option value="">{{ __("Select a Tournament") }}</option>
-                                    
+
                                 </select>
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                                 <label for="title"><b>{{ __("Teams") }} *</b></label>
                                 <select class="form-control" required id="team_id" name="team_id">
                                     <option value="">{{ __("Select a Tournament") }}</option>
-                                    
+
                                 </select>
                             </div>
                         </div>
@@ -145,28 +145,28 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>{{ __("Name") }} *</b></label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="45"> 
+                                <input type="text" class="form-control" id="name" name="name" required maxlength="45">
                             </div>
                         </div>
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="last_name"><b>{{ __("Last Name") }} *</b></label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" required maxlength="45"> 
+                                <input type="text" class="form-control" id="last_name" name="last_name" required maxlength="45">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="number"><b>{{ __("Number in T-shirt") }} *</b></label>
-                                <input type="text" class="form-control" id="number" name="number" required maxlength="10"> 
+                                <input type="text" class="form-control" id="number" name="number" required maxlength="10">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="phone"><b>{{ __("Phone Number") }} *</b></label>
-                                <input type="text" class="form-control" id="phone" name="phone" required maxlength="10"> 
+                                <input type="text" class="form-control" id="phone" name="phone" required maxlength="10">
                             </div>
                         </div>
 
@@ -174,8 +174,8 @@
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="dob"><b>{{ __("DOB") }}</b></label>
-                                <input type="date" class="form-control" id="dob" name="dob" required > 
-                                
+                                <input type="date" class="form-control" id="dob" name="dob" required >
+
                             </div>
                         </div>
 
@@ -186,14 +186,14 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="emergency_call"><b>{{ __("Emergency Name") }}</b></label>
-                                <input type="text" class="form-control" id="emergency_call" name="emergency_call" maxlength="80"> 
+                                <input type="text" class="form-control" id="emergency_call" name="emergency_call" maxlength="80">
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="emergency_phone"><b>{{ __("Emergency Phone") }}</b></label>
-                                <input type="text" class="form-control" id="emergency_phone" name="emergency_phone" maxlength="80"> 
+                                <input type="text" class="form-control" id="emergency_phone" name="emergency_phone" maxlength="80">
                             </div>
                         </div>
 
@@ -214,7 +214,7 @@
                         <div class="col-md-9 col-sm-6">
                             <div class="form-group">
                                 <label for="photo"><b>{{ __("Photo") }}</b></label>
-                                <input type="file" class="form-control" id="photo" name="photo" maxlength="80" accept="image/*"> 
+                                <input type="file" class="form-control" id="photo" name="photo" maxlength="80" accept="image/*">
                             </div>
                         </div>
 
@@ -233,7 +233,7 @@
                         {{ csrf_field() }}
 
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
+                                <span class="fa fa-save"></span>
                                 {{__('Save')}}
                             </button>
 
@@ -253,13 +253,13 @@
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">{{ __("Delete a Row") }}</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deleteForm">
@@ -273,7 +273,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -281,10 +281,10 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 @endsection
 
 @section('js')
@@ -294,7 +294,7 @@
             fetch_data();
 
             function fetch_data(tournament = '') {
-            
+
                 $('#table').DataTable({
                     "language": {
                         "sProcessing":    "Procesando...",
@@ -331,7 +331,7 @@
                         { data: 'category_id', name: 'category_id', visible: false},
                         { data: 'team_id', name: 'team_id', visible: false},
                         { data: 'team', name: 'team'},
-                        { data: 'image', name: 'image'},
+                        { data: 'photo', name: 'photo'},
                         { data: 'player', name: 'player'},
                         { data: 'phone', name: 'phone'},
                         { data: 'emergency_call', name: 'emergency_call'},
@@ -371,7 +371,7 @@
             //tournament_id
             $(document).on("change", "#tournament_id", function () {
                 var tournament = $('#tournament_id').val();
-               
+
                 var tournament=$(this).val();
                 if (tournament =="") {
                     $("#category_id").empty();
@@ -387,26 +387,26 @@
 
             $(document).on("change", "#filterCategories", function (e) {
                 //$('#table').DataTable().columns(1).search(this.value).draw();
-            
+
                 $("#filterCategories option:selected").each(function () {
                     categoryId=$(this).val();
                     $("#filterTeams").html('<option valu="">{{ __("Select a Tournament and Category") }}</option>');
                     getTeams("filterTeams",categoryId);
 
                     $("#team_id").html('<option valu="">{{ __("Select a Tournament and Category") }}</option>');
-                    getTeams("team_id",categoryId);              
-                    
-                    
+                    getTeams("team_id",categoryId);
+
+
                 });
             });
 
             $(document).on("change", "#category_id", function (e) {
                 //$('#table').DataTable().columns(1).search(this.value).draw();
-            
+
                 $("#category_id option:selected").each(function () {
                     categoryId=$(this).val();
                     $("#team_id").html('<option valu="">{{ __("Select a Tournament and Category") }}</option>');
-                    getTeams("team_id",categoryId);                
+                    getTeams("team_id",categoryId);
                 });
             });
 
@@ -420,27 +420,27 @@
 
                 $("#player_photo").attr("src","");
                 $("#player_photo").attr("src","images/No-photo-m.png");
-                
+
                 $("#updateForm").trigger('reset');
                 $("#id").val("");
 
                 let tournament = $('#filterTournaments').val();
-                if (tournament !== "") { 
+                if (tournament !== "") {
                     $('#tournament_id').val(tournament);
 
                     category = $('#filterCategories').val();
-                    
-                    if (category !==  "") { 
+
+                    if (category !==  "") {
                         getCategories("category_id",tournament, category);
-                        getTeams("team_id",category); 
-                    }                
+                        getTeams("team_id",category);
+                    }
 
                 }
 
                 //$("#sport").val("{{ Auth::user()->league->sport->name}}");
                 //$("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
-                jQuery.noConflict(); 
+                jQuery.noConflict();
                 jQuery("#formModal").modal('show');
             });
 
@@ -461,7 +461,7 @@
                     type: "GET",
                     url: $(this).attr("href"),
                     dataType: "json",
-                    success: function (data) { 
+                    success: function (data) {
                         let tournament_id = 0;
                         let category_id = 0;
                         let image = '';
@@ -486,15 +486,15 @@
 
                             if (obj == 'category_id') {
                                 category_id = data[obj];
-                                //getTeams("team_id",category_id); 
+                                //getTeams("team_id",category_id);
                             }
                         }
-                        getTeams("team_id",category_id, data['team_id']); 
-                        
+                        getTeams("team_id",category_id, data['team_id']);
+
                         //$("#sport").val("{{ Auth::user()->league->sport->name}}");
                         //$("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('show');
                     },
                 });
@@ -519,26 +519,26 @@
                     cache: false,
                     processData: false,
                     data: new FormData(this),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
                             var errors = "";
                             $.each(data.errors, function (i, val) {
                                 errors = errors  +  val + "\n";
                             });
-                            
+
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
-                            
+
                             return false;
                         }
 
                         $("#updateForm").trigger('reset');
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("There is an error trying to save the player information! FE", "error");
@@ -561,10 +561,10 @@
                             $.notify(data.message + "\n" + errors, data.type);
                             return false;
                         }
-                        
+
                         $("#deleteForm").trigger('reset');
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deleteModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
