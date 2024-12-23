@@ -191,6 +191,21 @@ Route::get('players_photos/{filename}',function($filename){
     return $response;
 });
 
+//photos
+Route::get('photos/{filename}',function($filename){
+    $path = storage_path("app/public/photos/$filename");
+
+    if (!\File::exists($path)) abort(404);
+
+    $file = \File::get($path);
+    $type = \File::mimeType($path);
+
+    $response = Response::make($file,200);
+    $response->header("Content-Type",$type);
+
+    return $response;
+});
+
 //tournaments options
 Route::resource('/tournaments','TournamentsController');
 Route::post('/tournaments.start/{id}', 'TournamentsController@start');
@@ -213,7 +228,10 @@ Route::post('/teams/upload_image', 'TeamsController@uploadImage');
 //Route::put('/update_brand_website/{id}/{website}', 'BrandController@updateWebsite');
 
 Route::resource('/players','PlayersController');
-Route::get('/playerss_list/{user_id}','PlayersController@list');
+Route::get('/players_list/{user_id}','PlayersController@list');
+
+Route::resource('/pictures','PicturesController');
+Route::get('/pictures_list/{user_id}','PicturesController@list');
 
 //roster players
 Route::resource('/rosters','RosterController');

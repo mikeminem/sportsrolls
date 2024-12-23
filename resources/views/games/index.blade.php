@@ -16,9 +16,9 @@
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
-                        <a role="button" 
-                            class="btn btn-primary" 
-                            href="javascript:void(0);" 
+                        <a role="button"
+                            class="btn btn-primary"
+                            href="javascript:void(0);"
                             id="btnAdd"
                              >
                             <span class="fa fa-plus"></span> {{ __("New")}}
@@ -52,7 +52,7 @@
                                     <select class="form-control" required id="filterJourneys" name="filterJourneys"  >
                                         <option value="">Selecciona un Torneo</option>
                                     </select>
-                                    
+
                                 </div>
                             </div>
 
@@ -64,10 +64,10 @@
                                         <option value="Varonil">Varonil</option>
                                         <option value="Femenil">Femenil</option>
                                         <option value="Mixto">Mixto</option>
-                                    </select>  
+                                    </select>
                                 </div>
                             </div>
-    
+
                             <div class="col-md-3 col-sm-12">
                                 <div class="form-group">
                                     <label for="title"><b>Categorias *</b></label>
@@ -100,13 +100,13 @@
                                     <th>Estadio</th>
                                     <th>Estatus</th>
                                     <th>Id</th>
-                                    
+
                                     <th> - </th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-        
+
                             </tbody>
                         </table>
                     </div>
@@ -123,7 +123,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"> Datos del Juego</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
+                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
             </div>
             <!--mandamos la forma-->
             <form id="updateForm" enctype="multipart/form-data">
@@ -166,7 +166,7 @@
                                     <option value="Semifinal">Semifinal</option>
                                     <option value="Final">Final</option>
                                     <option value="Otro">Otro</option>
-                                </select>  
+                                </select>
                             </div>
                         </div>
 
@@ -193,7 +193,7 @@
                                     <option value="Varonil">Varonil</option>
                                     <option value="Femenil">Femenil</option>
                                     <option value="Mixto">Mixto</option>
-                                </select>  
+                                </select>
                             </div>
                         </div>
 
@@ -202,7 +202,7 @@
                                 <label for="title"><b>Categoria</b></label>
                                 <select class="form-control" id="category_id" name="category_id">
                                     <option value="">Selecciona un torneo</option>
-                                 
+
                                 </select>
                             </div>
                         </div>
@@ -212,7 +212,7 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="game_day"><b>Fecha dej Juego *</b></label>
-                                <input type="date" class="form-control" id="game_day" name="game_day" required maxlength="80"> 
+                                <input type="date" class="form-control" id="game_day" name="game_day" required maxlength="80">
                             </div>
                         </div>
 
@@ -220,14 +220,14 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="game_time"><b>Hora del Juego *</b></label>
-                                <input type="time" class="form-control" id="game_time" name="game_time" required max="80" min="5"> 
+                                <input type="time" class="form-control" id="game_time" name="game_time" required max="80" min="5">
                             </div>
                         </div>
 
                     </div>
 
                     <div class="row">
-                        
+
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="team1_id"><b>Equipo 1 (Casa)</b></label>
@@ -243,7 +243,7 @@
                                 <select class="form-control" required id="team2_id" name="team2_id">
                                     <option value="">Selecciona torneo, rama y cateogria</option>
                                 </select>
-                                
+
                             </div>
                         </div>
 
@@ -262,7 +262,7 @@
                         {{ csrf_field() }}
 
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
+                                <span class="fa fa-save"></span>
                                 {{__('Save')}}
                             </button>
 
@@ -285,7 +285,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"> Capturar Resultado del Juego</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
+                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
             </div>
             <!--mandamos la forma-->
             <form id="scoreForm" enctype="multipart/form-data">
@@ -313,7 +313,7 @@
                         <div class="col-md-12 col-sm-12">
                             <b>Resultado en Penales en caso de aplicar</b>
                         </div>
-        
+
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="score_penalties_team1"><span id="team1scorePenalties" >Equipo 1 </span> (Casa) * </label>
@@ -333,7 +333,7 @@
 
 
                     <div class="row">
-        
+
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="status"><span id="team1score" >Estado del Juego *</span></label>
@@ -355,7 +355,7 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="game_day"><b>Notas</b></label>
-                            
+
                                 <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
                             </div>
                         </div>
@@ -373,7 +373,7 @@
                         {{ csrf_field() }}
 
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
+                                <span class="fa fa-save"></span>
                                 {{__('Save')}}
                             </button>
 
@@ -393,13 +393,13 @@
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Borrar Rregistro</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deleteForm">
@@ -413,7 +413,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -421,10 +421,10 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 <!-- end of the delete modal -->
 
 
@@ -432,15 +432,15 @@
 <div class="modal fade" id="historyModal">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">{{ __('Registry game logs') }}</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
-        <!-- Modal body -->   
-            <div class="modal-body">                
+        <!-- Modal body -->
+            <div class="modal-body">
                 <div class="row mb-1">
                     <div class="col-4 text-center">
                         <h3><span id="team1_name" >Equipo 1</span> (Casa)</h3>
@@ -474,7 +474,7 @@
                                 <div class="col-3 text-left">
                                     <div class="form-group">
                                         <label for="player">Player</label>
-                                        <select class="form-control" id="cboPlayer" name="cboPlayer"> 
+                                        <select class="form-control" id="cboPlayer" name="cboPlayer">
                                             <option value="">{{ __('Select') }}</option>
                                         </select>
                                     </div>
@@ -483,7 +483,7 @@
                                 <div class="col-3 text-left">
                                     <div class="form-group">
                                         <label for="action">Action</label>
-                                        <select class="form-control" id="cboAction" name="cboAction"> 
+                                        <select class="form-control" id="cboAction" name="cboAction">
                                             <option value="">{{ __('Select') }}</option>
                                         </select>
                                     </div>
@@ -495,7 +495,7 @@
 
                             </div>
                             {{ csrf_field() }}
-                                        
+
                         </form>
 
                     </div>
@@ -525,19 +525,19 @@
 
 
             </div>
-            
+
 
             <!-- Modal footer -->
-            <div class="modal-footer">                
+            <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
                     <span class="fa fa-remove"></span> {{__('Close')}}
                 </button>
             </div>
-        
-  
+
+
       </div>
     </div>
-  </div>	
+  </div>
 <!-- end of the delete modal -->
 
 @endsection
@@ -548,9 +548,8 @@
 
             fetch_data();
 
-        function fetch_data(tournament = '') {
+            function fetch_data(tournament = '') {
 
-            
             $('#table').DataTable({
                 order: [[10, 'desc']],
                 "language": {
@@ -582,7 +581,7 @@
                 ajax: {
                     url: '{{ route('games.index') }}',
                     data: { tournament: tournament },
-                }, 
+                },
                 columns: [
                     { data: 'tournament_id', name: 'tournament_id', visible:false},
                     { data: 'journey_id', name: 'journey_id', visible:false},
@@ -611,7 +610,7 @@
 
                     $('#table').DataTable().destroy();
                     fetch_data(tournament);
-                    
+
 
                     if (tournament =="") {
                         $("#filterCategories").empty();
@@ -630,7 +629,7 @@
                 $('#table').DataTable().columns(1).search(this.value).draw();
             });
 
-            
+
             $(document).on("change", "#filterBranchs", function () {
                 //Table.columns(6).search(this.value).draw();
                 $('#table').DataTable().columns(7).search(this.value).draw();
@@ -664,13 +663,13 @@
                 //journey
                 //$('#journey_id').val($('#filterJourneys option:selected').val());
                 // $('#journey').html($('#filterJourneys option:selected').text());
-                
+
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
                 //$("#category_id").html(getCategories("{{ Auth::user()->id}}"));
                 getCategories("category_id",tournament);
 
 
-                jQuery.noConflict(); 
+                jQuery.noConflict();
                 jQuery("#formModal").modal('show');
             });
 
@@ -680,7 +679,7 @@
 
                     if (tournament =="")
                     {
-                        $('#category_id').attr('required', true); 
+                        $('#category_id').attr('required', true);
                         $('#branch').val('');
                         $("#category_id").empty();
                         $("#category_id").html('<option value="">Selecciona un torneo</option>');
@@ -695,32 +694,32 @@
                         getCategories("category_id",tournament);
 
                     }
-                    
+
                 });
             });
 
             //branch
             $(document).on("change", "#branch", function (e) {
                 const branch = $('#branch option:selected').val();
-                $('#category_id').attr('required', true); 
+                $('#category_id').attr('required', true);
 
                 $("#tournament_id option:selected").each(function () {
                     var tournament=$(this).val();
 
                     if (tournament =="") {
-                        $('#category_id').attr('required', true); 
+                        $('#category_id').attr('required', true);
                         $("#team1_id").empty();
                         $("#team1_id").html('<option value="">Selecciona un torneo</option>');
                         $("#team2_id").empty();
                         $("#team2_id").html('<option valu="">Selecciona un torneo</option>');
-                    
+
                     } else {
                         if (branch.length > 0) {
-                        $('#category_id').attr('required', false); 
+                        $('#category_id').attr('required', false);
                             getTeamsByBranch([ "team1_id", 'team2_id'], tournament, branch);
                         }
                     }
-                    
+
                 });
             });
 
@@ -745,7 +744,7 @@
                     //getTeams("team2_id",categoryId);
                     getTeamsByCategoryAndBranch("team1_id", categoryId, branch );
                     getTeamsByCategoryAndBranch("team2_id", categoryId, branch );
-                    
+
                 });
             });
 
@@ -788,8 +787,8 @@
 
                 (penalties === 'Si') ? $('#penalties').show() : $('#penalties').hide();
 
-                jQuery.noConflict(); 
-                jQuery("#scoreModal").modal('show');    
+                jQuery.noConflict();
+                jQuery("#scoreModal").modal('show');
 
             });
 
@@ -810,7 +809,7 @@
                     type: "GET",
                     url: $(this).attr("href"),
                     dataType: "json",
-                    success: function (data) { 
+                    success: function (data) {
                         console.log(data)
                         var tournament_id = data["tournament_id"];
                         var journey_id = data["journey_id"];
@@ -831,7 +830,7 @@
                             $("#" + obj).val(data[obj]);
                         }
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('show');
                     },
                 });
@@ -844,7 +843,7 @@
                 $('#table').DataTable().ajax.reload();
             });
 
-            
+
             $(document).on("submit", "#scoreForm", function (e) {
 
                 e.preventDefault();
@@ -863,22 +862,22 @@
                     cache: false,
                     processData: false,
                     data: new FormData(this),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
-                            
-                            $.notify(data.message + "\n" + errors, data.type, { position:"center" } );                            
+
+                            $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
                             return false;
                         }
 
                         $("#scoreForm").trigger('reset');
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#scoreModal").modal('toggle');
                         // Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
 
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("Hubo un error al intentar capturar el resultado del juego", "error");
@@ -902,26 +901,26 @@
                     cache: false,
                     processData: false,
                     data: new FormData(this),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
                             // var errors = "";
                             // $.each(data.errors, function (i, val) {
                             //     errors = errors  +  val + "\n";
                             // });
-                            
+
                             $.notify(data.message + "\n" + data.errors, data.type, { position:"center" } );
-                            
+
                             return false;
                         }
 
                         $("#updateForm").trigger('reset');
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('toggle');
                         // Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("Hubo un error al intentar agregar el registro", "error");
@@ -944,9 +943,9 @@
                             $.notify(data.message + "\n" + errors, data.type);
                             return false;
                         }
-                        
+
                         $("#deleteForm").trigger('reset');
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deleteModal").modal('toggle');
                         // Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();

@@ -2,8 +2,8 @@
     <dov class="row">
         <div class="col-xs-12">
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('/images/imgLogo.png') }}" 
-                    alt="{{ config('app.name', 'DeporteZacatecas.com') }}" 
+                <img src="{{ asset('/images/imgLogo.png') }}"
+                    alt="{{ config('app.name', 'DeporteZacatecas.com') }}"
                     title="{{ config('app.name', 'DeporteZacatecas.com') }}"
                     class="img-fluid" >
             </a>
@@ -13,10 +13,10 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{  url('/') }}">
-                    <img src="{{ asset('/images/dz_logo.png') }}" 
-                        title="{{ config('app.name', 'Regresar al inicio') }}" 
+                    <img src="{{ asset('/images/dz_logo.png') }}"
+                        title="{{ config('app.name', 'Regresar al inicio') }}"
                         alt="{{ config('app.name', 'Regresar al inicio') }}"
-                        width="160px" 
+                        width="160px"
                     >
                     {{-- class="d-none d-sm-block" --}}
                 </a>
@@ -93,7 +93,7 @@
                                         <a class="dropdown-item" href="{{ url('/stadiums') }}"><i class="fa fa-map-marker"></i>  {{ __('Stadiums') }}</a>
                                         <a class="dropdown-item" href="{{ url('/players') }}"><i class="fa fa-users"></i> {{ __('Players') }}</a>
 
-                                        
+
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ url('/tournaments') }}"><i class="fa fa-trophy"></i> {{ __('Tournaments') }}</a>
                                         <a class="dropdown-item" href="{{ url('/categories') }}"><i class="fa fa-cubes"></i> {{ __('Categories') }}</a>
@@ -106,14 +106,14 @@
                                         <a class="dropdown-item" href="{{ url('/journeys')}}"><i class="fa fa-calendar"></i> {{ __('Journeys') }}</a>
                                         <a class="dropdown-item" href="{{ url('/games')}}"><i class="fa fa-tasks"></i> {{ __('Games') }}</a>
 
-                                        {{-- <div class="dropdown-divider"></div> --}}
-                                        <a class="dropdown-item" href="{{ url('/alerts') }}"><i class="fa fa-warning"></i>  {{ __('Alerts') }}</a>
-                                        
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{ url('/pictures') }}"><i class="fa fa-image"></i>  {{ __('Pictures') }}</a>
+
                                     </div>
                                 </li>
 
                             @endif
-                            
+
 
                             @if (Auth::user()->role == "Admin")
 
@@ -171,7 +171,7 @@
 
                             @endif
 
-                                
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <i class="fa fa-user"></i>  {{ Auth::user()->name }} <span class="caret"></span>
@@ -206,7 +206,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#" title="{{ __('Report a Bug')}}"><i class="fa fa-bug"></i></a>
                             </li>
-                            
+
                         @endguest
                     </ul>
                 </div>
