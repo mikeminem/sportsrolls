@@ -1,13 +1,13 @@
 @if ($game->status == 'Abierto')
     <div class="row">
         <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
-            <b>{{ $game->stadium }} /  {{ $game->category }}</b>
+            <b>{{ $game->stadium }} <br />  {{ $game->category }}</b>
         </div>
     </div>
 @else
 <div class="row">
     <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
-        <b>{{ __('Category') }}: {{ ($game->category) ? $game->category : 'MultiCategory' }} /  
+        <b>{{ __('Category') }}: {{ ($game->category) ? $game->category : 'Multidiv' }} /
         @php
             echo ($game->status == 'Finalizado') ? 'Final' : '';
         @endphp
@@ -30,12 +30,12 @@
             <b class="{{ ($win ==1) ? 'win':'' }}">{{ $game->score_team1}} {{ ($showPenalties == 1 ) ? '(' . $game->score_penalties_team1 . ')' : '' }}</b>
         @else
             @php
-                $gameDay = explode('-', $game->game_day); 
+                $gameDay = explode('-', $game->game_day);
                 //yy-mm-dd
-                echo $gameDay[1] . '/' . $gameDay[2] . '/' . substr($gameDay[0],2,2);                
+                echo $gameDay[1] . '/' . $gameDay[2] . '/' . substr($gameDay[0],2,2);
             @endphp
         @endif
-    </div> 
+    </div>
 </div>
 <div class="row">
     <div class="col-md-8 col-sm-8 col-8 my-auto">
@@ -62,7 +62,7 @@
 
 {{-- <div class="row">
     <div class="col-md-8 col-sm-8 col-8 my-auto">
-        {{ $game->type }} 
+        {{ $game->type }}
     </div>
     <div class="col-md-4 col-sm-4 col-4 text-right my-auto">
         <b>{{ $game->status }}</b>

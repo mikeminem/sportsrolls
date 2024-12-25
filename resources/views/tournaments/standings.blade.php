@@ -24,7 +24,7 @@
                                 @if ($category->show_stats == "Si")
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h3>{{ __('Division') }} {{ $category->name }}</h3>
+                                        <h4>{{ $category->name }}</h4>
 
                                         <div class="table-responsive">
                                             <table class="table table-striped table-standings" id="table">

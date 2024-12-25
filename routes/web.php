@@ -213,6 +213,7 @@ Route::get('/tournament_info/{slug}', 'TournamentsController@frontPage');
 Route::get('/tournament_info/{slug}/results', 'TournamentsController@results');
 Route::get('/tournament_info/{slug}/calendar', 'TournamentsController@calendar');
 Route::get('/tournament_info/{slug}/standings', 'TournamentsController@standings');
+Route::get('/tournament_info/{slug}/photos', 'TournamentsController@photos');
 Route::get('/tournament_info/{slug}/teams', 'TournamentsController@teams');
 Route::get('/tournament_info/{slug}/game/{code}', 'TournamentsController@game');
 

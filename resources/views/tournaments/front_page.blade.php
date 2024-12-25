@@ -30,16 +30,21 @@
                                 <div class="col-md-12">
                                     <div class="row">
                                         @foreach ($game_days as $game_day)
-
                                             @php
-                                                $date = date_create($game_day);
+                                                $day = $game_day;
                                             @endphp
-
-                                            <div class="col-md-12 text-center m-1">
+                                            {{-- <div class="col-md-12 text-center m-1">
                                                 <h4>
-                                                    {{ date_format($date, 'l jS \o\f F Y') }}
+
+                                                    @php
+                                                        $dayName = date('D', strtotime($day));
+                                                        $diassemana = array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+                                                        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+                                                        //echo $diassemana[date('w', strtotime($day))]." ".date('d', strtotime($day))." de ".$meses[date('n', strtotime($day))-1]. " de ".date('Y', strtotime($day)) ;
+                                                    @endphp
                                                 </h4>
-                                            </div>
+                                            </div> --}}
 
                                             @foreach ($stadiums as $stadium)
                                                 @php
@@ -137,13 +142,13 @@
 
         <div class="col-md-4">
             <div class="card mb-2">
-                <div class="card-header bg-dark text-light">{{ __('Tournament Leads')}}</div>
+                <div class="card-header bg-dark text-light">Primeras posiciones</div>
 
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12 m-1">
                             @foreach ($categories as $category )
-                                <h4>{{ __('Category') }} {{ $category->name }}</h4>
+                                <h4>{{ $category->name }}</h4>
                                 <ul class="list-group list-group-flush mb-2">
                                     @php
                                         $place = 1;

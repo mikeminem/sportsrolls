@@ -27,7 +27,7 @@ class TournamentsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['showTournament', 'frontPage', 'results', 'calendar', 'standings', 'teams', 'game']]);
+        $this->middleware('auth', ['except' => ['showTournament', 'frontPage', 'results', 'calendar', 'standings', 'teams', 'game', 'photos']]);
     }
     /**
      * Display a listing of the resource.
@@ -815,6 +815,69 @@ class TournamentsController extends Controller
             'tournament' => $tournament[0],
             'journeys'   => $journeys,
             'categories' => $categories,
+            'games'      => $games,
+            // 'stadiums'   => $stadiums,
+            // 'scores'     => $scores,
+            // 'teams'      => $teams
+        ]);
+    }
+
+    function photos($slug) {
+
+        if (!$slug) {
+            //lets send this to the tournaments list
+            return view ('app.error');
+        }
+
+        //lets get the tournament info
+        $tournament = Tournaments::where('slug', $slug)->get();
+
+        $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
+        $journeys = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','desc')->get();
+        $stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
+
+        $games  = DB::table('games as g')
+        ->select('g.id',
+         't1.name as team1',
+         't1.logo as t1logo',
+         'g.score_team1',
+         'g.score_team2',
+         't2.name as team2',
+         't2.logo as t2logo',
+         'c.name as category',
+         'g.status' , 'g.notes',
+         'g.score_team1',
+         'g.score_team2',
+         'g.game_day',
+         'g.journey_id',
+         'g.game_time',
+         'g.tournament_id',
+         'g.branch',
+         'g.category_id',
+         's.name as stadium',
+         'g.type',
+         'g.score_penalties_team1',
+         'g.score_penalties_team2',
+         'g.code')
+        ->join('teams as t1', 't1.id', '=', 'g.team1_id')
+        ->join('teams as t2', 't2.id', '=', 'g.team2_id')
+        ->leftJoin('categories as c', 'c.id', '=', 'g.category_id')
+        ->join('journeys as j', 'j.id', '=', 'g.journey_id')
+        ->leftJoin('stadiums as s', 's.id', '=', 'g.stadium_id')
+        ->where('g.is_deleted', 0)
+        ->where('j.is_deleted', 0)
+        ->where('j.show_public', "Si")
+        // ->where('g.status', 'Finalizado')
+        ->where('g.tournament_id', $tournament[0]->id )
+        ->orderBy('g.game_day', 'asc')
+        ->orderBy('g.game_time', 'asc')
+        ->get();
+
+
+        return view ('tournaments.photos', [
+            'tournament' => $tournament[0],
+            'journeys'   => $journeys,
+            //'categories' => $categories,
             'games'      => $games,
             // 'stadiums'   => $stadiums,
             // 'scores'     => $scores,
