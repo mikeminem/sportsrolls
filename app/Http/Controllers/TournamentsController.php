@@ -8,8 +8,9 @@ use App\Tournaments;
 use App\Teams;
 use App\Games;
 use App\Roster;
-use Illuminate\Http\Request;
+use App\Pictures;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -717,7 +718,7 @@ class TournamentsController extends Controller
             ->where('status','Abierto')
             ->where('start_at','<=', date('Y-m-d 00:00'))
             ->where('finish_at','>', date('Y-m-d 23:59') )
-            ->orderBy('id','desc')
+            ->orderBy('id','asc')
             ->get();
 
         //$stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
@@ -770,7 +771,7 @@ class TournamentsController extends Controller
         $tournament = Tournaments::where('slug', $slug)->get();
 
         $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
-        $journeys = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','desc')->get();
+        $journeys = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','asc')->get();
         $stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
 
         $games  = DB::table('games as g')
@@ -833,8 +834,9 @@ class TournamentsController extends Controller
         $tournament = Tournaments::where('slug', $slug)->get();
 
         $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
-        $journeys = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','desc')->get();
-        $stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
+        $journeys   = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','desc')->get();
+        $stadiums   = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
+        $pictures   = Pictures::where('tournament_id', $tournament[0]->id)->get();
 
         $games  = DB::table('games as g')
         ->select('g.id',
@@ -875,10 +877,10 @@ class TournamentsController extends Controller
 
 
         return view ('tournaments.photos', [
-            'tournament' => $tournament[0],
-            'journeys'   => $journeys,
-            //'categories' => $categories,
-            'games'      => $games,
+            'tournament'    => $tournament[0],
+            'journeys'      => $journeys,
+            'games'         => $games,
+            'pictures'      => $pictures,
             // 'stadiums'   => $stadiums,
             // 'scores'     => $scores,
             // 'teams'      => $teams

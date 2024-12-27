@@ -7,9 +7,10 @@
 @else
 <div class="row">
     <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
-        <b>{{ __('Category') }}: {{ ($game->category) ? $game->category : 'Multidiv' }} /
+        <b>{{ ($game->category) ? $game->category : 'Multidiv' }} <br>
+            {{ $game->status }}
         @php
-            echo ($game->status == 'Finalizado') ? 'Final' : '';
+            //echo ($game->status == 'Finalizado') ? 'Terminado' : '';
         @endphp
         </b>
     </div>
@@ -31,8 +32,11 @@
         @else
             @php
                 $gameDay = explode('-', $game->game_day);
-                //yy-mm-dd
-                echo $gameDay[1] . '/' . $gameDay[2] . '/' . substr($gameDay[0],2,2);
+                //yy-mm-dd <-original
+                //mm-dd-yy
+                //dd-mm-yy
+                //echo $gameDay[1] . '/' . $gameDay[2] . '/' . substr($gameDay[0],2,2);
+                echo $gameDay[2] . '/' . $gameDay[1] . '/' . substr($gameDay[0],2,2);
             @endphp
         @endif
     </div>
@@ -54,7 +58,7 @@
         @else
             @php
                 $gameTime = explode(':', $game->game_time);
-                echo $gameTime[0] . ':' . $gameTime[1];
+                echo $gameTime[0] . ':' . $gameTime[1] . ' HRS';
             @endphp
         @endif
     </div>

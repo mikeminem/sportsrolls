@@ -340,6 +340,7 @@
                                 <select name="status" id="status" class="form-control" required>
                                     <option value="">Selecciona</option>
                                     <option value="Finalizado">Finalizado</option>
+                                    <option value="En Curso">En Curso</option>
                                     <option value="Cancelado">Cancelado</option>
                                     <option value="Suspendido">Suspendido</option>
                                     <option value="Protestado">Protestado</option>
