@@ -61,7 +61,8 @@ class GamesController extends Controller
                         'g.score_penalties_team1',
                         'g.score_penalties_team2',
                         't.enable_penalties_scoring',
-                        'g.access_code'
+                        'g.access_code',
+                        'g.period'
                     )
                     ->join('teams as t1', 't1.id', '=', 'g.team1_id')
                     ->join('teams as t2', 't2.id', '=', 'g.team2_id')
@@ -199,6 +200,7 @@ class GamesController extends Controller
                             data-id="' . $row->id . '"
                             data-notes="' . $row->notes . '"
                             data-status="' . $row->status . '"
+                            data-period="' . $row->period . '"
                             data-team1="' . $row->team1 . '"
                             data-team2="' . $row->team2 . '"
                             data-score_team1="' . $row->score_team1 . '"
@@ -251,6 +253,7 @@ class GamesController extends Controller
             'game_time'         => 'required',
             'team1_id'          => 'required',
             'team2_id'          => 'required',
+            'period'            => 'required',
         ];
 
         $attributes = [
@@ -262,6 +265,7 @@ class GamesController extends Controller
             'game_time'         => 'Hora del juego',
             'team1_id'          => 'Equipo 1 (Visitante)',
             'team2_id'          => 'Equipo 2 (Casa)',
+            'period'            => 'Periodo / Tiempo',
         ];
 
         //Validate the data

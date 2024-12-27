@@ -485,7 +485,9 @@ class TournamentsController extends Controller
             'g.type',
             'g.score_penalties_team1',
             'g.score_penalties_team2',
-            'g.code')
+            'g.code',
+            'g.period'
+            )
             ->join('teams as t1', 't1.id', '=', 'g.team1_id')
             ->join('teams as t2', 't2.id', '=', 'g.team2_id')
             ->leftJoin('categories as c', 'c.id', '=', 'g.category_id')

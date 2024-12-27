@@ -1,14 +1,19 @@
 @if ($game->status == 'Abierto')
     <div class="row">
         <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
-            <b>{{ $game->stadium }} <br />  {{ $game->category }}</b>
+            <b>{{ $game->stadium }} <br />
+                {{ $game->category }}</b>
         </div>
     </div>
 @else
 <div class="row">
     <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
         <b>{{ ($game->category) ? $game->category : 'Multidiv' }} <br>
-            {{ $game->status }}
+            {{ $game->status }} /
+            @if ($game->status != 'Finalizado')
+                {{ $game->period }}
+            @endif
+
         @php
             //echo ($game->status == 'Finalizado') ? 'Terminado' : '';
         @endphp

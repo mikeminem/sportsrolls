@@ -349,6 +349,20 @@
                             </div>
                         </div>
 
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="period"><span id="team1score" >Tiempo / periodo *</span></label>
+                                <select name="period" id="period" class="form-control" required>
+                                    <option value="">Selecciona</option>
+                                    <option value="1er Tiempo">1er Tiempo</option>
+                                    <option value="2do Tiempo">2do Tiempo</option>
+                                    <option value="3er Tiempo">3er Tiempo</option>
+                                    <option value="4to Tiempo">4to Tiempo</option>
+
+                                </select>
+                            </div>
+                        </div>
+
 
                     </div>
 
@@ -760,6 +774,7 @@
                 $("#idscore").val($(this).attr("data-id"));
                 $("#notes").val($(this).attr("data-notes"));
                 $("#status").val($(this).attr("data-status"));
+                $("#period").val($(this).attr("data-period"));
 
                 $("#team1score").html($(this).attr("data-team1"));
                 $("#team2score").html($(this).attr("data-team2"));
@@ -783,8 +798,6 @@
                     $("#score_penalties_team1").attr("required", "false");
                     $("#score_penalties_team2").attr("required", "false");
                 }
-
-
 
                 (penalties === 'Si') ? $('#penalties').show() : $('#penalties').hide();
 

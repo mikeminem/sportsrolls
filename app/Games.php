@@ -8,17 +8,17 @@ class Games extends Model
 {
     //
     protected $fillable = [
-        'game_day', 
-        'game_time', 
-        'notes', 
-        'status', 
-        'type', 
-        'branch', 
-        'score_team1', 
-        'score_team2', 
-        'user_id', 
-        'tournament_id', 
-        'category_id',  
+        'game_day',
+        'game_time',
+        'notes',
+        'status',
+        'type',
+        'branch',
+        'score_team1',
+        'score_team2',
+        'user_id',
+        'tournament_id',
+        'category_id',
         'journey_id',
         'stadium_id',
         'team1_id',
@@ -27,7 +27,8 @@ class Games extends Model
         'score_penalties_team1',
         'score_penalties_team2',
         'code',
-        'access_code'
+        'access_code',
+        'period'
     ];
 
     public function tournament() {
