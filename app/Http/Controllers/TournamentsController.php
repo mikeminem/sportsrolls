@@ -838,7 +838,7 @@ class TournamentsController extends Controller
         $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
         $journeys   = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','desc')->get();
         $stadiums   = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
-        $pictures   = Pictures::where('tournament_id', $tournament[0]->id)->get();
+        $pictures   = Pictures::where('tournament_id', $tournament[0]->id)->orderBy('id','desc')->get();
 
         $games  = DB::table('games as g')
         ->select('g.id',

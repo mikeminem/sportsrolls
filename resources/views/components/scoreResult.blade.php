@@ -2,16 +2,19 @@
     <div class="row">
         <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
             <b>{{ $game->stadium }} <br />
-                {{ $game->category }}</b>
+                {{ $game->category }} </br>
+                {{ Str::upper($game->type ) }}
+            </b>
         </div>
     </div>
 @else
 <div class="row">
     <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
-        <b>{{ ($game->category) ? $game->category : 'Multidiv' }} <br>
-            {{ $game->status }} /
+        <b>{{ ($game->category) ? $game->category : 'Cruce de grupos' }} <br>
+            {{ Str::upper($game->type ) }}<br >
+            {{ $game->status }}
             @if ($game->status != 'Finalizado')
-                {{ $game->period }}
+                /  {{ $game->period }}
             @endif
 
         @php

@@ -253,7 +253,7 @@ class GamesController extends Controller
             'game_time'         => 'required',
             'team1_id'          => 'required',
             'team2_id'          => 'required',
-            'period'            => 'required',
+            //'period'            => 'required',
         ];
 
         $attributes = [
@@ -265,7 +265,7 @@ class GamesController extends Controller
             'game_time'         => 'Hora del juego',
             'team1_id'          => 'Equipo 1 (Visitante)',
             'team2_id'          => 'Equipo 2 (Casa)',
-            'period'            => 'Periodo / Tiempo',
+            //'period'            => 'Periodo / Tiempo',
         ];
 
         //Validate the data
