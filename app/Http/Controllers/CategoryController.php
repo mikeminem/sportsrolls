@@ -31,7 +31,7 @@ class CategoryController extends Controller
                 $rows = DB::table('categories as c')
                     ->join('sports as s', 's.id', '=', 'c.sport_id')
                     ->join('tournaments as t', 't.id', '=', 'c.tournament_id')
-                    ->select('c.id', 'c.sport_id', 'c.name', 'c.overview', 's.name as nameSport', 'c.show_stats', 't.id as tournament')
+                    ->select('c.id', 'c.sport_id', 'c.name', 'c.overview', 's.name as nameSport', 'c.show_stats', 't.id as tournament', 'c.has_groups')
                     ->where('c.is_deleted', 0)
                     ->where('c.user_id',Auth::user()->id)
                     ->where('t.id', $request->tournament)
@@ -142,7 +142,14 @@ class CategoryController extends Controller
     {
         //
         if ($id) {
-            $category = Category::select('id', 'sport_id', 'name', 'age_initial', 'age_final', 'overview', 'tournament_id')->find($id);
+            $category = Category::select('id',
+            'sport_id',
+            'name',
+            'age_initial',
+            'age_final',
+            'overview',
+            'tournament_id',
+            'has_groups')->find($id);
             return $category;
         }
         return false;
@@ -172,10 +179,14 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function list ($tournament_id) {
+    public function list ($tournament_id, $has_groups) {
 
         if ($tournament_id) {
-            $list = Category::where('tournament_id',$tournament_id)->where('is_deleted',0)->get();
+            $list = Category::where('tournament_id',$tournament_id)
+                ->where('is_deleted',0)
+                ->where('has_groups',$has_groups)
+                ->get();
+
             return (string) $list;
         }
 

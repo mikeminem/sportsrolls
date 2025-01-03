@@ -8,6 +8,9 @@ class Groups extends Model
 {
     //
     protected $fillable = [
-        'name', 'notes', 'tournament_id'
+        'name',
+        'notes',
+        'tournament_id',
+        'category_id'
     ];
 }

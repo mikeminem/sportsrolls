@@ -16,9 +16,9 @@
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
-                        <a role="button" 
-                            class="btn btn-primary" 
-                            href="javascript:void(0);" 
+                        <a role="button"
+                            class="btn btn-primary"
+                            href="javascript:void(0);"
                             id="AddCategory"
                              >
                             <span class="fa fa-plus"></span> {{ __("New")}}
@@ -53,13 +53,14 @@
                                     <th>Torneo</th>
                                     <th>Deporte</th>
                                     <th>Nombre</th>
-                                    <th>Mostrar Tabla de Pos</th>
+                                    <th>Mostrar Tabla</th>
+                                    <th>Dividir en Grupos</th>
                                     <th> - </th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-        
+
                             </tbody>
                         </table>
                     </div>
@@ -76,7 +77,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"> Datos de la Categoría</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
+                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
             </div>
             <!--mandamos la forma-->
             <form id="updateForm" enctype="multipart/form-data">
@@ -104,19 +105,29 @@
                         </div>
 
 
-                        <div class="col-md-8 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>Nombre *</b></label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="80"> 
+                                <input type="text" class="form-control" id="name" name="name" required maxlength="80">
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <div class="form-group">
-                                <label for="show_stats"><b>Mostrar tabla de posiciones *</b></label>
+                                <label for="show_stats"><b>Mostrar tabla *</b></label>
                                 <select id="show_stats" name="show_stats" class="form-control" required>
-                                    <option value="Si">Si</option>
+                                    <option value="Si" >Si</option>
                                     <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="has_groups"><b>Dividir en grupos *</b></label>
+                                <select id="has_groups" name="has_groups" class="form-control" required>
+                                    <option value="Si">Si</option>
+                                    <option value="No" >No</option>
                                 </select>
                             </div>
                         </div>
@@ -124,7 +135,7 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="overview"><b>Descripción</b></label>
-                                <input type="text" class="form-control" id="overview" name="overview" maxlength="100"> 
+                                <input type="text" class="form-control" id="overview" name="overview" maxlength="100">
                             </div>
                         </div>
 
@@ -143,7 +154,7 @@
                         {{ csrf_field() }}
 
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
+                                <span class="fa fa-save"></span>
                                 {{__('Save')}}
                             </button>
 
@@ -163,13 +174,13 @@
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Borrar Rregistro</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deleteForm">
@@ -183,7 +194,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -191,10 +202,10 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 @endsection
 
 @section('js')
@@ -204,7 +215,7 @@
             fetch_data();
 
             function fetch_data(tournament = '') {
-            
+
                 $('#table').DataTable({
                     "language": {
                         "sProcessing":    "Procesando...",
@@ -241,6 +252,7 @@
                         { data: 'sport_id', name: 'sport_id'},
                         { data: 'name', name: 'name'},
                         { data: 'show_stats', name: 'show_stats'},
+                        { data: 'has_groups', name: 'has_groups'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ]
                 });
@@ -255,16 +267,16 @@
             $(document).on("click", "#AddCategory", function () {
                 $("#updateForm").trigger('reset');
                 $("#id").val("");
-                
+
                 let tournament = $('#filterTournaments').val();
-                if (tournament !="") { 
+                if (tournament !="") {
                     $('#tournament_id').val(tournament);
                 }
 
                 $("#sport").val("{{ Auth::user()->league->sport->name}}");
                 $("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
-                jQuery.noConflict(); 
+                jQuery.noConflict();
                 jQuery("#formModal").modal('show');
             });
 
@@ -284,7 +296,7 @@
                     type: "GET",
                     url: $(this).attr("href"),
                     dataType: "json",
-                    success: function (data) { 
+                    success: function (data) {
                         console.log(data)
 
                         for(obj in data) {
@@ -293,7 +305,7 @@
                         $("#sport").val("{{ Auth::user()->league->sport->name}}");
                         //$("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('show');
                     },
                 });
@@ -318,30 +330,30 @@
                     cache: false,
                     processData: false,
                     data: new FormData(this),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
                             var errors = "";
                             $.each(data.errors, function (i, val) {
                                 errors = errors  +  val + "\n";
                             });
-                            
+
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
                             $.notify('hello !!', {
                                 style: 'happyblue'
                             });
-                            
+
                             return false;
                         }
 
                         $("#updateForm").trigger('reset');
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
 
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("Hubo un error al intentar agregar el registro", "error");
@@ -364,10 +376,10 @@
                             $.notify(data.message + "\n" + errors, data.type);
                             return false;
                         }
-                        
+
                         $("#deleteForm").trigger('reset');
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deleteModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();

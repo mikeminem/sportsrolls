@@ -824,7 +824,7 @@
                     url: $(this).attr("href"),
                     dataType: "json",
                     success: function (data) {
-                        console.log(data)
+
                         var tournament_id = data["tournament_id"];
                         var journey_id = data["journey_id"];
                         var category_id = data["category_id"];

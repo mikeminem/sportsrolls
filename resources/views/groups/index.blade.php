@@ -16,9 +16,9 @@
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
-                        <a role="button" 
-                            class="btn btn-primary" 
-                            href="javascript:void(0);" 
+                        <a role="button"
+                            class="btn btn-primary"
+                            href="javascript:void(0);"
                             id="addRow">
 
                             <span class="fa fa-plus"></span> {{ __("New")}}
@@ -33,18 +33,30 @@
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
                     </a>
                     <hr />
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="filterTournaments"><b>Torneos Activos</b></label>
-                                <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
-                                    <option value="">Selecciona...</option>
-                                    @foreach($tournaments as $tournament)
-                                        <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
-                                    @endforeach
-                                </select>
-                                
+                        <div class="row">
+                            <div class="col-md-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="filterTournaments"><b>Torneos Activos</b></label>
+                                    <select class="form-control" required id="filterTournaments" name="filterTournaments"  >
+                                        <option value="">Selecciona...</option>
+                                        @foreach($tournaments as $tournament)
+                                            <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-12">
+                                <div class="form-group">
+                                    <label for="title"><b>Categorías</b></label>
+                                    <select class="form-control" required id="filterCategories" name="filterCategories">
+                                        <option value="">Selecciona un torneo</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
+
                     <hr />
 
                     <div class="table-responsive">
@@ -52,14 +64,15 @@
                             <thead>
                                 <tr>
                                     <th>Torneo</th>
+                                    <th>Categoría</th>
                                     <th>Nombre</th>
                                     <th>Notas</th>
                                     <th> - </th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-        
+
                             </tbody>
                         </table>
                     </div>
@@ -76,7 +89,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"> Datos del Grupo</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
+                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
             </div>
             <!--mandamos la forma-->
             <form id="updateForm" enctype="multipart/form-data">
@@ -95,10 +108,20 @@
                             </div>
                         </div>
 
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="category_id"><b>Categoría *</b></label>
+                                <select class="form-control" required id="category_id" name="category_id">
+                                    <option value="">Selecciona un torneo</option>
+
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>Nombre *</b></label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="60"> 
+                                <input type="text" class="form-control" id="name" name="name" required maxlength="60">
                             </div>
                         </div>
 
@@ -106,7 +129,7 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="notes"><b>Detalle</b></label>
-                                <input type="text" class="form-control" id="notes" name="notes" maxlength="100"> 
+                                <input type="text" class="form-control" id="notes" name="notes" maxlength="100">
                             </div>
                         </div>
 
@@ -125,7 +148,7 @@
                         {{ csrf_field() }}
 
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
+                                <span class="fa fa-save"></span>
                                 {{__('Save')}}
                             </button>
 
@@ -145,13 +168,13 @@
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Borrar Rregistro</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deleteForm">
@@ -165,7 +188,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -173,16 +196,16 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 @endsection
 
 @section('js')
 <script type="text/javascript">
         jQuery(document).ready(function($){
-            
+
             fetch_data();
 
             function fetch_data(tournament = '') {
@@ -217,9 +240,10 @@
                     ajax: {
                         url: '{{ route('groups.index') }}',
                         data: { tournament: tournament }
-                    }, 
+                    },
                     columns: [
                         { data: 'tournament', name: 'tournament',  visible:false},
+                        { data: 'category', name: 'category',  visible:false},
                         { data: 'name', name: 'name'},
                         { data: 'notes', name: 'notes'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
@@ -231,14 +255,50 @@
                 var tournament = $('#filterTournaments').val();
                 $('#table').DataTable().destroy();
                 fetch_data(tournament);
+
+                if (tournament =="") {
+                        $("#filterCategories").empty();
+                        $("#filterCategories").html('<option value="">Selecciona un torneo</option>');
+                    } else {
+                        getCategories("filterCategories",tournament, "si");
+                    }
+            });
+
+            $(document).on("change", "#filterCategories", function () {
+                //Table.columns(7).search(this.value).draw();
+                $('#table').DataTable().columns(1).search(this.value).draw();
+
+            });
+
+            $(document).on("change", "#tournament_id", function () {
+                var tournament = $('#tournament_id').val();
+
+                if (tournament =="") {
+                        $("#category_id").empty();
+                        $("#category_id").html('<option value="">Selecciona un torneo</option>');
+                    } else {
+                        getCategories("category_id",tournament, "si");
+                    }
             });
 
             $(document).on("click", "#addRow", function () {
 
                 $("#updateForm").trigger('reset');
-                $("#id").val("");
 
-                jQuery.noConflict(); 
+                $("#id").val("");
+                let tournament = $('#filterTournaments').val();
+                if (tournament != "") {
+                    $('#tournament_id').val(tournament);
+                }
+
+                //category
+                let category = $('#filterCategories option:selected').val();
+                if (category != "") {
+                    console.log('we are in')
+                    getCategories("category_id", tournament, 'si', category);
+                }
+
+                jQuery.noConflict();
                 jQuery("#formModal").modal('show');
             });
 
@@ -258,8 +318,14 @@
                     type: "GET",
                     url: $(this).attr("href"),
                     dataType: "json",
-                    success: function (data) { 
-                        console.log(data)
+                    success: function (data) {
+                        console.log(data);
+
+                        var tournament_id = data["tournament_id"];
+                        var category_id = data["category_id"];
+
+                        getCategories("category_id", tournament_id,'si', category_id);
+                        //getCategories("category_id", tournament_id, 'si');
 
                         for(obj in data) {
                             $("#" + obj).val(data[obj]);
@@ -267,7 +333,7 @@
                         $("#sport").val("{{ Auth::user()->league->sport->name}}");
                         //$("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('show');
                     },
                 });
@@ -291,30 +357,30 @@
                     cache: false,
                     processData: false,
                     data: new FormData(this),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
                             var errors = "";
                             $.each(data.errors, function (i, val) {
                                 errors = errors  +  val + "\n";
                             });
-                            
+
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
                             $.notify('hello !!', {
                                 style: 'happyblue'
                             });
-                            
+
                             return false;
                         }
 
                         $("#updateForm").trigger('reset');
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('toggle');
                         // Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
 
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("Hubo un error al intentar agregar el registro", "error");
@@ -337,10 +403,10 @@
                             $.notify(data.message + "\n" + errors, data.type);
                             return false;
                         }
-                        
+
                         $("#deleteForm").trigger('reset');
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deleteModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();

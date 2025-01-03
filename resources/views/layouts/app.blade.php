@@ -340,13 +340,13 @@
     });
 
 
-        function getCategories(component, tournament_id, selected="") {
-            var options = "";
+        function getCategories(component, tournament_id, has_groups="no", selected="") {
+            let options = "";
 
             if (tournament_id) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('categories_list') }}/" + tournament_id,
+                    url: "{{ url('categories_list') }}/" + tournament_id + "/" + has_groups,
                     dataType: "json",
                     success: function (data) {
                         options = '<option value="">{{ __("Selecciona...") }}</option>';
