@@ -258,9 +258,13 @@
 
                 if (tournament =="") {
                         $("#filterCategories").empty();
-                        $("#filterCategories").html('<option value="">Selecciona un torneo</option>');
+                        $("#filterCategories").html('<option value="">Selecciona un torneo...</option>');
+
+                        $("#category_id").empty();
+                        $("#category_id").html('<option value="">Selecciona un torneo...</option>');
                     } else {
-                        getCategories("filterCategories",tournament, "si");
+                        getCategories("filterCategories",tournament,"",1);
+                        getCategories("category_id",tournament,"",1);
                     }
             });
 
@@ -277,7 +281,7 @@
                         $("#category_id").empty();
                         $("#category_id").html('<option value="">Selecciona un torneo</option>');
                     } else {
-                        getCategories("category_id",tournament, "si");
+                        getCategories("category_id",tournament,"",1 );
                     }
             });
 
@@ -294,8 +298,8 @@
                 //category
                 let category = $('#filterCategories option:selected').val();
                 if (category != "") {
-                    console.log('we are in')
-                    getCategories("category_id", tournament, 'si', category);
+                    console.log('we are in', category)
+                    getCategories("category_id", tournament, category, 1);
                 }
 
                 jQuery.noConflict();
@@ -324,7 +328,7 @@
                         var tournament_id = data["tournament_id"];
                         var category_id = data["category_id"];
 
-                        getCategories("category_id", tournament_id,'si', category_id);
+                        getCategories("category_id", tournament_id, category_id);
                         //getCategories("category_id", tournament_id, 'si');
 
                         for(obj in data) {

@@ -54,7 +54,7 @@ Route::resource('/sports','SportController');
 
 //categories options
 Route::resource('/categories','CategoryController');
-Route::get('/categories_list/{tournament_id}/{has_groups}','CategoryController@list');
+Route::get('/categories_list/{tournament_id}','CategoryController@list');
 
 //groups options
 Route::resource('/groups','GroupsController');

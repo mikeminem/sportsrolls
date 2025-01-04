@@ -143,13 +143,14 @@ class CategoryController extends Controller
         //
         if ($id) {
             $category = Category::select('id',
-            'sport_id',
-            'name',
-            'age_initial',
-            'age_final',
-            'overview',
-            'tournament_id',
-            'has_groups')->find($id);
+                'sport_id',
+                'name',
+                'age_initial',
+                'age_final',
+                'overview',
+                'tournament_id',
+                'has_groups')
+            ->find($id);
             return $category;
         }
         return false;
@@ -179,12 +180,12 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function list ($tournament_id, $has_groups) {
+    public function list ($tournament_id) {
 
         if ($tournament_id) {
             $list = Category::where('tournament_id',$tournament_id)
                 ->where('is_deleted',0)
-                ->where('has_groups',$has_groups)
+                //->where('has_groups',$has_groups)
                 ->get();
 
             return (string) $list;

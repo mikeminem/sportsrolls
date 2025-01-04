@@ -197,10 +197,20 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>Categoria</b></label>
+                                <label for="category_id"><b>Categoría *</b></label>
                                 <select class="form-control" id="category_id" name="category_id">
+                                    <option value="">Selecciona un torneo</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="group_id"><b>Grupo</b></label>
+                                <select class="form-control" id="group_id" name="group_id">
                                     <option value="">Selecciona un torneo</option>
 
                                 </select>
@@ -211,7 +221,7 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="game_day"><b>Fecha dej Juego *</b></label>
+                                <label for="game_day"><b>Fecha del Juego *</b></label>
                                 <input type="date" class="form-control" id="game_day" name="game_day" required maxlength="80">
                             </div>
                         </div>

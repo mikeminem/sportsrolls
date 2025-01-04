@@ -340,24 +340,32 @@
     });
 
 
-        function getCategories(component, tournament_id, has_groups="no", selected="") {
+        function getCategories(component, tournament_id, selected="", groups = 0) {
             let options = "";
 
             if (tournament_id) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('categories_list') }}/" + tournament_id + "/" + has_groups,
+                    url: "{{ url('categories_list') }}/" + tournament_id,
                     dataType: "json",
                     success: function (data) {
                         options = '<option value="">{{ __("Selecciona...") }}</option>';
-                        var categories = -1
+                        let categories = -1
                         for(obj in data) {
+
+                            let has_groups = data[obj]['has_groups'];
+
+                            if (groups ==1 && has_groups == 'No') {
+                                continue
+                            }
+
                             if ( selected == data[obj]['id'] ) {
                                 options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';
                             } else {
                                 options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';
                             }
                             categories++;
+
                         }
 
                         if (categories <0) {
@@ -381,7 +389,7 @@
                     url: "{{ url('journaments_list') }}/" + tournament,
                     dataType: "json",
                     success: function (data) {
-                        options += '<option value="">{{ __("Select...") }}</option>';
+                        options += '<option value="">{{ __("Selecciona...") }}</option>';
                         var journaments = -1
                         for(obj in data) {
                             if ( selected == data[obj]['id'] ) {
@@ -441,7 +449,7 @@
                     url: "{{ url('getTeamsbyCategoryAndBranch') }}/" + categoriId + '/' + branch,
                     dataType: "json",
                     success: function (data) {
-                        options += '<option value="">{{ __("Select...") }}</option>';
+                        options += '<option value="">{{ __("Selecciona...") }}</option>';
                         var journaments = -1
                         for(obj in data) {
                             if ( selected == data[obj]['id'] ) {
@@ -471,7 +479,7 @@
                     url: "{{ url('teams_list_by_branch') }}/" + tournament + '/' + branch,
                     dataType: "json",
                     success: function (data) {
-                        options += '<option value="">{{ __("Select...") }}</option>';
+                        options += '<option value="">{{ __("Selecciona...") }}</option>';
                         var journaments = -1
                         for(obj in data) {
                             if ( selected == data[obj]['id'] ) {
@@ -503,7 +511,7 @@
                     url: "{{ url('get_groups') }}/" + tournament,
                     dataType: "json",
                     success: function (data) {
-                        options += '<option value="">{{ __("Select...") }}</option>';
+                        options += '<option value="">{{ __("Selecciona...") }}</option>';
                         var journaments = -1
                         for(obj in data) {
                             if ( selected == data[obj]['id'] ) {
