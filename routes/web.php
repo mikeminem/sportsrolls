@@ -58,7 +58,7 @@ Route::get('/categories_list/{tournament_id}','CategoryController@list');
 
 //groups options
 Route::resource('/groups','GroupsController');
-Route::get('/get_groups/{tournament_id}','GroupsController@getGroups');
+Route::get('/get_groups/{category_id}','GroupsController@getGroups');
 
 
 //profiles options

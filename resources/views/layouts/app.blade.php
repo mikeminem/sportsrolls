@@ -502,33 +502,34 @@
         }
 
         //getGroups
-        function getGroups(components, tournament, selected="") {
+        function getGroups(components, category, selected="") {
             var options = "";
 
-            if (tournament) {
+            if (category) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('get_groups') }}/" + tournament,
+                    url: "{{ url('get_groups') }}/" + category,
                     dataType: "json",
                     success: function (data) {
                         options += '<option value="">{{ __("Selecciona...") }}</option>';
-                        var journaments = -1
+                        let groupsNum = -1
                         for(obj in data) {
                             if ( selected == data[obj]['id'] ) {
                                 options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';
                             } else {
                                 options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';
                             }
-                            journaments++;
+                            groupsNum++;
                         }
 
-                        // if (journaments <0) {
-                        //     $.notify("No hay Grupos en este torneo, selecciona otro o agrega equipos al torneo", "error");
-                        // }
+                        if (groupsNum <0) {
+                            $.notify("No hay Grupos en esta Categoría", "error");
+                        }
+
                         components.forEach( function(component) {
                             $("#" + component).html(options);
                         })
-                    },
+                    }
                 });
             }
         }

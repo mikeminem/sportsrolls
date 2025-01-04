@@ -202,9 +202,9 @@ class GroupsController extends Controller
         ]);
     }
 
-    public function getGroups(int $tournament_id) {
-        if ($tournament_id) {
-            $list = Groups::where('tournament_id',$tournament_id)
+    public function getGroups(int $category_id) {
+        if ($category_id) {
+            $list = Groups::where('category_id',$category_id)
                 ->where('is_deleted',0)
                 ->get();
             return (string) $list;
