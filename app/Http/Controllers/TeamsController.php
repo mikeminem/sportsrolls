@@ -39,15 +39,17 @@ class TeamsController extends Controller
             if ( $request->tournament ) {
                 $rows = DB::table('teams as t')
                         ->join('categories as c', 'c.id', '=', 't.category_id')
-                        ->leftjoin('groups as g', 'g.id', '=', 't.group_id')
+                        ->leftJoin('groups as g', 'g.id', '=', 't.group_id')
                         ->select('t.id','t.logo', 't.name', 't.photo', 't.description', 't.branch','t.user_id','t.tournament_id','t.sport_id', 't.is_deleted',
                             't.clicks', 't.prints', 't.category_id', 'c.name as category', 't.contact', 't.contact_phone', 't.status', 't.group_id',
                             'g.name as group', 't.photo', 't.logo' )
                         ->where('t.is_deleted', 0)
+                       // ->where('g.is_deleted', 0)
                         ->where('t.user_id',Auth::user()->id)
                         ->where('t.tournament_id', $request->tournament)
                         ->orderBy('t.id', 'desc')
                         ->get();
+
             }
 
             return DataTables::of($rows)
@@ -96,12 +98,16 @@ class TeamsController extends Controller
                         //<a href="javascript:void(0)" data-toggle="tooltip" title="¡Agregar foto!" id="btnPicture" data-id="'.$row->id.'" data-name="'.$row->name.'">
                         //<span class="fa fa-image tool"></span> </a>
 
+                        //<a href="javascript:void(0)" data-id="'.$row->id .'" data-toggle="tooltip" title="Administrar Jugadorees!" id="btnPlayers"><span class="fa fa-users tool"></span></a>
+
                             $links = '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
                                             <span class="fa fa-edit tool"></span>
                                         </a>
-                                        <a href="javascript:void(0)" data-id="'.$row->id .'" data-toggle="tooltip" title="Administrar Jugadorees!" id="btnPlayers">
-                                            <span class="fa fa-users tool"></span>
+
+                                        <a href="javascript:void(0)" data-id="'.$row->id .'" data-toggle="tooltip" title="Listado de Juegos Ganados / Perdidos!" id="btnGames">
+                                            <span class="fa fa-list tool"></span>
                                         </a>
+
                                         <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete">
                                             <span class="fa fa-trash tool"></span>
                                         </a>';
@@ -283,6 +289,19 @@ class TeamsController extends Controller
         if ($branch) {
             $list = Teams::where('branch',$branch)
                 ->where('tournament_id', $tournament)
+                ->where('status','Activo')
+                ->where('is_deleted',0)
+                ->orderby('name')->get(['id','name']);
+            return (string) $list;
+        }
+        return (string) false;
+    }
+
+    public function listByGroup($group_id) {
+
+        if ($group_id) {
+            $list = Teams::where('group_id',$group_id)
+                //->where('tournament_id', $tournament)
                 ->where('status','Activo')
                 ->where('is_deleted',0)
                 ->orderby('name')->get(['id','name']);

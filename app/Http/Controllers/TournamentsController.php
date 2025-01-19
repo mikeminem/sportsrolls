@@ -7,6 +7,7 @@ use App\Journeys;
 use App\Tournaments;
 use App\Teams;
 use App\Games;
+use App\Groups;
 use App\Roster;
 use App\Pictures;
 
@@ -385,7 +386,10 @@ class TournamentsController extends Controller
         // }
 
         //handle scores for multicategories
-        $query = "SELECT t.id, t.category_id, t.name as team,
+        $query = "SELECT t.id,
+                t.category_id,
+                t.group_id,
+                t.name as team,
                 count('x') as JJ,
                 count(case when PAF > PEC then 1 end) JG,
                 count(case when PAF < PEC then 1 end) JP,
@@ -449,6 +453,8 @@ class TournamentsController extends Controller
                 $query .= ' LIMIT ' . $limit;
             }
 
+        //echo $query;
+
         $scores = DB::select( DB::raw( $query ) );
 
         // foreach($scores as $scores) {
@@ -486,11 +492,13 @@ class TournamentsController extends Controller
             'g.score_penalties_team1',
             'g.score_penalties_team2',
             'g.code',
-            'g.period'
+            'g.period',
+            'gr.name as group'
             )
             ->join('teams as t1', 't1.id', '=', 'g.team1_id')
             ->join('teams as t2', 't2.id', '=', 'g.team2_id')
             ->leftJoin('categories as c', 'c.id', '=', 'g.category_id')
+            ->leftJoin('groups as gr', 'gr.id', '=', 'g.group_id')
             ->join('journeys as j', 'j.id', '=', 'g.journey_id')
             ->leftJoin('stadiums as s', 's.id', '=', 'g.stadium_id')
             ->where('g.is_deleted', 0)
@@ -926,8 +934,10 @@ class TournamentsController extends Controller
         $tournament = Tournaments::where('slug', $slug)->get();
 
         $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
+        $groups = Groups::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
+
         $journeys = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','desc')->get();
-        $stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
+        //$stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
 
         $points = '';
         if ($tournament[0]->enable_points_system == "Si"){
@@ -956,7 +966,7 @@ class TournamentsController extends Controller
             'journeys'   => $journeys,
             'categories' => $categories,
             'scores'     => $scores,
-            // 'games'      => $games,
+            'groups'     => $groups,
             // 'stadiums'   => $stadiums,
             // 'teams'      => $teams
         ]);

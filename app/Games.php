@@ -28,7 +28,8 @@ class Games extends Model
         'score_penalties_team2',
         'code',
         'access_code',
-        'period'
+        'period',
+        'group_id'
     ];
 
     public function tournament() {

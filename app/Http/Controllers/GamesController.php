@@ -18,7 +18,7 @@ class GamesController extends Controller
     //
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['showGame', 'data_entry']]);
+        $this->middleware('auth', ['except' => ['showGame']]);
     }
 
     public function index(Request $request)
@@ -67,9 +67,11 @@ class GamesController extends Controller
                     ->join('teams as t1', 't1.id', '=', 'g.team1_id')
                     ->join('teams as t2', 't2.id', '=', 'g.team2_id')
                     ->leftJoin('categories as c', 'c.id', '=', 'g.category_id')
+                    ->leftJoin('groups as gr', 'gr.id', '=', 'g.group_id')
                     ->join('tournaments as t', 't.id', '=', 'g.tournament_id')
                     ->leftJoin('stadiums as s', 's.id', '=', 'g.stadium_id')
                     ->where('g.is_deleted', 0)
+                    //->where('gr.is_deleted', 0)
                     ->where('g.user_id',Auth::user()->id)
                     ->where('g.tournament_id', $request->tournament)
                     ->orderBy('g.id', 'desc')
@@ -236,6 +238,220 @@ class GamesController extends Controller
         return view ('games.index', compact('tournaments', 'stadiums'));
     }
 
+    // public function index(Request $request)
+    // {
+    //      if($request->ajax()){
+    //         // SELECT g.id, t1.name as team1, g.score_team1, g.score_team2,  t2.name as team2, c.name as category, g.status , g.notes
+    //         // FROM games as g
+    //         // inner join teams t1 on t1.id = g.team1_id
+    //         // inner join teams t2 on t2.id = g.team2_id
+    //         // inner join categories c on c.id = g.category_id
+    //         // WHERE
+    //         // g.user_id = 3 and
+    //         // g.is_deleted = 0
+    //         $rows = [];
+
+    //         if ($request->tournament) {
+
+    //             $rows = DB::table('games as g')
+    //                 ->select(
+    //                     'g.id',
+    //                     't1.name as team1',
+    //                     'g.score_team1',
+    //                     'g.score_team2',
+    //                     't2.name as team2',
+    //                     'c.name as category',
+    //                     'g.status' ,
+    //                     'g.notes',
+    //                     'g.team1_id',
+    //                     'g.team2_id',
+    //                     'g.score_team1',
+    //                     'g.score_team2',
+    //                     'g.game_day',
+    //                     'g.journey_id',
+    //                     'g.game_time',
+    //                     'g.tournament_id',
+    //                     'g.category_id',
+    //                     'g.branch',
+    //                     'g.type',
+    //                     's.name as stadium',
+    //                     'g.score_penalties_team1',
+    //                     'g.score_penalties_team2',
+    //                     't.enable_penalties_scoring',
+    //                     'g.code'
+    //                 )
+    //                 ->join('teams as t1', 't1.id', '=', 'g.team1_id')
+    //                 ->join('teams as t2', 't2.id', '=', 'g.team2_id')
+    //                 ->leftJoin('categories as c', 'c.id', '=', 'g.category_id')
+    //                 ->join('tournaments as t', 't.id', '=', 'g.tournament_id')
+    //                 ->leftJoin('stadiums as s', 's.id', '=', 'g.stadium_id')
+    //                 ->where('g.is_deleted', 0)
+    //                 ->where('g.user_id',Auth::user()->id)
+    //                 ->where('g.tournament_id', $request->tournament)
+    //                 ->orderBy('g.id', 'desc')
+    //                 ->get();
+    //         }
+
+    //         return DataTables::of($rows)
+    //                 ->addColumn('code', function($row) {
+    //                     return '<b>' . $row->code . '</br>';
+    //                 })
+    //                 ->addColumn('date_time', function($row) {
+    //                     $day = substr($row->game_day,8,2) . "/" . substr($row->game_day,5,2) . "/" . substr($row->game_day,0,4);
+    //                     return $day . '<br />' . $row->game_time ;
+    //                 })
+    //                 ->addColumn('stadium', function($row) {
+    //                     return $row->stadium ?? '--';
+    //                 })
+    //                 ->addColumn( 'status', function($row) {
+    //                     $status = $row->status;
+    //                     switch ($row->status) {
+    //                         case 'Abierto':
+    //                             $status = '<span class="badge badge-primary">Abierto</span>';
+    //                             break;
+    //                         case 'Finalizado':
+    //                             $status = '<span class="badge badge-success">Finalizado</span>';
+    //                             break;
+    //                         case 'Protestado':
+    //                             $status = '<span class="badge badge-warning">Protestado</span>';
+    //                             break;
+    //                         case 'Cancelado':
+    //                             $status = '<span class="badge badge-danger">Cancelado</span>';
+    //                             break;
+    //                         case 'Suspendido':
+    //                             $status = '<span class="badge badge-danger">Suspendido</span>';
+    //                             break;
+    //                     }
+    //                     return $status;
+    //                 })
+    //                 ->addColumn('score', function($row) {
+    //                     $score1 = '';
+    //                     $score2 = '';
+    //                     $penalScore1 = '';
+    //                     $penalScore2 = '';
+    //                     $result = '';
+    //                     $direction = ' - ';
+
+    //                     if ($row->score_team1 > $row->score_team2) {
+    //                         $score1 .= '<b class="win">'. $row->score_team1 . "</b>";
+    //                         $score2 .= $row->score_team2;
+    //                         $direction = '<i class="fa fa-arrow-left"></i>';
+    //                     } elseif ($row->score_team2 > $row->score_team1) {
+    //                         $score2 .= '<b class="win">'.  $row->score_team2 . "</b>";
+    //                         $score1 .= $row->score_team1;
+    //                         $direction = '<i class="fa fa-arrow-right"></i>';
+
+    //                     } elseif ($row->score_team1 == $row->score_team2) {
+    //                         $score1 .=  $row->score_team1;
+    //                         $score2 .=  $row->score_team2;
+
+    //                         //here is where the penalties score goes
+    //                         if ( $row->enable_penalties_scoring === 'Si') {
+    //                             $penalScore1 = $row->score_penalties_team1;
+    //                             $penalScore2 = $row->score_penalties_team2;
+
+    //                             //definition of the direction
+    //                             if ($penalScore1 > $penalScore2) {
+    //                                 $direction = '<i class="fa fa-arrow-left"></i>';
+    //                             } elseif ($penalScore2 > $penalScore1) {
+    //                                 $direction = '<i class="fa fa-arrow-right"></i>';
+    //                             }
+
+    //                         }
+
+    //                     }
+    //                     if ( $row->enable_penalties_scoring === 'No') {
+    //                         $direction = ' - ';
+    //                     }
+
+    //                     $result = '<h5>'.$score1 . ' ' . $direction .  ' ' . $score2 . '</h5>';
+
+    //                     if ( $row->enable_penalties_scoring === 'Si') {
+    //                         if ( (strlen($penalScore1)>0)
+    //                             || (strlen($penalScore2)>0) ) {
+    //                                 $result .= '<i>(' . $penalScore1 .' - '. $penalScore2 .')</i>';
+
+    //                         }
+    //                     }
+
+    //                     return $result;
+    //                 })
+    //                 ->addColumn('action', function($row) {
+
+
+    //                     $links          = '';
+    //                     $routeEdit      = route('games.show', $row->id);
+    //                     //$routeHistory   = route('game_history', $row->code);
+    //                     $routeDelete    = route('games.destroy', $row->id);
+
+    //                     //if ($row->status != "Finalizado") {
+
+    //                         $links .= '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
+    //                                     <span class="fa fa-edit tool">
+    //                                     </span>
+    //                                 </a>';
+    //                     //}
+
+    //                     // if ($row->status == "Finalizado") {
+    //                     //     $links .= '<a href="javascript:void(0)" data-toggle="tooltip"
+    //                     //                     data-id="' . $row->id . '"
+    //                     //                     data-notes="' . $row->notes . '"
+    //                     //                     data-status="' . $row->status . '"
+    //                     //                     data-team1="' . $row->team1 . '"
+    //                     //                     data-team2="' . $row->team2 . '"
+    //                     //                     data-team1_id="' . $row->team1_id . '"
+    //                     //                     data-team2_id="' . $row->team2_id . '"
+    //                     //                     data-score_team1="' . $row->score_team1 . '"
+    //                     //                     data-score_team2="' . $row->score_team2 . '"
+    //                     //                     data-score_penalties_team1="' . $row->score_penalties_team1 . '"
+    //                     //                     data-score_penalties_team2="' . $row->score_penalties_team2 . '"
+    //                     //                     data-penalties="'. $row->enable_penalties_scoring .'"
+    //                     //                     title="Capturar Historia!"
+    //                     //                     id="btnHistory">
+    //                     //                 <span class="fa fa-history tool">
+    //                     //                 </span>
+    //                     //             </a>';
+    //                     // }
+
+    //                     $links .= ' <a href="javascript:void(0)"
+    //                         data-id="' . $row->id . '"
+    //                         data-notes="' . $row->notes . '"
+    //                         data-status="' . $row->status . '"
+    //                         data-team1="' . $row->team1 . '"
+    //                         data-team2="' . $row->team2 . '"
+    //                         data-score_team1="' . $row->score_team1 . '"
+    //                         data-score_team2="' . $row->score_team2 . '"
+    //                         data-score_penalties_team1="' . $row->score_penalties_team1 . '"
+    //                         data-score_penalties_team2="' . $row->score_penalties_team2 . '"
+    //                         data-penalties="'. $row->enable_penalties_scoring .'"
+    //                         title="Capturar resultados"
+    //                         id="btnScore">
+    //                     <span class="fa fa-calculator tool"></span>
+    //                     </a>
+    //                     <a href="' . $routeDelete . '" data-name="'. $row->id .'"  title="Borrar Registro"  id="btnDelete">
+    //                         <span class="fa fa-trash tool"></span>
+    //                     </a>';
+
+    //                     return $links;
+
+    //                 })
+    //                 ->rawColumns(['code', 'date_time', 'status', 'game_time','score', 'action'])
+    //                 ->make(true);
+    //     }
+
+    //     $tournaments = Tournaments::where('is_deleted','0')
+    //         ->where('status','!=','Terminado')
+    //         ->where('user_id',Auth::user()->id)
+    //         ->get(['id','title']);
+
+    //     $stadiums = Stadiums::where('is_deleted','0')
+    //         ->where('user_id',Auth::user()->id)
+    //         ->orderBy('name','asc')
+    //         ->get(['id','name']);
+
+    //     return view ('games.index', compact('tournaments', 'stadiums'));
+    // }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -253,7 +469,6 @@ class GamesController extends Controller
             'game_time'         => 'required',
             'team1_id'          => 'required',
             'team2_id'          => 'required',
-            //'period'            => 'required',
         ];
 
         $attributes = [
@@ -265,7 +480,6 @@ class GamesController extends Controller
             'game_time'         => 'Hora del juego',
             'team1_id'          => 'Equipo 1 (Visitante)',
             'team2_id'          => 'Equipo 2 (Casa)',
-            //'period'            => 'Periodo / Tiempo',
         ];
 
         //Validate the data
@@ -290,10 +504,9 @@ class GamesController extends Controller
 
 
         if (!isset($request->id) || empty($request->id)) {
-            $model              = new Games($request->all());
-            $model->user_id     = Auth::user()->id;
-            $model->code        = strtoupper( str_random(8));
-            $model->access_code = strtoupper( str_random(6));
+            $model = new Games($request->all());
+            $model->user_id = Auth::user()->id;
+            $model->code    = strtoupper( str_random(8));
 
 
             if ($model->save())
@@ -305,10 +518,6 @@ class GamesController extends Controller
 
             if (!$model->code) {
                 $model->code    = strtoupper( str_random(8));
-            }
-
-            if (!$model->access_code) {
-                $model->access_code    = strtoupper( str_random(6));
             }
 
             if ($model->update())
@@ -367,7 +576,7 @@ class GamesController extends Controller
         ]);
     }
 
-    public function list($tournament_id) {
+    public function list ($tournament_id) {
 
         if ($tournament_id) {
             $list = Games::where('tournament_id',$tournament_id)->get();
@@ -380,16 +589,13 @@ class GamesController extends Controller
     public function updateScore(Request $request) {
         //update the score
         if ($request) {
-            $game = Games::find($request->id);
+            $model = Games::find($request->id);
 
-            //$game->status = "Finalizado";
-            $game->fill($request->all());
-            if ($game->update()) {
-                //we need to update the wins, losses, and position for both teams
-
+            $model->status = "Finalizado";
+            $model->fill($request->all());
+            if ($model->update())
                 return response()->json(['type' => 'success',
                                  'message' => 'Se ha modificado el juegoo!']);
-            }
         }
 
         return response()->json([
@@ -445,35 +651,55 @@ class GamesController extends Controller
 
     }
 
-    function data_entry(Request $request) {
-        if (!$request->access_code) {
-            return response()->json([
-                'access'=>'false',
-                'type'=>'error',
-                'message' => 'Algo salió mal para accesar a editar el juego'
-            ]);
+    function getTeamGames ($teamId)
+    {
+        $gameList = false;
+
+        if ($teamId) {
+            $query = "select
+                    t1.name as team1,
+                    score.score1,
+                    t2.name as team2,
+                    score.score2,
+                    if(score.score1 > score.score2, 'Ganado','Perdido') as result,
+                    score.game_day,
+                    score.game_time,
+                    score.journey
+                from
+                (
+                    (
+                        select h.team1_id team1, h.team2_id team2, h.score_team1 score1, h.score_team2 score2, h.game_day, h.game_time, j.name as journey
+                        from games h
+                        JOIN journeys j ON j.id = h.journey_id
+                        WHERE
+                        h.status = 'Finalizado'
+                        and h.is_deleted = 0
+                        and h.type = 'Temporada Regular'
+                    )
+                    UNION ALL
+                    (
+                        select v.team2_id team1, v.team1_id team2, v.score_team2 score1, v.score_team1 score2,  v.game_day, v.game_time, j.name as journey
+                        from games v
+                        JOIN journeys j ON j.id = v.journey_id
+                        WHERE
+                        v.status = 'Finalizado'
+                        and v.is_deleted = 0
+                        and v.type = 'Temporada Regular'
+                    )
+                ) AS score
+                JOIN teams t1 on t1.id = score.team1
+                JOIN teams t2 on t2.id = score.team2
+                WHERE
+                t1.status = 'Activo'
+                AND t1.id = $teamId
+                AND t2.status = 'Activo'
+                ORDER BY journey desc;";
+
+            $gameList = DB::select( DB::raw( $query ) );
+
         }
 
-        $access_code = $request->access_code;
-
-        $has_access = Games::where('access_code', $access_code)->get(['id']);
-
-
-        if (count($has_access) === 0) {
-            return response()->json([
-                'access'=>'false',
-                'type'=>'error',
-                'message' => 'Algo salió mal para accesar a editar el juego'
-            ]);
-        }
-
-        return response()->json([
-            'access'=>'true',
-            'type'=>'success',
-            'message' => 'Bienvenido al modo de edición del juego'
-        ]);;
-
+        return $gameList;
 
     }
-
 }

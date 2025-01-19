@@ -178,3 +178,74 @@ SELECT t.id, t.category_id, t.name as team,
                 t.status = 'Activo'
                 and t.id = 25
                 GROUP BY team ORDER BY PUNTOS DESC, DIF DESC
+
+
+
+//game list
+select g.id, g.game_day, g.game_time, j.name as jornada, g.status, t1.name as team1, g.score_team1, t2.name as team2, g.score_team2, g.notes
+from games g
+join teams t1 on t1.id = g.team1_id
+join teams t2 on t2.id = g.team2_id
+join journeys j on j.id = g.journey_id
+WHERE
+	g.team1_id = 554
+    or g.team2_id = 554
+ order by game_day;
+
+
+
+select t1.name, score.score1, t2.name, score.team2, score.score2
+from
+(
+    (
+        select h.team1_id team1, h.team2_id team2, h.score_team1 score1, h.score_team2 score2
+		from games h
+		WHERE
+		h.status = 'Finalizado'
+		and h.is_deleted = 0
+		and h.type = 'Temporada Regular'
+    )
+    UNION ALL
+    (
+        select v.team2_id team1, v.team1_id team2, v.score_team2 score1, v.score_team1 score2
+		from games v
+		WHERE
+		v.status = 'Finalizado'
+		and v.is_deleted = 0
+		and v.type = 'Temporada Regular'
+    )
+) AS score
+JOIN teams t1 on t1.id = score.team1
+JOIN teams t2 on t2.id = score.team2
+WHERE
+t1.status = 'Activo'
+and t2.status = 'Activo';
+
+
+select t1.name, score.score1, t2.name, score.score2, if(score.score1 > score.score2, 'Win','lose') as result, score.game_day, score.game_time
+from
+(
+    (
+        select h.team1_id team1, h.team2_id team2, h.score_team1 score1, h.score_team2 score2, h.game_day, h.game_time
+		from games h
+		WHERE
+		h.status = 'Finalizado'
+		and h.is_deleted = 0
+		and h.type = 'Temporada Regular'
+    )
+    UNION ALL
+    (
+        select v.team2_id team1, v.team1_id team2, v.score_team2 score1, v.score_team1 score2,  v.game_day, v.game_time
+		from games v
+		WHERE
+		v.status = 'Finalizado'
+		and v.is_deleted = 0
+		and v.type = 'Temporada Regular'
+    )
+) AS score
+JOIN teams t1 on t1.id = score.team1
+JOIN teams t2 on t2.id = score.team2
+WHERE
+t1.status = 'Activo'
+and t1.id = 516
+and t2.status = 'Activo';

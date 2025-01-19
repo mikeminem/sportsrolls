@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
             <b>{{ $game->stadium }} <br />
-                {{ $game->category }} </br>
+                {{ $game->category }}  {{ ($game->group) ? ' - ' . $game->group : '' }} </br>
                 {{ Str::upper($game->type ) }}
             </b>
         </div>

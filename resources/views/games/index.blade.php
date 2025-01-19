@@ -162,7 +162,8 @@
                                     <option value="Temporada Regular" selected>Temporada Regular</option>
                                     <option value="Amistoso">Amistoso</option>
                                     <option value="Pretemporada">Pretemporada</option>
-                                    <option value="Finales">Finales</option>
+                                    <option value="8vo de Final">8vo de Final</option>
+                                    <option value="4to de Final">4to de Final</option>
                                     <option value="Semifinal">Semifinal</option>
                                     <option value="Final">Final</option>
                                     <option value="Otro">Otro</option>
@@ -200,7 +201,7 @@
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="category_id"><b>Categoría *</b></label>
-                                <select class="form-control" id="category_id" name="category_id">
+                                <select class="form-control" id="category_id" name="category_id" required>
                                     <option value="">Selecciona un torneo</option>
 
                                 </select>
@@ -366,8 +367,10 @@
                                     <option value="">Selecciona</option>
                                     <option value="1er Tiempo">1er Tiempo</option>
                                     <option value="2do Tiempo">2do Tiempo</option>
+                                    <option value="Medio Tiempo">Medio Tiempo</option>
                                     <option value="3er Tiempo">3er Tiempo</option>
                                     <option value="4to Tiempo">4to Tiempo</option>
+                                    <option value="Tiempo Extra">Tiempo Extra</option>
 
                                 </select>
                             </div>
@@ -664,9 +667,7 @@
             $(document).on("change", "#filterCategories", function () {
                 //Table.columns(7).search(this.value).draw();
                 $('#table').DataTable().columns(9).search(this.value).draw();
-
             });
-
 
             $(document).on("click", "#btnAdd", function () {
                 $("#updateForm").trigger('reset');
@@ -760,7 +761,10 @@
                 $("#category_id option:selected").each(function () {
                     categoryId=$(this).val();
 
-                    //console.log("el valor de categoryId" , categoryId);
+                    $("#group_id").empty();
+                    $("#group_id").html('<option value="">Selecciona una Categoría</option>');
+
+                    getGroups(['group_id'], categoryId);
 
                     $("#team1_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
                     $("#team2_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
@@ -771,6 +775,17 @@
                     getTeamsByCategoryAndBranch("team2_id", categoryId, branch );
 
                 });
+            });
+
+               $(document).on("change", "#group_id", function () {
+
+                let group_id = $(this).val();
+                $("#team1_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
+                $("#team2_id").html('<option valu="">Selecciona torneo, rama y cateogria</option>');
+
+
+                getTeamsByGroup(['team1_id'], group_id );
+                getTeamsByGroup(['team2_id'], group_id );
             });
 
             $(document).on("click", "#btnScore", function (e) {
