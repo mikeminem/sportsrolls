@@ -216,7 +216,7 @@ Route::get('/tournament_info/{slug}/standings', 'TournamentsController@standings
 Route::get('/tournament_info/{slug}/photos', 'TournamentsController@photos');
 Route::get('/tournament_info/{slug}/teams', 'TournamentsController@teams');
 Route::get('/tournament_info/{slug}/game/{code}', 'TournamentsController@game');
-
+Route::get('/update_tournament_enable_enrollment/{id}/{enable_enrollment}', 'TournamentsController@updateEnableEnroll');
 
 //teams options
 Route::resource('/teams','TeamsController');

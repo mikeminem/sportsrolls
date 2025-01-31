@@ -141,6 +141,47 @@
         </div>
 
         <div class="col-md-4">
+
+            @if ($tournament->enable_enrollment == 'Si')
+                <div class="card mb-2">
+                    <div class="card-header bg-dark text-light">Inscripción de Juugadores</div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 m-1">
+                                @foreach ($categories as $category )
+                                    <h4>{{ $category->name }}</h4>
+                                    <ul class="list-group list-group-flush mb-2">
+                                        @php
+                                            $place = 1;
+                                        @endphp
+                                        @foreach ( $scores as $score )
+                                            @if($score->category_id == $category->id
+                                                && $place <=3)
+                                                <a href="#">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-left">
+                                                            @if( $score->logo )
+                                                                <img class="img" src="{{ asset('team_logo/' . $score->logo) }} " style="width:40px">
+                                                            @else
+                                                                <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
+                                                            @endif
+                                                            {{ $score->team }}
+                                                            <span class="badge badge-light badge-pill">{{ $place }}</span>
+                                                        </li>
+                                                </a>
+                                                @php
+                                                    $place++;
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                @endforeach
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            @endif
             <div class="card mb-2">
                 <div class="card-header bg-dark text-light">Primeras posiciones</div>
 

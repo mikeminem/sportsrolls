@@ -310,7 +310,6 @@ class TeamsController extends Controller
         return (string) false;
     }
 
-
     public function updateStatus( $id,  $status) {
         Teams::where('id', $id)->update(['status' => $status]);
         return response()->json(['results' => 'success', 'response' => ['¡El equipo se a modificado!']]);

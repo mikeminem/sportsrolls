@@ -29,7 +29,16 @@ class TournamentsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['showTournament', 'frontPage', 'results', 'calendar', 'standings', 'teams', 'game', 'photos']]);
+        $this->middleware('auth', ['except' => [
+            'showTournament',
+            'frontPage',
+            'results',
+            'calendar',
+            'standings',
+            'teams',
+            'game',
+            'photos']
+        ]);
     }
     /**
      * Display a listing of the resource.
@@ -42,7 +51,7 @@ class TournamentsController extends Controller
         if($request->ajax()){
             //send the grid rows
             $rows = DB::table('tournaments as t')
-                    ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status', 't.contacts', 't.prints', 't.clicks')
+                    ->select('t.id','t.code', 't.title', 't.is_deleted', 't.status', 't.contacts', 't.prints', 't.clicks', 't.enable_enrollment')
                     ->where('t.is_deleted', 0)
                     ->where('t.user_id',Auth::user()->id)
                     ->orderBy('t.id', 'desc')
@@ -54,6 +63,27 @@ class TournamentsController extends Controller
                     })
                     ->addColumn('title', function($row) {
                         return '<h4>' . $row->title . '</h4> Equipos inscritos: <br> Impresiones: '.$row->prints.' - Clicks: '.$row->clicks;
+                    })
+                    ->addColumn('enable_enrollment', function ($row) {
+
+                        $enable = ($row->status == 'Terminado') ? 'disabled':'';
+
+                        $combo = '<select id="cboEnableEnrollment" class="form-control" data-id="'.$row->id.'" ' . $enable . ' >';
+
+                        if ($row->enable_enrollment=='Si') {
+                            $combo .= '<option value="Si" selected>Si</opction>';
+                        } else {
+                            $combo .= '<option value="Si">Si</opction>';
+                        }
+
+                        if ($row->enable_enrollment=='No') {
+                            $combo .= '<option value="No" selected>No</opction>';
+                        } else {
+                            $combo .= '<option value="No">No</opction>';
+                        }
+
+                        $combo .= '</select>';
+                        return  $combo;
                     })
                     ->addColumn('status', function($row) {
                         switch ($row->status) {
@@ -76,10 +106,10 @@ class TournamentsController extends Controller
                         if ($row->status == 'Por Empezar') {
                             $links .= '<a href="' . $routeEdit . '" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate">
                                     <span class="fa fa-edit tool"></span></a>
-                                <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete">
-                                <span class="fa fa-trash tool"></span>
-                            </a>
-                            <a href="javascript:void(0)" title="Iniciar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="En Progreso" id="btnStatus">
+                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete">
+                                        <span class="fa fa-trash tool"></span>
+                                    </a>
+                                    <a href="javascript:void(0)" title="Iniciar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="En Progreso" id="btnStatus">
                                         <span class="fa fa-play tool"></span>
                                     </a>';
                         }
@@ -98,7 +128,7 @@ class TournamentsController extends Controller
 
                         return $links;
                     })
-                    ->rawColumns(['title','status', 'action', 'code'])
+                    ->rawColumns(['title', 'enable_enrollment','status', 'action', 'code'])
                     ->make(true);
         }
 
@@ -243,7 +273,8 @@ class TournamentsController extends Controller
                 'draw_points',
                 'winner_points_penalties',
                 'loser_points_penalties',
-                'enable_penalties_scoring')->find($id);
+                'enable_penalties_scoring',
+                'enable_enrollment')->find($id);
 
             if (!$model->code) {
                 $model->code =  strtoupper( str_random(8));
@@ -1062,5 +1093,9 @@ class TournamentsController extends Controller
 
     }
 
+    public function updateEnableEnroll( $id,  $enable_enrollment) {
+        Tournaments::where('id', $id)->update(['enable_enrollment' => $enable_enrollment]);
+        return response()->json(['results' => 'success', 'response' => ['¡El torneo se a modificado!']]);
+    }
 
 }
