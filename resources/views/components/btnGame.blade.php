@@ -1,7 +1,7 @@
 {{-- this component is to show a game button --}}
 
 
-    <div class="col-lg-12 col-md-12 col-sm-12 mb-1 d-flex">
+    <div class="col-lg-6 col-md-6 col-sm-12 mb-1 d-flex">
         <a href="{{ url('tournament_info/' . $tournament->slug .'/game/' . $game->code) }}"
             alt="Ver detalles del juego"
             title="Ver detalles del juego"

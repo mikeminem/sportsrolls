@@ -568,6 +568,45 @@
   </div>
 <!-- end of the delete modal -->
 
+
+<!-- Games modal -->
+<div class="modal" id="formGamesModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Juegos Jugados</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <table class="table table-striped" id="tableGames">
+                <thead class="thead-dark">
+                    <tr>
+                        <td>Jornada</td>
+                        <td>Equipo</td>
+                        <td>Marcador</td>
+                        <td>Contra</td>
+                        <td>Resultado</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
+                <span class="fa fa-remove"></span> Cerrar
+            </button>
+        </div>
+      </div>
+    </div>
+</div>
+{{-- end of the modal lgames --}}
+
 @endsection
 
 @section('js')
@@ -1059,6 +1098,44 @@
                 } else {
                     //getPlayers('cboPlayer', teamId,'');
                 }
+            });
+
+            $(document).on("click", "#btnGames", function (e) {
+                $('#tableGames tbody').empty();
+
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('get_team_games') }}/" + $(this).attr('data-id'),
+                    dataType: "json",
+                    success: function (data) {
+
+                        for(gameRows in data) {
+
+                            console.log(data[gameRows]);
+                            let gameRow = '';
+                            gameRow = '<tr>';
+
+                            gameRow += '<td>' + data[gameRows]['journey']
+                                + '<br> <small>' + data[gameRows]['game_day'] + ' ' + data[gameRows]['game_time']
+                                + '</small></td>';
+                            gameRow += '<td>' + data[gameRows]['team1'] + '</td>';
+                            gameRow += '<td>' + data[gameRows]['score1'] + ' -  ' + data[gameRows]['score2'] + '</td>';
+                            gameRow += '<td>' + data[gameRows]['team2'] + '</td>';
+                            gameRow += '<td>' + data[gameRows]['result'] + '</td>';
+
+                            gameRow += '</tr>'
+                            console.log(gameRow)
+                            $("#tableGames tbody").append( gameRow )
+                        }
+
+                        jQuery.noConflict();
+                        jQuery("#formGamesModal").modal('show');
+
+                    },
+                });
+
+                return false;
+
             });
 
 

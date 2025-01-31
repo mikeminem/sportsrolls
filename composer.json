@@ -12,6 +12,7 @@
         "anouar/paypalpayment": "~1.0",
         "barryvdh/laravel-dompdf": "^0.8.2",
         "fideloper/proxy": "^4.0",
+        "intervention/image": "^2.7",
         "laracasts/flash": "^3.0",
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",

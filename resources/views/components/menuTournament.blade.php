@@ -71,7 +71,7 @@
                 type="button"
                 class="btn btn-{{ ($active == 'front-page') ? 'primary': 'light' }}">
                 <span class="fa fa-newspaper-o"></span>
-                    {{ __('Front Page')}}
+                    Página Principal
             </a>
             <a href="{{ url('tournament_info/' . $tournament->slug . '/results') }}"
                 alt="{{ $tournament->title }}"
@@ -79,7 +79,7 @@
                 type="button"
                 class="btn btn-{{ ($active == 'results') ? 'primary': 'light' }}">
                 <span class="fa fa-align-left"></span>
-                    {{ __('Scores')}}
+                    Resultados
             </a>
             {{-- <a href="{{ url('tournament_info/' . $tournament->slug . '/calendar') }}"
                 alt="{{ $tournament->title }}"
@@ -95,7 +95,7 @@
                 type="button"
                 class="btn btn-{{ ($active == 'standings') ? 'primary': 'light' }}">
                 <span class="fa fa-list"></span>
-                    {{ __('Standings')}}
+                    Tabla de Posiciones
             </a>
 
             <a href="{{ url('tournament_info/' . $tournament->slug . '/photos') }}"
@@ -104,7 +104,7 @@
                 type="button"
                 class="btn btn-{{ ($active == 'photos') ? 'primary': 'light' }}">
                 <span class="fa fa-image"></span>
-                    {{ __('Photo Gallery')}}
+                    Fotografías
             </a>
 
 
@@ -113,7 +113,8 @@
                 title="{{ $tournament->title }}"
                 type="button"
                 class="btn btn-{{ ($active == 'teams') ? 'primary': 'light' }}">
-                <span class="fa fa-users"></span> {{ __('Teams')}}
+                <span class="fa fa-users"></span>
+                    Equipos
             </a>
         </div>
     </div>

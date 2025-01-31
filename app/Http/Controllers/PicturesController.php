@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Pictures;
 use App\Tournaments;
+use Intervention\Image\Facades\Image;
+
+
 
 
 //use Exception;
@@ -39,7 +42,7 @@ class PicturesController extends Controller
 
                 )
                 ->where('p.is_deleted', 0)
-                //->where('p.user_id',Auth::user()->id)
+                ->where('p.user_id',Auth::user()->id)
                 ->get();
 
             return DataTables::of($rows)
@@ -133,16 +136,23 @@ class PicturesController extends Controller
 
         $pathphoto = '';
         if($request->file('photo')) {
-            $pathphoto =  date('YmdHis') . '.' .$request->file('photo')->extension();
-            $request->file('photo')->storeAs('public/photos', $pathphoto);
+            //$pathphoto =  date('YmdHis') . '.' .$request->file('photo')->extension();
+            //$request->file('photo')->storeAs('public/photos', $pathphoto);
+
+            $image  = $request->file('photo');
+            $tmp_image = Image::make($image->getRealPath());
+
+            $tmp_image->resize(800,600);
+            $tmp_image->save($image);
+
+            $image->storeAs('/public/photos/', $pathphoto);
         }
 
         if (!isset($request->id) || empty($request->id)) {
             //insert
             $model          = new Pictures($request->all());
             $model->slug = str_slug($model->title);
-
-            //$model->user_id = Auth::user()->id; <--- is not needed, the players is global
+            $model->user_id = Auth::user()->id;
 
             if (!empty($pathphoto)) {
                 $model->photo = $pathphoto;
@@ -161,6 +171,8 @@ class PicturesController extends Controller
             //update
             $model = Pictures::find($request->id);
             $lastphoto = $model->photo;
+            $model->user_id = Auth::user()->id;
+
             $model->fill($request->all());
             $model->slug = str_slug($model->title);
 

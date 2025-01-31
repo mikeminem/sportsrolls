@@ -2,7 +2,8 @@
     <div class="row">
         <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
             <b>{{ $game->stadium }} <br />
-                {{ $game->category }}  {{ ($game->group) ? ' - ' . $game->group : '' }} </br>
+                {{ $game->category }}
+                {{ isset($game->group) ? ' - ' . $game->group : '' }}
                 {{ Str::upper($game->type ) }}
             </b>
         </div>
@@ -11,7 +12,7 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-12 my-auto text-center">
         <b>{{ ($game->category) ? $game->category : 'Cruce de grupos' }} <br>
-            {{ Str::upper($game->type ) }}<br >
+            {{ Str::upper($game->type ) }} /
             {{ $game->status }}
             @if ($game->status != 'Finalizado')
                 /  {{ $game->period }}

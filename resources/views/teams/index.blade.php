@@ -291,7 +291,7 @@
 </div>
 {{-- end of the delete modal form --}}
 
-<!-- delete modal -->
+<!-- Games modal -->
 <div class="modal" id="formGamesModal">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -327,7 +327,7 @@
       </div>
     </div>
 </div>
-
+{{-- end of the modal lgames --}}
 
 @endsection
 

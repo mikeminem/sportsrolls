@@ -1,15 +1,15 @@
-<table class="table table-hover">
+<table class="table table-hover table-responsive">
     <thead>
         <tr>
-          <th>Num</th>
-          <th>Name</th>
+          <th>#</th>
+          <th>Nombre</th>
           <th>Fouls</th>
           <th>Points</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        @if(count($players) ==0) 
+        @if(count($players) ==0)
             <tr>
               <td colspan="5">No hay Jugadores</td>
             </tr>
@@ -25,10 +25,10 @@
                       <button class="btn btn-primary float-right gameButton" id="btnAttendance" data-id="{{ $player->id }}"><span class="fa fa-check"></span></button>
                       <button class="btn btn-primary float-right gameActions" id="btnAction" ><span class="fa fa-play"></span></button>
                 </td>
-              </tr>  
+              </tr>
           @endif
-        
+
         @endforeach
-      
+
       </tbody>
 </table>
