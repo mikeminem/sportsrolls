@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', config('app.name') ." :: " .  __('Roster') )
-@section('description',  "Administrador de Roster ")
+@section('title', config('app.name') ." :: " .  __('Jugadores') )
+@section('description',  "Administrador de Jugadores ")
 
 @section('content')
 
@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text-left">
-                        <h1>{{ __('Roster')}}</h1>
+                        <h1>{{ __('Jugaores')}}</h1>
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
@@ -75,12 +75,12 @@
                                     <th>{{ __("Tournament") }}</th>
                                     <th>{{ __("Category") }}</th>
                                     <th>{{ __("Team") }}</th>
-                                    <th>{{ __("Team Name") }}</th>
-                                    <th>{{ __("Photo") }}</th>
-                                    <th>{{ __("Player") }}</th>
+                                    <th>{{ __("Foto") }}</th>
+                                    <th>{{ __("Equipo") }}</th>
+                                    <th>{{ __("Jugador") }}</th>
                                     <th>{{ __("Phone") }}</th>
-                                    <th>{{ __("Call in case of emergency") }}</th>
-                                    <th>{{ __("Status") }}</th>
+                                    <th>{{ __("En caso de emergencia") }}</th>
+                                    <th>{{ __("Estado") }}</th>
                                     <th> - </th>
                                 </tr>
                             </thead>
@@ -185,8 +185,8 @@
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="emergency_call"><b>{{ __("Emergency Name") }}</b></label>
-                                <input type="text" class="form-control" id="emergency_call" name="emergency_call" maxlength="80">
+                                <label for="emergency_name"><b>{{ __("Emergency Name") }}</b></label>
+                                <input type="text" class="form-control" id="emergency_name" name="emergency_name" maxlength="80">
                             </div>
                         </div>
 
@@ -330,8 +330,8 @@
                         { data: 'tournament', name: 'tournament', visible: false},
                         { data: 'category_id', name: 'category_id', visible: false},
                         { data: 'team_id', name: 'team_id', visible: false},
-                        { data: 'team', name: 'team'},
                         { data: 'photo', name: 'photo'},
+                        { data: 'team', name: 'team'},
                         { data: 'player', name: 'player'},
                         { data: 'phone', name: 'phone'},
                         { data: 'emergency_call', name: 'emergency_call'},
@@ -386,8 +386,6 @@
 
 
             $(document).on("change", "#filterCategories", function (e) {
-                //$('#table').DataTable().columns(1).search(this.value).draw();
-
                 $("#filterCategories option:selected").each(function () {
                     categoryId=$(this).val();
                     $("#filterTeams").html('<option valu="">{{ __("Select a Tournament and Category") }}</option>');
@@ -425,14 +423,18 @@
                 $("#id").val("");
 
                 let tournament = $('#filterTournaments').val();
+
                 if (tournament !== "") {
                     $('#tournament_id').val(tournament);
 
-                    category = $('#filterCategories').val();
+                    let category = $('#filterCategories').val();
+                    console.log(category)
 
                     if (category !==  "") {
+                        let team = $('#filterTeams').val();
+
                         getCategories("category_id",tournament, category);
-                        getTeams("team_id",category);
+                        getTeams("team_id",category, team);
                     }
 
                 }
@@ -467,13 +469,12 @@
                         let image = '';
 
                         for(obj in data) {
-                            $("#" + obj).val(data[obj]);
 
                             if (obj == "tournament_id"){
                                 tournament_id = data[obj];
                             }
 
-                            if (obj == "image") {
+                            if (obj == "photo") {
                                 image = data[obj];
                                 console.log('image', image);
                                 if (image) {
@@ -482,6 +483,8 @@
                                     $("#player_photo").attr("src","");
                                     $("#player_photo").attr("src","images/No-photo-m.png");
                                 }
+                            } else {
+                                $("#" + obj).val(data[obj]);
                             }
 
                             if (obj == 'category_id') {

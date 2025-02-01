@@ -33,25 +33,25 @@ class RosterController extends Controller
             if ( $request->tournament ) {
 
                 $rows = DB::table('rosters as r')
-                    ->join('players as p', 'p.id', '=', 'r.player_id')
-                    ->join('teams as t', 't.id', '=', 'r.team_id')
+                    //->join('players as p', 'p.id', '=', 'r.player_id')
+                    ->leftjoin('teams as t', 't.id', '=', 'r.team_id')
                     ->select(
                         'r.id',
                         'r.number',
                         'r.positions',
-                        'p.names',
-                        'p.last_name1',
-                        'p.last_name2',
-                        'p.phone',
+                        'r.name',
+                        'r.last_name',
+                        'r.phone',
+                        'r.photo',
                         't.name as team',
                         'r.tournament_id as tournament',
                         'r.status',
                         'r.team_id',
                         'r.category_id',
-                        'p.emergency_name',
-                        'p.emergency_phone',
-                        'p.dob',
-                        'p.photo'
+                        'r.emergency_name',
+                        'r.emergency_phone',
+                        'r.dob'
+                        // 'p.photo'
                     )
                     ->where('r.is_deleted', 0)
                     //->where('r.user_id',Auth::user()->id)
@@ -70,8 +70,7 @@ class RosterController extends Controller
                         return $image;
                     })
                     ->addColumn('player', function($row) {
-
-                        return  $row->last_name1 . ' ' . $row->last_name2 . ', ' . $row->names . ' <b>player #' . $row->number . '</b>  ';
+                        return  $row->last_name . ', ' . $row->name . ' <b>player #' . $row->number . '</b>  ';
                     })
                     ->addColumn('emergency_call', function($row) {
                         return  $row->emergency_name. '<br> ' . $row->emergency_phone;
@@ -86,7 +85,7 @@ class RosterController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a>
-                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->names.'" id="btnDelete">
+                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete">
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
@@ -121,18 +120,19 @@ class RosterController extends Controller
             'team_id'       => 'required',
             'number'        => 'required|max:10',
             'phone'         => 'required|max:10',
-            'status'        => 'required'
+            'status'        => 'required',
+            'dob'           => 'required'
         ];
 
         $attributes = [
-            'name'          => 'Name',
-            'tournament_id' => 'Tournament',
-            'last_name'     => 'Last Name',
-            'category_id'   => 'Category',
-            'team_id'       => 'Team',
-            'number'        => 'Number in T-shirt',
-            'phone'         => 'Playuer phone number',
-            'status'        => 'Player status'
+            'name'          => 'Nombre',
+            'tournament_id' => 'Torneo',
+            'last_name'     => 'Apellidos',
+            'category_id'   => 'Categiría',
+            'team_id'       => 'Equipo',
+            'number'        => 'Número en playera',
+            'phone'         => 'Teléfono / Celular',
+            'status'        => 'Estado'
         ];
 
         //Validate the data
@@ -158,7 +158,7 @@ class RosterController extends Controller
             $model->user_id = Auth::user()->id;
 
             if (!empty($pathphoto)) {
-                $model->image = $pathphoto;
+                $model->photo = $pathphoto;
             }
             // try {
             //     $model->save();
@@ -169,21 +169,21 @@ class RosterController extends Controller
 
             if ($model->save())
                  return response()->json(['type' => 'success',
-                                 'message' => 'Player saved!']);
+                                 'message' => 'Datos del jugador guardaados!']);
         } else {
             //update
             $model = Roster::find($request->id);
-            $lastphoto = $model->image;
+            $lastphoto = $model->photo;
             $model->fill($request->all());
 
             if (!empty($pathphoto)) {
                 Storage::delete('public/players_photos/' . $lastphoto);
-                $model->image = $pathphoto;
+                $model->photo = $pathphoto;
             }
 
             if ($model->update())
                 return response()->json(['type' => 'success',
-                                 'message' => 'Player updated!']);
+                                 'message' => 'Datos del jugador actualizado!']);
         }
 
         return response()->json([
@@ -207,9 +207,7 @@ class RosterController extends Controller
                 'id',
                 'team_id',
                 'user_id',
-                //'player_id',
                 'number',
-                //'positions',
                 'status',
                 'category_id',
                 'is_deleted',
@@ -217,10 +215,10 @@ class RosterController extends Controller
                 'name',
                 'last_name',
                 'phone',
-                'emergency_call',
+                'emergency_name',
                 'emergency_phone',
                 'dob',
-                'image'
+                'photo'
             )->find($id);
             return $row;
         }

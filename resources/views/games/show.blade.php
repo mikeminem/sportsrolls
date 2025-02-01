@@ -65,14 +65,15 @@
 
                             <div class="row text-left">
                                 <div class="col-12">
-                                    <div class="card">
+                                    @include('components.tableGamePlayers', ['teamId' => $game->team1_id])
+                                    {{-- <div class="card">
                                         <div class="card-header">
                                             Jugadores
                                         </div>
                                         <div class="card-body">
                                             @include('components.tableGamePlayers', ['teamId' => $game->team1_id])
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
@@ -104,14 +105,16 @@
 
                             <div class="row text-left">
                                 <div class="col-12">
-                                    <div class="card">
+                                    @include('components.tableGamePlayers', ['teamId' => $game->team2_id])
+
+                                    {{-- <div class="card">
                                         <div class="card-header">
                                             Jugadores
                                         </div>
                                         <div class="card-body">
                                             @include('components.tableGamePlayers', ['teamId' => $game->team2_id])
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
