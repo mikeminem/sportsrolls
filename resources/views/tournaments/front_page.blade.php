@@ -149,33 +149,18 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 m-1">
-                                @foreach ($categories as $category )
-                                    <h4>{{ $category->name }}</h4>
-                                    <ul class="list-group list-group-flush mb-2">
-                                        @php
-                                            $place = 1;
-                                        @endphp
-                                        @foreach ( $scores as $score )
-                                            @if($score->category_id == $category->id
-                                                && $place <=3)
-                                                <a href="#">
-                                                    <li class="list-group-item d-flex justify-content-between align-items-left">
-                                                            @if( $score->logo )
-                                                                <img class="img" src="{{ asset('team_logo/' . $score->logo) }} " style="width:40px">
-                                                            @else
-                                                                <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
-                                                            @endif
-                                                            {{ $score->team }}
-                                                            <span class="badge badge-light badge-pill">{{ $place }}</span>
-                                                        </li>
-                                                </a>
-                                                @php
-                                                    $place++;
-                                                @endphp
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                @endforeach
+                                <p><b>El administrador del torneo habilitó el registro de jugadores, si no conoces el código de registro,
+                                    pregunta por él en el grupo de whatsapp del torneo.</b>
+                                </p>
+
+                                <div class="form-group">
+                                    <label for="code"><b>Código de Registro</b></label>
+                                    <input class="form-control" type="text" id="code" name="code" maxlength="10">
+                                </div>
+
+                                <button class="btn btn-danger btn-lg w-100">
+                                    <span class="fa fa-edit"></span> Me quiero registrar
+                                </button>
                             </div>
                         </div>
 
