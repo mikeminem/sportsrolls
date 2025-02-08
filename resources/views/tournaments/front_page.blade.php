@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title',  $tournament->title . ' - ' . __('Front Page')  )
+@section('title',  $tournament->title . ' - ' . __('Página del Torneo')  )
 @section('description', $tournament->title ." | " . $tournament->summary . " | " . config('app.name') )
 @section('url',  url('tournament_info/' . $tournament->slug) )
 @section('keywords', $tournament->title ." | " . $tournament->summary . " | " . config('app.name') )
@@ -13,7 +13,6 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-
 
             {{-- jornada de la semana --}}
             @foreach ($journeys as $journey)
@@ -155,10 +154,10 @@
 
                                 <div class="form-group">
                                     <label for="code"><b>Código de Registro</b></label>
-                                    <input class="form-control" type="text" id="code" name="code" maxlength="10">
+                                    <input class="form-control" type="text" id="code_enrollment" name="code_enrollment" maxlength="10">
                                 </div>
 
-                                <button class="btn btn-danger btn-lg w-100">
+                                <button class="btn btn-danger btn-lg w-100" id="btnEnrollment" name="btnEnrollment">
                                     <span class="fa fa-edit"></span> Me quiero registrar
                                 </button>
                             </div>
@@ -225,42 +224,256 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-
     </div>
 </div>
+
+{{-- forms --}}
+
+@include('forms/formPlayer')
+
 @endsection
 
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/jquery.cropbox.js') }}"></script>
+<link href="{{ asset('css/jquery.cropbox.css') }}" rel="stylesheet">
+
+
 <script type="text/javascript">
     jQuery(document).ready(function($){
 
-        $('#filterCategories').change( function () {
-            // const branch = $('#branch option:selected').val();
+        $('#btnEnrollment').click( function () {
 
-            // if (branch === '') {
-            //     $.notify("Selecciona una Rama", "error");
-            //     return;
-            // }
+            let code = $('#code_enrollment').val();
 
-            $("#filterCategories option:selected").each(function () {
-                categoryId=$(this).val();
+            if (code == null || code ==="") {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Escribe el código de acceso al torneo',
+                    icon: 'error',
+                    confirmButtonText: 'Enterado'
+                });
+                return false;
+            }
 
-                $("#filterTeams").html('<option value="">Selecciona una cateogría</option>');
-
-                getTeams("filterTeams",categoryId);
-                // getTeamsByCategoryAndBranch("team1_id", categoryId, branch );
-                // getTeamsByCategoryAndBranch("team2_id", categoryId, branch );
-
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
             });
-        })
 
-        $('#btnBuscar').click( function () {
-            alert('Vamos a buscar')
-        })
+            $.ajax({
+                type: "GET",
+                url: "{{ url('/tournament_enrollment') }}/" + code,
+                dataType: "json",
+                data: $(this).serialize(),
+                success: function (data) {
+                    if (data.access == true) {
+                        //display the player form
+                        $('#code_enrollment').val('');
+
+                        let tournament = {{ $tournament->id }}
+                        let categories = '';
+                        getCategories("category_id",tournament);
+                        $('#hide_name').val('Si');
+                        $('#player_photo').attr('src', '{{ asset('images/No-photo-m.png') }}');
+
+                        jQuery.noConflict();
+                        jQuery("#formPlayerModal").modal('toggle');
+
+                    } else {
+                        $('#code_enrollment').val('');
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        })
+                    }
+
+                },
+                error:function(){
+                    $.notify("Hubo un error al intentar validar el cídog de registro!", "error");
+                },
+            });
+
+            return false;
+        });
+
+        $(document).on("change", "#category_id", function (e) {
+            $("#category_id option:selected").each(function () {
+                categoryId=$(this).val();
+                $("#team_id").html('<option valu="">{{ __("Selecciona un torneo and Category") }}</option>');
+                getTeams("team_id",categoryId);
+            });
+        });
+
+        $(document).on("submit", "#formPlayer", function (e) {
+            e.preventDefault();
+
+            let data = new FormData(this);
+            data.delete('photo2')
+            data.append("photo",$('#player_photo').data('cropbox').getBlob(),"cropped-"+(new Date)+".jpg")
+
+    	    //data.append('photo', $("#player_photo").val().replace(/^data:image\/(png|jpg);base64,/, ""));
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('rosters.store') }}",
+                data : data,
+    			cache : false,
+	    		contentType : false,
+		    	processData : false,
+                dataType:'JSON',
+                //data: new FormData(this),
+                success: function (data) {
+                    if (data.type == "error") {
+                        var errors = "";
+                        $.each(data.errors, function (i, val) {
+                            errors = errors  +  val + "\n";
+                        });
+                        //$.notify(data.message + "\n" + errors, data.type, { position:"center" } );
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        })
+
+                        return false;
+                    }
+
+                    $("#formPlayer").trigger('reset');
+
+                    jQuery.noConflict();
+                    jQuery("#formPlayerModal").modal('toggle');
+                    //Table.ajax.reload();
+                    $('#table').DataTable().ajax.reload();
+                    //$.notify(data.message, data.type);
+                    Swal.fire({
+                            title: 'Bienvenido!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'Gracias'
+                        })
+
+                },
+                error:function(){
+                    $.notify("There is an error trying to save the player information! FE", "error");
+                },
+            });
+
+            return false;
+        });
+
+        $('#photo2').on('change', uploadImageProfile);
+
+        // var uploadImageProfile = function () {
+        //         var file    = $('#photo')[0].files[0] ;
+        //         var reader  = new FileReader();
+        //         alert('here');
+
+        //         var preview = document.getElementById('player_photo');
+        //         preview.src = "";
+
+        //         // funcion para mostrar la imagen cargada en el crop
+        //         reader.onloadend = function () {
+        //                 preview.src = reader.result;
+
+        //                 $('#player_photo').cropbox({
+        //                     width: 300,
+        //                     height: 300,
+        //                 }).on('cropbox', function (e, result, img) {
+        //                     // cuando se hace el crop se agrega el resultado a al input file
+        //                     $('#photo').val(img.getDataURL());
+        //                 });
+        //             }
+
+        //             reader.readAsDataURL(file);
+        //     }
+
+
+    //     //handle the image photo
+    // //function uploadImageProfile() {
+    //     $(document).on("change", "#photo", function (e) {
+    //         //showLoading();
+    //         // $('#loaderFile').show();
+    //         //let file    = document.querySelector('input[type=file]').files[0];
+    //         //let file    = $('#photo')[0].files[0];
+    //         //let file = document.getElementById("photo").files[0]; // will return a File object containing information about the selected file
+
+    //         let file    = $('#photo')[0].files[0] ;
+    // 	  	var reader  = new FileReader();
+
+    //         let preview = document.getElementById('player_photo');
+
+    //         preview.src = "";
+
+    //         reader.onloadend = function (data) {
+    //             preview.src = reader.result;
+
+    //             $('#player_photo').attr('crossorigin', "anonymous");
+    //             $('#player_photo').css('width', "auto");
+
+    //             $('#player_photo').cropbox({
+    //                 width: 300,
+    //                 height: 300,
+    //             }).on('cropbox', function (e, results, img) {
+    //                 //$('#theHidden').attr('data', img.getDataURL());
+    //                 //$('#saveImageProfile').attr('data', img.getDataURL());
+    //                 //$("#theHidden").val ( JSON.stringify(results) );
+    //                 //$('#photo').attr('data',img.getDataURL());
+    //                 //$('#photo').prop('data', img.getDataURL());
+    //                 $(this).attr('data', img.getDataURL());
+    //                 //$('#photo').attr('data', img.getBlob());
+
+
+
+    //                 //$('#photo').attr('data', JSON.stringify(img.getDataURL()) );
+
+    //             });
+    //         }
+
+    //         reader.readAsDataURL(file);
+
+    //     })
     });
 
+
+    var uploadImageProfile = function () {
+        var file    = $('#photo2')[0].files[0];
+        var reader  = new FileReader();
+
+        var preview = document.getElementById('player_photo');
+        preview.src = "";
+
+        // funcion para mostrar la imagen cargada en el crop
+        reader.onloadend = function () {
+                preview.src = reader.result;
+
+                $('#player_photo').cropbox({
+                    width: 200,
+                    height: 200,
+                }).on('cropbox', function (e, results, img) {
+                    // NOTHING TO DO
+                    //$('#photo').val(img.getDataURL());
+
+                    //console.log( JSON.stringify(results) )
+                    //#$("#ptoho").val ( JSON.stringify(results) );
+
+                    //$('#photo').val(img.getDataURL());
+                    //$('#photo').val(img.getBlob());
+
+                });
+            }
+
+            reader.readAsDataURL(file);
+    }
+
+
 </script>
+
 @endsection

@@ -50,7 +50,7 @@
                                 <div class="form-group">
                                     <label for="filterCategories"><b>{{ __("Categories") }}</b></label>
                                     <select class="form-control" required id="filterCategories" name="filterCategories"  >
-                                        <option value="">{{ __("Select a Tournament") }}...</option>
+                                        <option value="">{{ __("Selecciona un torneo") }}...</option>
                                     </select>
                                 </div>
                             </div>
@@ -59,7 +59,7 @@
                                 <div class="form-group">
                                     <label for="filterTeams"><b>{{ __("Teams") }}</b></label>
                                     <select class="form-control" required id="filterTeams" name="filterTeams"  >
-                                        <option value="">{{ __("Select a Tournament") }}...</option>
+                                        <option value="">{{ __("Selecciona un torneo") }}...</option>
                                     </select>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                                     <th>{{ __("Team") }}</th>
                                     <th>{{ __("Foto") }}</th>
                                     <th>{{ __("Equipo") }}</th>
-                                    <th>{{ __("Jugador") }}</th>
+                                    <th width="200px">{{ __("Jugador") }}</th>
                                     <th>{{ __("Phone") }}</th>
                                     <th>{{ __("En caso de emergencia") }}</th>
                                     <th>{{ __("Estado") }}</th>
@@ -350,17 +350,15 @@
                 var tournament=$(this).val();
                 if (tournament =="") {
                     $("#filterCategories").empty();
-                    $("#filterCategories").html('<option value="">{{ __("Select a Tournament") }}</option>');
+                    $("#filterCategories").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
 
                     $("#filterTeams").empty();
-                    $("#filterTeams").html('<option value="">{{ __("Select a Tournament") }}</option>');
+                    $("#filterTeams").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
 
                     $("#category_id").empty();
-                    $("#category_id").html('<option value="">{{ __("Select a Tournament") }}</option>');
+                    $("#category_id").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
                     $("#team_id").empty();
-                    $("#team_id").html('<option value="">{{ __("Select a Tournament") }}</option>');
-
-
+                    $("#team_id").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
 
                 } else {
                     getCategories("filterCategories",tournament);
@@ -368,47 +366,40 @@
                 }
             });
 
-            //tournament_id
             $(document).on("change", "#tournament_id", function () {
                 var tournament = $('#tournament_id').val();
 
                 var tournament=$(this).val();
                 if (tournament =="") {
                     $("#category_id").empty();
-                    $("#category_id").html('<option value="">{{ __("Select a Tournament") }}</option>');
+                    $("#category_id").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
                     $("#team_id").empty();
-                    $("#team_id").html('<option value="">{{ __("Select a Tournament") }}</option>');
+                    $("#team_id").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
 
                 } else {
                     getCategories("category_id",tournament);
                 }
             });
 
-
             $(document).on("change", "#filterCategories", function (e) {
                 $("#filterCategories option:selected").each(function () {
                     categoryId=$(this).val();
-                    $("#filterTeams").html('<option valu="">{{ __("Select a Tournament and Category") }}</option>');
+                    $("#filterTeams").html('<option valu="">{{ __("Selecciona un torneo and Category") }}</option>');
                     getTeams("filterTeams",categoryId);
 
-                    $("#team_id").html('<option valu="">{{ __("Select a Tournament and Category") }}</option>');
+                    $("#team_id").html('<option valu="">{{ __("Selecciona un torneo and Category") }}</option>');
                     getTeams("team_id",categoryId);
-
-
                 });
             });
 
             $(document).on("change", "#category_id", function (e) {
-                //$('#table').DataTable().columns(1).search(this.value).draw();
 
                 $("#category_id option:selected").each(function () {
                     categoryId=$(this).val();
-                    $("#team_id").html('<option valu="">{{ __("Select a Tournament and Category") }}</option>');
+                    $("#team_id").html('<option valu="">{{ __("Selecciona un torneo and Category") }}</option>');
                     getTeams("team_id",categoryId);
                 });
             });
-
-
 
             $(document).on("change", "#filterTeams", function (e) {
                 $('#table').DataTable().columns(2).search(this.value).draw();
@@ -438,9 +429,6 @@
                     }
 
                 }
-
-                //$("#sport").val("{{ Auth::user()->league->sport->name}}");
-                //$("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
                 jQuery.noConflict();
                 jQuery("#formModal").modal('show');

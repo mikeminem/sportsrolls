@@ -5,6 +5,8 @@
 
 @section('content')
 
+@include('components.menuTournament', ['active' => 'results'])
+
 <div class="container">
     <div class="row py-1">
         <div class="col-md-12">

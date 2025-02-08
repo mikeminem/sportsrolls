@@ -21,7 +21,10 @@ class RosterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth',  ['except' => [
+            'store'
+            ]
+        ]);
     }
 
     public function index(Request $request)
@@ -120,7 +123,7 @@ class RosterController extends Controller
             'team_id'       => 'required',
             'number'        => 'required|max:10',
             'phone'         => 'required|max:10',
-            'status'        => 'required',
+            //'status'        => 'required',
             'dob'           => 'required'
         ];
 
@@ -132,7 +135,7 @@ class RosterController extends Controller
             'team_id'       => 'Equipo',
             'number'        => 'Número en playera',
             'phone'         => 'Teléfono / Celular',
-            'status'        => 'Estado'
+            //'status'        => 'Estado'
         ];
 
         //Validate the data
@@ -141,12 +144,13 @@ class RosterController extends Controller
         if ($validated->fails()) {
             return response()->json([
                 'type' => 'error',
-                'message' => 'There is an error trying to save the player information!',
+                'message' => 'Hubo un error al intentar guardar los datos del jugador!',
                 'errors' => $validated->errors()
             ]);
         }
 
         $pathphoto = '';
+
         if($request->file('photo')) {
             $pathphoto =  date('YmdHis') . '.' .$request->file('photo')->extension();
             $request->file('photo')->storeAs('public/players_photos', $pathphoto);
@@ -155,7 +159,10 @@ class RosterController extends Controller
         if (!isset($request->id) || empty($request->id)) {
             //insert
             $model          = new Roster($request->all());
-            $model->user_id = Auth::user()->id;
+
+            if (isset(Auth::user()->id)) {
+                $model->user_id = Auth::user()->id;
+            }
 
             if (!empty($pathphoto)) {
                 $model->photo = $pathphoto;
@@ -169,7 +176,7 @@ class RosterController extends Controller
 
             if ($model->save())
                  return response()->json(['type' => 'success',
-                                 'message' => 'Datos del jugador guardaados!']);
+                                 'message' => 'Datos del jugador guardados!']);
         } else {
             //update
             $model = Roster::find($request->id);

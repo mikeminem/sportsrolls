@@ -37,7 +37,9 @@ class TournamentsController extends Controller
             'standings',
             'teams',
             'game',
-            'photos']
+            'photos',
+            'getValidateEnrollCode'
+            ]
         ]);
     }
     /**
@@ -1078,12 +1080,12 @@ class TournamentsController extends Controller
         ->get()[0];
 
         $players = Roster::whereIn('team_id', [$game->team1_id, $game->team2_id])->get();
-
+        $tournament =  Tournaments::where('id', $game->tournament_id)->get();
 
         return view ('games.show', [
             'game'      => $game,
-            'players'   => $players
-            // 'tournament' => $tournament[0],
+            'players'   => $players,
+            'tournament' => $tournament[0],
             // 'teams'      => $teams,
             // 'categories' => $categories,
             // 'journeys'   => $journeys,
@@ -1096,6 +1098,37 @@ class TournamentsController extends Controller
     public function updateEnableEnroll( $id,  $enable_enrollment) {
         Tournaments::where('id', $id)->update(['enable_enrollment' => $enable_enrollment]);
         return response()->json(['results' => 'success', 'response' => ['¡El torneo se a modificado!']]);
+    }
+
+    public function getValidateEnrollCode( $code ) {
+
+        $found = false;
+        $message = '';
+        $type ='';
+        if (!$code) {
+            $message = 'No se encontró el Código de registro';
+            $type = 'error';
+            $found = false;
+        }
+
+        $row = Tournaments::where('code',$code)->get();
+        if (!empty($row->all())) {
+            $found = true;
+            $type = 'success';
+            $message = 'Código de registro válido';
+        } else {
+            $message = 'No se encontró el Código de registro al torneo';
+            $type = 'error';
+            $found = false;
+        }
+
+
+        return response()->json([
+            'access'    => $found,
+            'type'   => $type,
+            'message'  => $message
+        ]);
+
     }
 
 }

@@ -21,7 +21,8 @@ class Roster extends Model
         'emergency_name',
         'emergency_phone',
         'photo',
-        'dob'
+        'dob',
+        'hide_name'
     ];
 
     // public function player()

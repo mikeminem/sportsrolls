@@ -13,7 +13,7 @@
       <tbody>
         @if(count($players) ==0)
             <tr>
-              <td colspan="5">No hay Jugadores</td>
+              <td colspan="7">No hay Jugadores registrados</td>
             </tr>
         @endif
         @foreach ($players as $player)
