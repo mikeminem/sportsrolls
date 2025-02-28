@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions;
 use App\Category;
 use App\Journeys;
 use App\Tournaments;
@@ -1064,7 +1065,10 @@ class TournamentsController extends Controller
          'g.type',
          'g.score_penalties_team1',
          'g.score_penalties_team2',
-         'g.code')
+         'g.code',
+         'g.game_day',
+         'g.game_time'
+         )
         ->join('teams as t1', 't1.id', '=', 'g.team1_id')
         ->join('teams as t2', 't2.id', '=', 'g.team2_id')
         ->join('categories as c', 'c.id', '=', 'g.category_id')
@@ -1079,14 +1083,17 @@ class TournamentsController extends Controller
         ->orderBy('g.game_time', 'asc')
         ->get()[0];
 
-        $players = Roster::whereIn('team_id', [$game->team1_id, $game->team2_id])->get();
-        $tournament =  Tournaments::where('id', $game->tournament_id)->get();
+        $players    = Roster::whereIn('team_id', [$game->team1_id, $game->team2_id])
+            ->where('is_deleted',0)
+            ->get(['id', 'name','last_name', 'photo', 'number', 'team_id']);
+        $tournament = Tournaments::where('id', $game->tournament_id)->get();
+        $actions    = Actions::where('is_deleted',0)->where('sport_id', $tournament[0]->sport_id)->get();
 
         return view ('games.show', [
             'game'      => $game,
             'players'   => $players,
             'tournament' => $tournament[0],
-            // 'teams'      => $teams,
+            'actions'    => $actions,
             // 'categories' => $categories,
             // 'journeys'   => $journeys,
             // 'stadiums'   => $stadiums,

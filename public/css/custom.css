@@ -238,3 +238,47 @@ if modal give us problems, just delete the backdrop element
 
   }
 
+
+  /* dashboard */
+  .crono {
+    font-size: xx-large;
+    font-weight: bolder;
+  }
+
+
+/* activity style */
+#activity {
+    padding: 20px;
+    background: #FAFAFA;
+  }
+
+  #activity h2 {
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+#activity input[type=radio] {
+    display: none;
+  }
+
+  #activity label {
+    display: inline-block;
+    margin: 4px;
+    padding: 8px;
+    background: #CECECE;
+    color: #4C3000;
+    width: calc(100%);
+    /* width: calc(50% - 8px); */
+    /* min-width: 100px; */
+    cursor: pointer;
+  }
+
+  #activity label:hover {
+    background: #EBBB67;
+  }
+
+  #activity input[type=radio]:checked + label {
+    background: #CB8306;
+    color: #FAFAFA;
+  }

@@ -143,12 +143,12 @@
 
             @if ($tournament->enable_enrollment == 'Si')
                 <div class="card mb-2">
-                    <div class="card-header bg-dark text-light">Inscripción de Juugadores</div>
+                    <div class="card-header bg-dark text-light">Inscripción de Jugadores</div>
 
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 m-1">
-                                <p><b>El administrador del torneo habilitó el registro de jugadores, si no conoces el código de registro,
+                                <p><b>El administrador del torneo habilitó el <b>registro de jugadores</b>, si no conoces el código de registro,
                                     pregunta por él en el grupo de whatsapp del torneo.</b>
                                 </p>
 
@@ -157,7 +157,7 @@
                                     <input class="form-control" type="text" id="code_enrollment" name="code_enrollment" maxlength="10">
                                 </div>
 
-                                <button class="btn btn-danger btn-lg w-100" id="btnEnrollment" name="btnEnrollment">
+                                <button class="btn btn-success btn-lg w-100" id="btnEnrollment" name="btnEnrollment">
                                     <span class="fa fa-edit"></span> Me quiero registrar
                                 </button>
                             </div>

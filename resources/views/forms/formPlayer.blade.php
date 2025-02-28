@@ -14,7 +14,7 @@
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>{{ __("Torneo") }} *</b></label>
+                                <label for="title"><b>Torneo *</b></label>
                                 @if(isset($tournaments))
                                 <select class="form-control" required id="tournament_id" name="tournament_id">
                                     <option value="">Selecciona</option>
@@ -33,7 +33,7 @@
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>{{ __("Category") }} *</b></label>
+                                <label for="title"><b>Categoría *</b></label>
                                 <select class="form-control" required id="category_id" name="category_id">
                                     <option value="">{{ __("Selecciona un torneo") }}</option>
 
@@ -43,7 +43,7 @@
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>{{ __("Teams") }} *</b></label>
+                                <label for="title"><b>Equipos *</b></label>
                                 <select class="form-control" required id="team_id" name="team_id">
                                     <option value="">{{ __("Selecciona un torneo") }}</option>
 
@@ -54,14 +54,14 @@
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>Nombres *</b></label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="45">
+                                <input type="text" class="form-control text-uppercase" id="name" name="name" required maxlength="45">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="last_name"><b>Apellidos *</b></label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" required maxlength="45">
+                                <input type="text" class="form-control text-uppercase" id="last_name" name="last_name" required maxlength="45">
                             </div>
                         </div>
 
@@ -78,14 +78,14 @@
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="number"><b>Número en playera *</b></label>
-                                <input type="text" class="form-control" id="number" name="number" required maxlength="10">
+                                <input type="text" class="form-control text-uppercase" id="number" name="number" required maxlength="10">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="phone"><b>Teléfono celular *</b></label>
-                                <input type="text" class="form-control" id="phone" name="phone" required maxlength="10">
+                                <input type="text" class="form-control text-uppercase" id="phone" name="phone" required maxlength="10">
                             </div>
                         </div>
 
@@ -105,14 +105,14 @@
                         <div class="col-md-9 col-sm-12">
                             <div class="form-group">
                                 <label for="emergency_name"><b>Nombre Completo</b></label>
-                                <input type="text" class="form-control" id="emergency_name" name="emergency_name" maxlength="80">
+                                <input type="text" class="form-control text-uppercase" id="emergency_name" name="emergency_name" maxlength="80">
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="emergency_phone"><b>Teléfono Emergencia</b></label>
-                                <input type="text" class="form-control" id="emergency_phone" name="emergency_phone" maxlength="80">
+                                <input type="text" class="form-control text-uppercase" id="emergency_phone" name="emergency_phone" maxlength="10">
                             </div>
                         </div>
 

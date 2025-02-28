@@ -297,7 +297,6 @@ class GamesController extends Controller
             $model->code        = strtoupper( str_random(8));
             $model->access_code = strtoupper( str_random(6));
 
-
             if ($model->save())
                  return response()->json(['type' => 'success',
                                  'message' => 'Se ha creado el Juego!']);
