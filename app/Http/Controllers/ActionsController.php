@@ -30,14 +30,22 @@ class ActionsController extends Controller
         if($request->ajax()){
 
             $rows = [];
-                $rows = DB::table('actions as a')                
-                    ->select('a.id', 'a.name', 'a.value', 'a.scoring', 'a.label', 'a.is_deleted', 'a.sport_id')
+                $rows = DB::table('actions as a')
+                    ->select('a.id',
+                        'a.name',
+                        'a.value',
+                        'a.scoring',
+                        'a.label',
+                        'a.is_deleted',
+                        'a.need_confirmation',
+                        'a.sport_id'
+                    )
                     ->where('a.is_deleted', 0)
-                    ->get();    
-            
-            
+                    ->get();
+
+
             return DataTables::of($rows)
-                   ->addColumn('name', function ($row) { 
+                   ->addColumn('name', function ($row) {
                         return $row->name . ' (' . $row->label . ')';
                    })
                    ->addColumn('action', function($row) {
@@ -49,7 +57,7 @@ class ActionsController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a>
-                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
+                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete">
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
@@ -68,7 +76,7 @@ class ActionsController extends Controller
         ]);
     }
 
-   
+
     /**
      * Store a newly created resource in storage.
      *
@@ -92,7 +100,7 @@ class ActionsController extends Controller
             'sport_id'      => 'Deporte',
             'scoring'       => 'Afecta el marcador',
             'value'         => 'Valor de la acción',
-          
+
         ];
 
         //Validate the data
@@ -108,17 +116,17 @@ class ActionsController extends Controller
 
         if (!isset($request->id) || empty($request->id)) {
             $model = new Actions($request->all());
-            
+
             if ($model->save())
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado la acción del deporte!']);      
+                 return response()->json(['type' => 'success',
+                                 'message' => 'Se ha creado la acción del deporte!']);
         } else {
             $model = Actions::find($request->id);
             $model->fill($request->all());
 
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado la acción del deporte!']); 
+            if ($model->update())
+                return response()->json(['type' => 'success',
+                                 'message' => 'Se ha modificado la acción del deporte!']);
         }
 
         return response()->json([
@@ -136,7 +144,15 @@ class ActionsController extends Controller
     public function show($id)
     {
         if ($id) {
-            return  Actions::select('id', 'name', 'sport_id', 'label', 'scoring', 'value', 'is_deleted')->find($id);
+            return  Actions::select('id',
+                'name',
+                'sport_id',
+                'label',
+                'scoring',
+                'value',
+                'is_deleted',
+                'need_confirmation'
+            )->find($id);
         }
         return false;
     }

@@ -245,6 +245,11 @@ if modal give us problems, just delete the backdrop element
     font-weight: bolder;
   }
 
+  .score {
+    font-size: 40px;
+    font-weight: bolder;
+  }
+
 
 /* activity style */
 #activity {

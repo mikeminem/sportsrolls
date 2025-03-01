@@ -16,9 +16,9 @@
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
-                        <a role="button" 
-                            class="btn btn-primary" 
-                            href="javascript:void(0);" 
+                        <a role="button"
+                            class="btn btn-primary"
+                            href="javascript:void(0);"
                             id="addRow"
                              >
                             <span class="fa fa-plus"></span> {{ __("New")}}
@@ -33,21 +33,37 @@
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
                     </a>
                     <hr />
-                   
+
+                    <div class="col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label for="filter-sport"><b>Deporte </b></label>
+                            <select id="filter-sport" name="filter-sport" class="form-control" required>
+                                <option value="">Todos</option>
+                                @foreach ($sports as $sport )
+                                <option value="{{ $sport->id }}">{{ $sport->name }}</option>
+
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+
 
                     <div class="table-responsive">
                         <table class="table table-hover" id="table">
                             <thead>
                                 <tr>
+                                    <th>Sport</th>
                                     <th>Nombre</th>
                                     <th>Valor</th>
                                     <th>Afecta marcador</th>
+                                    <th>Necesita confirmación</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-        
+
                             </tbody>
                         </table>
                     </div>
@@ -64,7 +80,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"> Datos de la acción</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
+                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
             </div>
             <!--mandamos la forma-->
             <form id="updateForm" enctype="multipart/form-data">
@@ -75,11 +91,11 @@
                             <div class="form-group">
                                 <label for="sport_id"><b>Deporte *</b></label>
                                 <select id="sport_id" name="sport_id" class="form-control" required>
-                                    <option value="">Selecciona</option>   
+                                    <option value="">Selecciona</option>
                                     @foreach ($sports as $sport )
-                                    <option value="{{ $sport->id }}">{{ $sport->name }}</option>   
-                                        
-                                    @endforeach                             
+                                    <option value="{{ $sport->id }}">{{ $sport->name }}</option>
+
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -89,32 +105,43 @@
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="label"><b>Etiqueta *</b></label>
-                                <input type="text" class="form-control" id="label" name="label" required maxlength="10" selected> 
+                                <input type="text" class="form-control" id="label" name="label" required maxlength="10" selected>
                             </div>
                         </div>
 
                         <div class="col-md-9 col-sm-12">
                             <div class="form-group">
                                 <label for="name"><b>Nombre *</b></label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="80"> 
+                                <input type="text" class="form-control" id="name" name="name" required maxlength="80">
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-3 col-sm-12">
+                        <div class="col-md-4 col-sm-6">
                             <div class="form-group">
                                 <label for="scoring"><b>Afecta el marcador *</b></label>
                                 <select id="scoring" name="scoring" class="form-control" required>
-                                    <option value="">Selecciona</option>                                
-                                    <option value="Si">Si</option>                                
-                                    <option value="No">No</option>                                
+                                    <option value="">Selecciona</option>
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6">
+                            <div class="form-group">
+                                <label for="need_confirmation"><b>Necesita Confirmación *</b></label>
+                                <select id="need_confirmation" name="need_confirmation" class="form-control" required>
+                                    <option value="">Selecciona</option>
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
                                 </select>
                             </div>
                         </div>
 
 
-                        <div class="col-md-3 col-sm-12">
+                        <div class="col-md-4 col-sm-6">
                             <div class="form-group">
                                 <label for="value"><b>Valor *</b></label>
                                 <input type="text" class="form-control" id="value" name="value" required maxlength="80">
@@ -136,7 +163,7 @@
                         {{ csrf_field() }}
 
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
+                                <span class="fa fa-save"></span>
                                 {{__('Save')}}
                             </button>
 
@@ -156,13 +183,13 @@
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Borrar Rregistro</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deleteForm">
@@ -176,7 +203,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -184,10 +211,10 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 @endsection
 
 @section('js')
@@ -197,7 +224,7 @@
             fetch_data();
 
             function fetch_data() {
-            
+
                 $('#table').DataTable({
                     "language": {
                         "sProcessing":    "Procesando...",
@@ -229,21 +256,31 @@
                         url: '{{ route('actions.index') }}',
                     },
                     columns: [
+                        { data: 'sport_id', name: 'sport_id', visible:false},
                         { data: 'name', name: 'name'},
                         { data: 'value', name: 'value'},
                         { data: 'scoring', name: 'scoring'},
+                        { data: 'need_confirmation', name: 'need_confirmation'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ]
                 });
             }
 
-          
+            //filters
+            $(document).on("change", "#filter-sport", function () {
+                $('#table').DataTable().columns(0).search(this.value).draw();
+            });
+
+
+
+
+
 
             $(document).on("click", "#addRow", function () {
                 $("#updateForm").trigger('reset');
                 $("#id").val("");
 
-                jQuery.noConflict(); 
+                jQuery.noConflict();
                 jQuery("#formModal").modal('show');
             });
 
@@ -263,13 +300,13 @@
                     type: "GET",
                     url: $(this).attr("href"),
                     dataType: "json",
-                    success: function (data) { 
-                        
+                    success: function (data) {
+
                         for(obj in data) {
                                 $("#" + obj).val(data[obj]);
                         }
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('show');
                     },
                 });
@@ -294,26 +331,26 @@
                     cache: false,
                     processData: false,
                     data: new FormData(this),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
                             var errors = "";
                             $.each(data.errors, function (i, val) {
                                 errors = errors  +  val + "\n";
                             });
-                            
+
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
                             return false;
                         }
 
                         $("#updateForm").trigger('reset');
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
 
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("Hubo un error al intentar agregar el registro", "error");
@@ -336,10 +373,10 @@
                             $.notify(data.message + "\n" + errors, data.type);
                             return false;
                         }
-                        
+
                         $("#deleteForm").trigger('reset');
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deleteModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();

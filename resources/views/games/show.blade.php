@@ -126,7 +126,7 @@
                                     </div>
 
                                     <div class="col-4 text-right align-items-center">
-                                        <span class="crono">00</span>
+                                        <span class="score" id="score{{ $game->team1_id }}">00</span>
                                     </div>
 
                                 </div>
@@ -135,13 +135,14 @@
                             </div>
                             <div class="col-4 text-center align-items-center">
                                     <h1 class="crono">00:00</h1>
+                                    <button class="btn btn-primary"> <span class="fa fa-cog"></span></button>
                                     <button class="btn btn-danger"> <span class="fa fa-stop"></span></button>
                                     <button class="btn btn-primary"> <span class="fa fa-play"></span></button>
                             </div>
                             <div class="col-4 text-right">
                                 <div class="row">
-                                    <div class="col-4 text-right align-items-center">
-                                        <span class="crono">00</span>
+                                    <div class="col-4 text-left align-items-center">
+                                        <span class="score" id="score{{ $game->team2_id }}" >00</span>
                                     </div>
                                     <div class="col-8 text-right align-items-center">
                                         {{ $game->team2 }}
@@ -378,9 +379,9 @@
                 console.log(playersList{{ $game->team1_id  }})
             }
 
-            if ( $.cookie('playersList{{ $game->team1_id  }}') ) {
-                playersListB = $.parseJSON($.cookie('playersList{{ $game->team1_id  }}'))
-                console.log(playersList{{ $game->team1_id  }})
+            if ( $.cookie('playersList{{ $game->team2_id  }}') ) {
+                playersListB = $.parseJSON($.cookie('playersList{{ $game->team2_id  }}'))
+                console.log(playersList{{ $game->team2_id  }})
             }
 
 
@@ -424,7 +425,7 @@
                     x.id == playerId
                 ).forEach( player => {
                         $('#table-' + teamId ).append(
-                            '<tr>'
+                            '<tr id="player-'+ player.id +'">'
                                 + '<td>'+ player.number +'</td>'
                                 + '<td><img src=" {{ asset('players_photos/') }}/' + player.photo +'" width="60px" height="60px"></td>'
                                 + '<td>'+ player.last_name +', ' + player.name +'</td>'

@@ -13,7 +13,7 @@
         <tbody>
             <tr id="noplayers-{{ $teamId }}"">
                 <td colspan="4" class="text-center">
-                    <b>Agregue jugadores</b>
+                    <b>JUGADORES EN LA CANCHA</b>
                 </td>
             </tr>
 
