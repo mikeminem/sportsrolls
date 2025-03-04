@@ -140,7 +140,6 @@
                             </div>
                         </div>
 
-
                         <div class="col-md-4 col-sm-6">
                             <div class="form-group">
                                 <label for="value"><b>Valor *</b></label>

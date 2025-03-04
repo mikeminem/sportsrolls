@@ -326,10 +326,51 @@
 
             <div class="modal-body">
                 <div id="activity">
-                    @foreach($actions as $action)
-                        <input type="radio" value="{{ $action->id }}" class="activity" name="action" id="action{{ $action->id }}">
-                        <label for="action{{ $action->id }}" >{{ $action->name }}</label> <br>
-                    @endforeach
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td>Acción</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <tr colspan="2">
+                                    <h3>
+                                        <span id="action-player-id">Nombre Player</span>
+                                    </h3>
+                                </tr>
+
+                            </tr>
+                            @foreach($actions as $action)
+                                {{-- <input type="radio" value="{{ $action->id }}" class="activity" name="action" id="action{{ $action->id }}">
+                                <label for="action{{ $action->id }}" >{{ $action->name }}</label> <br> --}}
+
+                                <tr>
+                                    <td>{{ $action->name }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-success" id="btnAddAction"
+                                            data-id="{{ $action->id }}"
+                                            data-value="{{ $action->value }}"
+                                            player-id=""
+                                            team-id=""
+                                            data-status="Exitoso" > <span class="fa fa-check"></span>  </button>
+                                        @if ($action->need_confirmation == 'Si')
+                                            <button class="btn btn-danger" id="btnAddAction"
+                                                data-id="{{ $action->id }}"
+                                                data-value="{{ $action->value }}"
+                                                player-id=""
+                                                team-id=""
+                                                data-status="Fallado" ><span class="fa fa-remove"></span> </button>
+                                        @endif
+
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
+
                 </div>
 
             </div>
@@ -337,10 +378,6 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                {{-- <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span>
-                    Agregar
-                </button> --}}
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
                     <span class="fa fa-remove"></span>
                     Cerrar
@@ -366,24 +403,51 @@
 
             let gameEnable = false
             let playersList = []
-            let playersList{{ $game->team1_id }} = []
-            let playersList{{ $game->team2_id }} = []
+            //let playersList{{ $game->team1_id }} = []
+            let playersListA = []
+            let playersListB = []
+
 
             if ( $.cookie('playersList') ) {
                 playersList = $.parseJSON($.cookie('playersList'))
-                console.log(playersList)
             }
 
-            if ( $.cookie('playersList{{ $game->team1_id  }}') ) {
-                playersListB = $.parseJSON($.cookie('playersList{{ $game->team1_id  }}'))
-                console.log(playersList{{ $game->team1_id  }})
+            if ( $.cookie('playersListA') ) {
+                playersListA = $.parseJSON($.cookie('playersListA'))
+                let teamId = {{ $game->team1_id }}
+                playersListA.forEach( player => {
+                        $('#table-' + teamId ).append(
+                            '<tr id="player-'+ player.id +'">'
+                                + '<td>'+ player.number +'</td>'
+                                + '<td><img src=" {{ asset('players_photos/') }}/' + player.photo +'" width="60px" height="60px"></td>'
+                                + '<td>'+ player.last_name +', ' + player.name +'</td>'
+                                + '<td class="text-right">'
+                                    + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
+                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
+                                +'</td>'
+                            + '</tr>')
+
+                })
             }
 
-            if ( $.cookie('playersList{{ $game->team2_id  }}') ) {
-                playersListB = $.parseJSON($.cookie('playersList{{ $game->team2_id  }}'))
-                console.log(playersList{{ $game->team2_id  }})
-            }
+            if ( $.cookie('playersListB') ) {
+                playersListB = $.parseJSON($.cookie('playersListB'))
+                let teamId = {{ $game->team2_id }}
+                playersListB.forEach( player => {
+                        $('#table-' + teamId ).append(
+                            '<tr id="player-'+ player.id +'">'
+                                + '<td>'+ player.number +'</td>'
+                                + '<td><img src=" {{ asset('players_photos/') }}/' + player.photo +'" width="60px" height="60px"></td>'
+                                + '<td>'+ player.last_name +', ' + player.name +'</td>'
+                                + '<td class="text-right">'
+                                    + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
+                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
+                                +'</td>'
+                            + '</tr>')
+                    console.log(player.id + player.name)
 
+                })
+            }
 
 
 
@@ -421,6 +485,10 @@
                 //$('#table-game-log > tbody').empty()
                 $('#no-activity').remove();
 
+                let player = playersList.filter( x =>
+                    x.id == playerId
+                )
+
                 let players = playersList.filter( x =>
                     x.id == playerId
                 ).forEach( player => {
@@ -430,13 +498,14 @@
                                 + '<td><img src=" {{ asset('players_photos/') }}/' + player.photo +'" width="60px" height="60px"></td>'
                                 + '<td>'+ player.last_name +', ' + player.name +'</td>'
                                 + '<td class="text-right">'
-                                    + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-up"></span> </button>'
-                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-retweet"></span> </button>'
+                                    + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
+                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
                                 +'</td>'
                             + '</tr>')
 
 
                         //table-game-log
+                        //this code can be inside the logGameHandle
                         $('#table-game-log').prepend(
                             '<tr>'
                                 + '<td>'+ player.number +'</td>'
@@ -450,12 +519,16 @@
                                 +'</td>'
                             + '</tr>')
                         }
-
                 )
+                if ( teamId == {{ $game->team1_id }} ) {
+                    playersListA.push(...player)
+                    $.cookie('playersListA', JSON.stringify(playersListA))
+                }
 
-
-                //add it to the log game table
-                //table_game_log
+                if ( teamId == {{ $game->team2_id }} ) {
+                    playersListB.push(...player)
+                    $.cookie('playersListB', JSON.stringify(playersListB))
+                }
 
 
                 //remove the player from the main array
@@ -467,8 +540,32 @@
             });
 
             $(document).on("click", "#btnAction", function (e) {
+
+                $('#action-player-id').html($(this).attr('player-name'));
+
+                //add the teamid and playerid to the addAction button
+                $("[id=btnAddAction]").attr('player-id', $(this).attr('player-id'))
+                $("[id=btnAddAction]").attr('team-id', $(this).attr('team-id'))
+
                 jQuery("#ActionsModal").modal('show');
             })
+
+            $(document).on("click", "#btnAddAction", function (e) {
+
+                //data-id="{{ $action->id }}" data-value="{{ $action->value }}" data-status="Exitoso"
+                let actionId = $(this).attr("data-id")
+                let actionValue = $(this).attr("data-value")
+                let actionStatus = $(this).attr("data-status")
+
+                alert('sent the action to db ' + 'actionid=' + actionId + ' action value=' +  actionValue + ' Action Status=' + actionStatus)
+                handleLogGame()
+
+                jQuery("#ActionsModal").modal('hide');
+
+
+
+            })
+
 
 
             $(document).on("click", "#btnDataEntry", function (e) {
@@ -479,6 +576,8 @@
             $(document).on("click", "#btnFinishDataEntry", function (e) {
                 $.removeCookie('enableGame');
                 $.removeCookie('playersList');
+                $.removeCookie('playersListA');
+                $.removeCookie('playersListB');
                 enableGame(false);
                 $(this).hide();
                 $('#btnDataEntry').show();
@@ -548,6 +647,19 @@
                     $('#btnFinishDataEntry').show();
 
                 }
+            }
+
+            function handleLogGame(
+                    game_id=null,
+                    team_id=null,
+                    player_id=null,
+                    action_id=null,
+                    period=null,
+                    time=null,
+                    comment=null
+                ) {
+                //this function handles the activity of the game
+                alert('let\'s save this in DB')
             }
 
         });

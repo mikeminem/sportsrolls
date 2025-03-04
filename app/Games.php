@@ -40,6 +40,12 @@ class Games extends Model
         return $this->belongsTo('App\Stadiums');
     }
 
+    public function gameLog() {
+        return $this->hasMany('App\GameLogs');
+    }
+
+
+
     public static function getDate($date) {
         echo "";
     }
