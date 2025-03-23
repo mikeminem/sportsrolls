@@ -250,6 +250,11 @@ if modal give us problems, just delete the backdrop element
     font-weight: bolder;
   }
 
+  .playerNumber {
+    font-size: 30px;
+    font-weight: bolder;
+  }
+
 
 /* activity style */
 #activity {

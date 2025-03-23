@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class GameLogs extends Model
 {
     //
+    protected $table = 'gamelogs';
+
     protected $fillable = [
         'player_id',
+        'team_id',
         'action_id',
         'game_id',
         'tournament_id',
@@ -17,6 +20,7 @@ class GameLogs extends Model
         'value',
         'time',
         'period',
+        'status',
     ];
 
     public function game() {

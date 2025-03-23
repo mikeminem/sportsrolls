@@ -254,6 +254,10 @@ Route::get('/game_history/{code}', 'GamesController@gameHistory');
 Route::post('/game_data_entry', 'GamesController@data_entry');
 Route::get('/get_team_games/{teamId}', 'GamesController@getTeamGames');
 
+//gaame logs
+Route::post('/game_log', 'GameLogsController@storeLog');
+
+
 //Sponsors options
 Route::resource('/sponsors','SponsorController');
 Route::get('/sponsors_list/{user_id}','SponsorController@list');

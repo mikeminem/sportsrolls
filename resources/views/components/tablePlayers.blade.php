@@ -3,13 +3,13 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>Nombre</th>
-            <th>Faltas</th>
+            <th>FOTO</th>
+            <th>NOMBRE</th>
             <th class="text-right">
-                <button class="btn btn-primary" id="addPlayer" team-id="{{ $teamId }}"><span class="fa fa-arrow-right"></span> Ingresa Jugador</button>
+                <button class="btn btn-primary" id="addPlayer" team-id="{{ $teamId }}"><span class="fa fa-arrow-right"></span> INGRESA</button>
             </th>
         </tr>
-        </thead>
+        </thead>S
         <tbody>
             <tr id="noplayers-{{ $teamId }}"">
                 <td colspan="4" class="text-center">
