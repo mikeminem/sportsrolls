@@ -277,7 +277,9 @@ class TournamentsController extends Controller
                 'winner_points_penalties',
                 'loser_points_penalties',
                 'enable_penalties_scoring',
-                'enable_enrollment')->find($id);
+                'enable_enrollment',
+                'period_time',
+                'period_num' )->find($id);
 
             if (!$model->code) {
                 $model->code =  strtoupper( str_random(8));
@@ -1132,8 +1134,8 @@ class TournamentsController extends Controller
 
         return response()->json([
             'access'    => $found,
-            'type'   => $type,
-            'message'  => $message
+            'type'      => $type,
+            'message'   => $message
         ]);
 
     }

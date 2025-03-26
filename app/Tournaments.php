@@ -27,7 +27,9 @@ class Tournaments extends Model
         'winner_points_penalties',
         'loser_points_penalties',
         'enable_penalties_scoring',
-        'enable_enrollment'
+        'enable_enrollment',
+        'period_time',
+        'period_num'
     ];
 
 

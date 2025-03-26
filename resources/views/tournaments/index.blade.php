@@ -71,7 +71,6 @@
                 <div class="modal-body">
                     <div class="row">
 
-
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
                                 <label for="sport">Deporte</label>
@@ -87,10 +86,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <div class="form-group">
-                                <label for="code">Habilitar Registro de Jugadores</label>
-                                <select class="form-control" id="enable_enrollment" name="enable_enrollment" style="width: 100px;">
+                                <label for="code">Habilitar Registro</label>
+                                <select class="form-control" id="enable_enrollment" name="enable_enrollment" >
                                     <option value="Si">Si</option>
                                     <option value="No">No</option>
                                 </select>
@@ -120,8 +119,37 @@
                             </div>
                         </div>
 
+                    </div>
+                    <div class="row">
 
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label for="code">Cantidad de Periodos</label>
+                                <select class="form-control" id="period_num" name="period_num" >
+                                    <option value="">Selecciona </option>
+                                    <option value="2">2 </option>
+                                    <option value="4">4 </option>
+                                </select>
+                            </div>
 
+                        </div>
+
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label for="code">Cantidad de Tiempo (Mins)</label>
+                                <select class="form-control" id="period_time" name="period_time" >
+                                    <option value="">Selecciona </option>
+                                    <option value="5">5 </option>
+                                    <option value="8">8 </option>
+                                    <option value="10">10 </option>
+                                    <option value="12">12 </option>
+                                    <option value="15">15 </option>
+                                    <option value="20">20 </option>
+                                    <option value="45">45 </option>
+                                </select>
+                            </div>
+
+                        </div>
                     </div>
 
                     <div class="row">
