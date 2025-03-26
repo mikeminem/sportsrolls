@@ -134,10 +134,13 @@
 
                             </div>
                             <div class="col-4 text-center align-items-center">
-                                    <h1 class="crono">00:00</h1>
-                                    <button class="btn btn-primary"> <span class="fa fa-cog"></span></button>
-                                    <button class="btn btn-danger"> <span class="fa fa-stop"></span></button>
-                                    <button class="btn btn-primary"> <span class="fa fa-play"></span></button>
+
+                                    <h1 class="crono">  <span id="timer">00:00</span> <span id="period">P1</span> </h1>
+
+                                    {{-- <button class="btn btn-primary" id="config-crono"> <span class="fa fa-cog"></span></button> --}}
+                                    <button class="btn btn-primary" id="restart"> <span class="fa fa-refresh"></span></button>
+                                    <button class="btn btn-danger" id="stop"> <span class="fa fa-stop"></span></button>
+                                    <button class="btn btn-primary" id="start"> <span class="fa fa-play"></span></button>
                             </div>
                             <div class="col-4 text-right">
                                 <div class="row">
@@ -462,6 +465,54 @@
 
                 })
             }
+
+
+
+            // crono config
+            window.onload = init;
+            function init(){
+                document.querySelector(".start").addEventListener("click",cronometrar);
+                document.querySelector(".stop").addEventListener("click",parar);
+                document.querySelector(".reiniciar").addEventListener("click",reiniciar);
+            //    h = 0;
+                m = 1;
+                s = 0;
+                document.getElementById("hms").innerHTML="10:00";
+            }
+            function cronometrar(){
+                escribir();
+                id = setInterval(escribir,1000);
+                document.querySelector(".start").removeEventListener("click",cronometrar);
+            }
+            function escribir(){
+                var hAux, mAux, sAux;
+                //s++;
+                s--;
+                if (s<0){m--;s=59;}
+                if (m==0 && s==0){ parar()}
+                //if (m<0){h--;m=0;}
+                //if (h>24){h=0;}
+
+                if (s<10){sAux="0"+s;}else{sAux=s;}
+                if (m<10){mAux="0"+m;}else{mAux=m;}
+            //    if (h<10){hAux="0"+h;}else{hAux=h;}
+
+            //document.getElementById("hms").innerHTML = hAux + ":" + mAux + ":" + sAux;
+            document.getElementById("hms").innerHTML = mAux + ":" + sAux;
+            }
+            function parar(){
+                clearInterval(id);
+                document.querySelector(".start").addEventListener("click",cronometrar);
+
+            }
+            function reiniciar(){
+                clearInterval(id);
+                document.getElementById("hms").innerHTML="10:00";
+                h=0;m=0;s=0;
+                document.querySelector(".start").addEventListener("click",cronometrar);
+            }
+
+            //end of the crono config
 
 
 

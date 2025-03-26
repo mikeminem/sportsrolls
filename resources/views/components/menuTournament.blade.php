@@ -41,6 +41,15 @@
                 <span class="fa fa-list p-2"></span>
             </a>
 
+            <a href="{{ url('tournament_info/' . $tournament->slug . '/stats') }}"
+                alt="{{ $tournament->title }}"
+                title="{{ $tournament->title }}"
+                type="button"
+                class="btn btn-{{ ($active == 'stats') ? 'primary': 'light' }}">
+                <span class="fa fa-line-chart p-2"></span>
+            </a>
+
+
             <a href="{{ url('tournament_info/' . $tournament->slug . '/photos') }}"
                 alt="{{ $tournament->title }}"
                 title="{{ $tournament->title }}"
@@ -95,7 +104,16 @@
                 type="button"
                 class="btn btn-{{ ($active == 'standings') ? 'primary': 'light' }}">
                 <span class="fa fa-list"></span>
-                    Tabla de Posiciones
+                    Clasificación
+            </a>
+
+            <a href="{{ url('tournament_info/' . $tournament->slug . '/stats') }}"
+                alt="{{ $tournament->title }}"
+                title="{{ $tournament->title }}"
+                type="button"
+                class="btn btn-{{ ($active == 'stats') ? 'primary': 'light' }}">
+                <span class="fa fa-line-chart"></span>
+                    Estadísticas
             </a>
 
             <a href="{{ url('tournament_info/' . $tournament->slug . '/photos') }}"
