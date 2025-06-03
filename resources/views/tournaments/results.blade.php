@@ -20,44 +20,46 @@
                     <div class="row">
                         <div class="col-md-12">
 
-                            @foreach ($journeys as $journey)
+                            <div class="form-group">
+                                <label for="filterJourneys"><b>Jornada</b></label>
+                                <select class="form-control" required id="filterJourneys" name="filterJourneys"  >
+                                    @foreach ($journeys as $journey)
+                                        <option value="{{ $journey->id }}" {{ ($journey->status == 'Abierto') ? 'selected':'' }} > {{ $journey->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                                    @if (($journey->is_deleted == 0) &&
-                                         ($journey->show_public == "Si") )
-                                        <div class="col-md-12">
-                                                <h4> {{ $journey->name }}</h4>
+                            <div class="row show-results">
+                                @foreach ($journeys as $journey)
 
-                                                {{-- @foreach ($categories as $category) --}}
-                                                    {{-- <h5>Categoría {{ $category->name}}</h5> --}}
-                                                        @php
-                                                            $i=0;
-                                                        @endphp
-                                                        <div class="row">
-                                                            @foreach ($games as $game)
-                                                                    @if (($game->journey_id == $journey->id) && ($game->status == "Finalizado"))
+                                    @if (($journey->status == 'Abierto') )
+                                        @php
+                                            $i=0;
+                                        @endphp
 
-                                                                        @php
-                                                                            $i++;
-                                                                        @endphp
+                                            @foreach ($games as $game)
+                                                @if ($game->journey_id == $journey->id)
 
-                                                                        {{-- @if ($game->category_id == $category->id) --}}
-                                                                            @include('components/btnGame')
-                                                                        {{-- @endif --}}
-                                                                    @endif
-                                                            @endforeach
-                                                        </div>
+                                                    @php
+                                                        $i++;
+                                                    @endphp
 
-                                                {{-- @endforeach --}}
+                                                    @include('components/btnGame')
 
-                                                @if ($i==0)
-                                                    <div class="alert alert-danger">
-                                                        <strong>Nota!</strong> no se encontraron resultados en esta jornada
-                                                    </div>
                                                 @endif
-                                        </div>
-                                        <hr />
-                                    @endif
+                                            @endforeach
+
+                                        @if ($i==0)
+                                            <div class="alert alert-danger">
+                                                <strong>Nota!</strong> no se encontraron resultados en esta jornada
+                                            </div>
+                                        @endif
+                                            <hr />
+                                        @endif
                                 @endforeach
+
+                            </div>
+
 
 
                             <div class="fb-share-button" data-href="{{ url('tournament_info/' . $tournament->slug) }}" data-layout="button_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.deportezacatecas.com%2Ftournament_info%2FLiga-de-Veteranos-de-Guadalupe&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
@@ -78,29 +80,30 @@
 <script type="text/javascript">
     jQuery(document).ready(function($){
 
-        $('#filterCategories').change( function () {
-            // const branch = $('#branch option:selected').val();
+        $('#filterJourneys').change( function () {
+           let journeyId = $(this).val()
+           //call the endpoint to fetch the games into the journey
 
-            // if (branch === '') {
-            //     $.notify("Selecciona una Rama", "error");
-            //     return;
-            // }
+            $.ajax({
+                type: "GET",
+                url: "{{ url('get_games_by_journey') }}/" + journeyId,
+                dataType: "json",
+                success: function (data) {
 
-            $("#filterCategories option:selected").each(function () {
-                categoryId=$(this).val();
+                    let bladeContent = data;
+                    console.log(bladeContent);
 
-                $("#filterTeams").html('<option value="">Selecciona una cateogría</option>');
+                    $('.show-results').empty();
+                    $('.show-results').html(data);
 
-                getTeams("filterTeams",categoryId);
-                // getTeamsByCategoryAndBranch("team1_id", categoryId, branch );
-                // getTeamsByCategoryAndBranch("team2_id", categoryId, branch );
-
+                },
             });
+
+            return false;
+
+
         })
 
-        $('#btnBuscar').click( function () {
-            alert('Vamos a buscar')
-        })
     });
 
 </script>

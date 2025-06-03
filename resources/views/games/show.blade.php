@@ -433,7 +433,7 @@
                                 + '<td>'+ player.last_name +', ' + player.name +'</td>'
                                 + '<td class="text-right">'
                                     + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
-                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
+                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'" ><span class="fa fa-arrow-left"></span> </button>'
                                 +'</td>'
                             + '</tr>')
 
@@ -461,58 +461,57 @@
                                     + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
                                 +'</td>'
                             + '</tr>')
-                    console.log(player.id + player.name)
 
                 })
             }
 
 
 
-            // crono config
-            window.onload = init;
-            function init(){
-                document.querySelector(".start").addEventListener("click",cronometrar);
-                document.querySelector(".stop").addEventListener("click",parar);
-                document.querySelector(".reiniciar").addEventListener("click",reiniciar);
-            //    h = 0;
-                m = 1;
-                s = 0;
-                document.getElementById("hms").innerHTML="10:00";
-            }
-            function cronometrar(){
-                escribir();
-                id = setInterval(escribir,1000);
-                document.querySelector(".start").removeEventListener("click",cronometrar);
-            }
-            function escribir(){
-                var hAux, mAux, sAux;
-                //s++;
-                s--;
-                if (s<0){m--;s=59;}
-                if (m==0 && s==0){ parar()}
-                //if (m<0){h--;m=0;}
-                //if (h>24){h=0;}
+            // crono config ##################################
+            // window.onload = init;
+            // function init(){
+            //     document.querySelector(".start").addEventListener("click",cronometrar);
+            //     document.querySelector(".stop").addEventListener("click",parar);
+            //     document.querySelector(".reiniciar").addEventListener("click",reiniciar);
+            // //    h = 0;
+            //     m = 1;
+            //     s = 0;
+            //     document.getElementById("hms").innerHTML="10:00";
+            // }
+            // function cronometrar(){
+            //     escribir();
+            //     id = setInterval(escribir,1000);
+            //     document.querySelector(".start").removeEventListener("click",cronometrar);
+            // }
+            // function escribir(){
+            //     var hAux, mAux, sAux;
+            //     //s++;
+            //     s--;
+            //     if (s<0){m--;s=59;}
+            //     if (m==0 && s==0){ parar()}
+            //     //if (m<0){h--;m=0;}
+            //     //if (h>24){h=0;}
 
-                if (s<10){sAux="0"+s;}else{sAux=s;}
-                if (m<10){mAux="0"+m;}else{mAux=m;}
-            //    if (h<10){hAux="0"+h;}else{hAux=h;}
+            //     if (s<10){sAux="0"+s;}else{sAux=s;}
+            //     if (m<10){mAux="0"+m;}else{mAux=m;}
+            // //    if (h<10){hAux="0"+h;}else{hAux=h;}
 
-            //document.getElementById("hms").innerHTML = hAux + ":" + mAux + ":" + sAux;
-            document.getElementById("hms").innerHTML = mAux + ":" + sAux;
-            }
-            function parar(){
-                clearInterval(id);
-                document.querySelector(".start").addEventListener("click",cronometrar);
+            // //document.getElementById("hms").innerHTML = hAux + ":" + mAux + ":" + sAux;
+            // document.getElementById("hms").innerHTML = mAux + ":" + sAux;
+            // }
+            // function parar(){
+            //     clearInterval(id);
+            //     document.querySelector(".start").addEventListener("click",cronometrar);
 
-            }
-            function reiniciar(){
-                clearInterval(id);
-                document.getElementById("hms").innerHTML="10:00";
-                h=0;m=0;s=0;
-                document.querySelector(".start").addEventListener("click",cronometrar);
-            }
+            // }
+            // function reiniciar(){
+            //     clearInterval(id);
+            //     document.getElementById("hms").innerHTML="10:00";
+            //     h=0;m=0;s=0;
+            //     document.querySelector(".start").addEventListener("click",cronometrar);
+            // }
 
-            //end of the crono config
+            //end of the crono config ##################################
 
 
 
@@ -649,10 +648,18 @@
                 //remove the player from the main array
                 playersList = playersList.filter( x =>
                     x.id != playerId )
-                console.log(playersList)
+
                 $.cookie('playersList', JSON.stringify(playersList))
 
             });
+
+            $(document).on("click", "#btnChange", function (e) {
+
+                alert('Cambio de jugador' + $(this).attr('player-name'))
+                //$('#action-player-id').html($(this).attr('player-name'));
+                //add the teamid and playerid to the addAction button
+                //jQuery("#ChangeModal").modal('show');
+            })
 
             $(document).on("click", "#btnAction", function (e) {
 
@@ -684,11 +691,12 @@
                         let actionStatus = $(this).attr("data-status")
                         let playerId = $(this).attr('player-id')
                         let teamId = $(this).attr('team-id')
+                        let period = $('#period').html();
 
                         let tournamentId = {{ $game->tournament_id }}
                         let gameId = {{ $game->id }}
 
-                        handleLogGame(tournamentId, gameId, teamId, playerId, actionId, actionStatus, actionValue, 1, '00:00', '')
+                        handleLogGame(tournamentId, gameId, teamId, playerId, actionId, actionStatus, actionValue, period, '00:00', '')
                         jQuery("#ActionsModal").modal('hide');
 
                     }

@@ -65,7 +65,8 @@ class LeaguesController extends Controller
         }
 
         if ($request) {
-            $league = Leagues::find(Auth::user()->id);
+            // $league = Leagues::find(Auth::user()->id);
+            $league = User::find(Auth::user()->id)->league;
 
             if ($league) {
                 $lastImage = $league->logo1;

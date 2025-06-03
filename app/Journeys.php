@@ -8,7 +8,16 @@ class Journeys extends Model
 {
     //
     protected $fillable = [
-        'name', 'notes', 'start_at', 'finish_at', 'tournament_id', 'sport_id', 'is_deleted', 'status', 'is_current','show_public',
+        'name',
+        'notes',
+        'start_at',
+        'finish_at',
+        'tournament_id',
+        'sport_id',
+        'is_deleted',
+        'status',
+        'is_current',
+        'show_public'
     ];
 
     public function tournament() {

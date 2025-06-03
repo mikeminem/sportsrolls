@@ -151,9 +151,6 @@
                             </div>
                         </div>
 
-
-
-
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="title"><b>Torneo *</b></label>
@@ -212,7 +209,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <!--div class="row">
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label for="photo">Foto del Equipo</label>
@@ -222,10 +219,20 @@
 
                             </div>
                         </div>
+                    </div-->
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 text-right">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="keep-open" id="keep-open"> Mantener ventana abierta
+                            </label>
+
+
+                        </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <b>Datos marcados con * son obligatorios</b>
                             <input type="hidden" class="form-control" id="id" name="id" readonly>
                         </div>
@@ -233,6 +240,7 @@
                 </div>
 
                 <div class="modal-footer">
+
                     <div class="form-group text-right">
                         {{ csrf_field() }}
 
@@ -244,8 +252,8 @@
                             <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
                                 <span class="fa fa-remove"></span> {{__('Cancel')}}
                             </button>
-                        </div>
                     </div>
+                </div>
             </form>
                 <!--fin de la forma-->
          </div>
@@ -583,6 +591,9 @@
             $(document).on("submit", "#Form", function (e) {
                 e.preventDefault();
 
+                let keepOpen = $('#keep-open').is(":checked")
+                console.log(keepOpen)
+
                 $.ajax({
                     type: "POST",
                     url: "{{ route('teams.store') }}",
@@ -602,10 +613,17 @@
                             return false;
                         }
 
-                        $("#updateForm").trigger('reset');
+                        //$("#updateForm").trigger('reset')
 
                         jQuery.noConflict();
-                        jQuery("#formModal").modal('toggle');
+                        if (keepOpen === false) {
+                            $("#Form").trigger('reset');
+                            jQuery("#formModal").modal('toggle');
+                        } else {
+                            //just clean the team name
+                            $('#name').val('');
+                        }
+
                         // Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
 

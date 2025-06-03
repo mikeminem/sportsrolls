@@ -254,6 +254,9 @@ Route::get('/game_history/{code}', 'GamesController@gameHistory');
 Route::post('/game_data_entry', 'GamesController@data_entry');
 Route::get('/get_team_games/{teamId}', 'GamesController@getTeamGames');
 
+Route::get('/get_games_by_journey/{journeyId}', 'GamesController@getJourneyGames');
+
+
 //gaame logs
 Route::post('/game_log', 'GameLogsController@storeLog');
 

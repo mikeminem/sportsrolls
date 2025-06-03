@@ -370,6 +370,7 @@
                                     <option value="Medio Tiempo">Medio Tiempo</option>
                                     <option value="3er Tiempo">3er Tiempo</option>
                                     <option value="4to Tiempo">4to Tiempo</option>
+                                    <option value="Tiempo Regular">Tiempo Regular</option>
                                     <option value="Tiempo Extra">Tiempo Extra</option>
 
                                 </select>
@@ -1111,7 +1112,7 @@
 
                         for(gameRows in data) {
 
-                            console.log(data[gameRows]);
+                            //console.log(data[gameRows]);
                             let gameRow = '';
                             gameRow = '<tr>';
 

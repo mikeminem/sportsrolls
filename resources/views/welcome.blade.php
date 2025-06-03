@@ -23,12 +23,12 @@
 
           {{-- ads --}}
           @foreach ($webContents as $webContent)
-            @if( $webContent->location == 'Encabezado' 
+            @if( $webContent->location == 'Encabezado'
               && $webContent->type == 'Publicidad' )
                 <a href="{{ asset('webpage/' . $webContent->slug ) }}" alt="{{ $webContent->title }}" title="{{ $webContent->title }}">
 
-                    <div class="text-center" 
-                      style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}'); 
+                    <div class="text-center"
+                      style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}');
                         background-size: cover;
                         background-repeat: no-repeat;
                         /* background-attachment: fixed; */
@@ -42,7 +42,7 @@
                 </a>
               @endif
           @endforeach
-        
+
       </div>
   </div>
 </div>
@@ -56,7 +56,7 @@
                         $slide =0;
                     @endphp
                     @foreach ($webContents as $webContent)
-                        
+
                         @if( $webContent->location == 'Carrusel Principal' )
                             <li data-target="#carouselExampleIndicators" data-slide-to="{{ $slide }}" class="{{ ($slide==0) ? 'active': '' }}"></li>
 
@@ -71,22 +71,23 @@
                     $slide =0;
                   @endphp
                   @foreach ($webContents as $webContent)
-                      
+
                         @if( $webContent->location == 'Carrusel Principal' )
                               <div class="carousel-item {{ ($slide ==0) ? 'active' : '' }} ">
-                                <img class="mx-auto d-block" 
-                                    src="{{ asset('web_pages/' . $webContent->image) }}?auto=yes&bg=777&fg=555&text=DeporteZacatecas.com" 
-                                    alt="La Liga Sanfa Fe Soccer"
-                                    width="100%"
-                                    height="50%">
+                                <img class="mx-auto d-block img-responsive"
+                                    src="{{ asset('web_pages/' . $webContent->image) }}?auto=yes&bg=777&fg=555&text=DeporteZacatecas.com"
+                                    alt="Deport Zacatecas"
+                                    {{-- width="100%" --}}
+                                    {{-- height="50%" --}}
+                                >
                                 <div class="carousel-caption" style="background:rgba(255, 255, 255, 0.7)" width="100%">
                                   <h2>
-                                    <a href="{{ asset('webpage/' . $webContent->slug ) }}" 
-                                        alt="{{ $webContent->title }}" 
-                                        title="{{ $webContent->title }}">{{ $webContent->title }} 
+                                    <a href="{{ asset('webpage/' . $webContent->slug ) }}"
+                                        alt="{{ $webContent->title }}"
+                                        title="{{ $webContent->title }}">{{ $webContent->title }}
                                     </a>
                                   </h2>
-                                            
+
                                 </div>
                               </div>
 
@@ -99,11 +100,11 @@
                   {{-- <div class="carousel-item active">
                     <img class="mx-auto w-100 d-block" src="{{ asset('images/imgCampanas2024.jpeg')}}?auto=yes&bg=777&fg=555&text=SportRoles.com" alt="La Liga Sanfa Fe Soccer">
                     <div class="carousel-caption" style="background:rgba(0, 0, 0, 0.3)">
-                      <h2>Campanas 2024 </h2>          
+                      <h2>Campanas 2024 </h2>
                     </div>
                   </div> --}}
 
-               
+
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -124,23 +125,23 @@
   <div class="row">
     <div class="col-md-12">
       <h2 class="title">{{ __('Convocatorias') }}</h2>
-    </div> 
+    </div>
 
     <div class="col-md-4 col-sm-12">
         @foreach ($webContents as $webContent)
-            @if( $webContent->location == 'No Ubicacion' 
+            @if( $webContent->location == 'No Ubicacion'
               && $webContent->type == 'Convocatoria' )
                 <a href="{{ asset('webpage/' . $webContent->slug ) }}" alt="{{ $webContent->title }}" title="{{ $webContent->title }}">
 
-                  <img 
-                    src="{{ asset('web_pages/' . $webContent->image) }}" 
-                    alt="{{ $webContent->title }}" 
+                  <img
+                    src="{{ asset('web_pages/' . $webContent->image) }}"
+                    alt="{{ $webContent->title }}"
                     title="{{ $webContent->title }}"
                     width="100%"
                     height="100%">
 
-                    {{-- <div class="text-center" 
-                      style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}'); 
+                    {{-- <div class="text-center"
+                      style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}');
                         background-size: cover;
                         background-repeat: no-repeat;
                         /* background-attachment: fixed; */
@@ -154,7 +155,7 @@
               @endif
           @endforeach
     </div>
-      
+
   </div>
 </div>
 <!-- end current torunaments-->
@@ -169,7 +170,7 @@
 
       <div class="col-md-12">
         <div class="row">
-          @if (count($tournaments)==0) 
+          @if (count($tournaments)==0)
             <div class="alert alert-danger">
               <strong>Aviso!</strong> Aún no hay torneos activos
             </div>
@@ -185,7 +186,7 @@
 <!-- end current torunaments-->
 
 <!-- comming up torunaments-->
-@if (count($tournaments2)>0) 
+@if (count($tournaments2)>0)
 <div class="container mt-2">
   <div class="row">
     <div class="col-md-12 m-1">
@@ -203,30 +204,30 @@
                 <h4 class="card-title">{{ $tournament->title }}</h4>
                 <a href="{{ url('tournament_info/' . $tournament->slug) }}" class="btn btn-primary stretched-link" width="100%"> Ir al torneo <span class="fa fa-arrow-right"> </a>
               </div>
-              <div class="card-footer text-right"> 
+              <div class="card-footer text-right">
                 <span class="float-left" ><b> {{ $tournament->sport->name }} </b></span>
-                
+
                 <span class="fa fa-list"></span>
                 @php
                   $prints = $tournament->prints;
                   if ($prints>=1000) {
                       $prints = number_format($prints /1000,1) . "K";
                   }
-                @endphp   
-                {{ $prints }} 
+                @endphp
+                {{ $prints }}
                 <span class="fa fa-eye"></span>
                 @php
                   $clicks = $tournament->clicks;
                   if ($clicks>=1000) {
                       $clicks = number_format($clicks /1000,1) . "K";
                   }
-                @endphp   
+                @endphp
                   {{ $clicks }}
               </div>
             </div>
           </div>
           @endforeach
-          
+
   </div>
 </div>
 <br />
@@ -261,7 +262,7 @@
           <li data-target="#demo" data-slide-to="1"></li>
           <li data-target="#demo" data-slide-to="2"></li>
         </ul>
-      
+
         <!-- The slideshow -->
         <div class="carousel-inner text-center">
           <div class="carousel-item active">
@@ -274,7 +275,7 @@
             <h4>"Could I... BE any more happy with this company?"<br><span>Chandler Bing, Actor, FriendsAlot</span></h4>
           </div>
         </div>
-      
+
         <!-- Left and right controls -->
         <a class="carousel-control-prev" href="#demo" data-slide="prev">
           <span class="carousel-control-prev-icon"></span>
@@ -282,11 +283,41 @@
         <a class="carousel-control-next" href="#demo" data-slide="next">
           <span class="carousel-control-next-icon"></span>
         </a>
-      
+
       </div>
     </div>
   </div>
 </div> --}}
+
+<div class="container mb-1">
+    <div class="row">
+        <div class="col-md-12">
+
+            {{-- ads --}}
+            @foreach ($webContents as $webContent)
+              @if( $webContent->location == 'Abajo'
+                && $webContent->type == 'Publicidad' )
+                  <a href="{{ asset('webpage/' . $webContent->slug ) }}" alt="{{ $webContent->title }}" title="{{ $webContent->title }}">
+
+                      <div class="text-center"
+                        style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}');
+                          background-size: cover;
+                          background-repeat: no-repeat;
+                          /* background-attachment: fixed; */
+                          background-position: center;
+                          background-position-x: center;
+                          background-position-y: center;
+                          vertical-align: middle;
+                          height: 250px;  ">
+                          <h2 style="color: #fff;" class="p-5">{{ $webContent->title }}</h2>
+                      </div>
+                  </a>
+                @endif
+            @endforeach
+
+        </div>
+    </div>
+  </div>
 
 
 
@@ -298,7 +329,7 @@
                 <button class="btn btn-default">Patrocinadores</button>
           </div>
     </div> --}}
-   
+
       <div class="row justify-content-center">
         <div class="col-md-12 text-center">
               <ul class="sponsors">
@@ -309,8 +340,8 @@
                 @endforeach
               </ul>
 
-          </div>  
-      </div>  
+          </div>
+      </div>
   </div>
 @endif
 
@@ -322,12 +353,12 @@
 
           {{-- ads --}}
           @foreach ($webContents as $webContent)
-            @if( $webContent->location == 'PiePagina' 
+            @if( $webContent->location == 'PiePagina'
               && $webContent->type == 'Publicidad' )
                 <a href="{{ asset('webpage/' . $webContent->slug ) }}" alt="{{ $webContent->title }}" title="{{ $webContent->title }}">
 
-                    <div class="text-center" 
-                      style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}'); 
+                    <div class="text-center"
+                      style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}');
                         background-size: cover;
                         background-repeat: no-repeat;
                         /* background-attachment: fixed; */
@@ -341,7 +372,7 @@
                 </a>
               @endif
           @endforeach
-        
+
       </div>
   </div>
 </div>

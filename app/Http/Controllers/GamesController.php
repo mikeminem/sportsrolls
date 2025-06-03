@@ -10,15 +10,16 @@ use DataTables;
 use DB;
 use App\Tournaments;
 use App\Games;
-use App\Category;
+use App\Journeys;
 use App\Stadiums;
+use Illuminate\Support\Facades\View;
 
 class GamesController extends Controller
 {
     //
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['showGame', 'data_entry']]);
+        $this->middleware('auth', ['except' => ['showGame', 'data_entry', 'getJourneyGames']]);
     }
 
     public function index(Request $request)
@@ -514,6 +515,63 @@ class GamesController extends Controller
         }
 
         return $gameList;
+
+    }
+
+    function getJourneyGames($journeyId) {
+
+        //get the tournament
+        $journey = Journeys::where('id', $journeyId)->get();
+        $tournament = Tournaments::where('id', $journey[0]->tournament_id)->get();
+
+        $games  = DB::table('games as g')
+        ->select('g.id',
+         't1.name as team1',
+         't1.logo as t1logo',
+         'g.score_team1',
+         'g.score_team2',
+         't2.name as team2',
+         't2.logo as t2logo',
+         'c.name as category',
+         'g.status' , 'g.notes',
+         'g.score_team1',
+         'g.score_team2',
+         'g.game_day',
+         'g.journey_id',
+         'g.game_time',
+         'g.tournament_id',
+         'g.branch',
+         'g.category_id',
+         's.name as stadium',
+         'g.type',
+         'g.score_penalties_team1',
+         'g.score_penalties_team2',
+         'g.code')
+        ->join('teams as t1', 't1.id', '=', 'g.team1_id')
+        ->join('teams as t2', 't2.id', '=', 'g.team2_id')
+        ->leftJoin('categories as c', 'c.id', '=', 'g.category_id')
+        ->join('journeys as j', 'j.id', '=', 'g.journey_id')
+        ->leftJoin('stadiums as s', 's.id', '=', 'g.stadium_id')
+        ->where('g.is_deleted', 0)
+        ->where('j.is_deleted', 0)
+        ->where('j.show_public', "Si")
+        ->where('j.id', $journeyId)
+        ->orderBy('g.game_day', 'asc')
+        ->orderBy('g.game_time', 'asc')
+        ->get();
+
+        $btnGames = '';
+        foreach ($games as $game) {
+            $viewGame =  View::make('components/btnGame', [
+                'game'         => $game,
+                'tournament'    => $tournament[0]
+            ]);
+
+            $btnGames .= (string)$viewGame;
+
+
+        }
+        return $btnGames;
 
     }
 
