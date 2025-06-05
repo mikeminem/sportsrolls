@@ -9,14 +9,14 @@
                 <button class="btn btn-primary" id="addPlayer" team-id="{{ $teamId }}"><span class="fa fa-arrow-right"></span> INGRESA</button>
             </th>
         </tr>
-        </thead>S
+        </thead>
         <tbody>
-            <tr id="noplayers-{{ $teamId }}"">
+            <tr id="noplayers-{{ $teamId }}">
                 <td colspan="4" class="text-center">
                     <b>JUGADORES EN LA CANCHA</b>
                 </td>
             </tr>
-
         </tbody>
+
     </table>
 </div>

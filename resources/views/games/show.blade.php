@@ -12,26 +12,30 @@
         <div class="col-md-12">
 
             <div class="card">
-                <div class="card-header text-center">
-                    <h2 id="title">Detalles del Juego</h2>
-                </div>
                 <div class="card-body">
                     @if($game->status !== 'Finalizado')
                         <div class="row">
-                            <div class="col-9 text-left">
-                                Lugar: {{ $game->stadium }} |
-                                Fecha: {{ $game->game_day }} {{ $game->game_time }}
-                                Tipo de juego: {{ $game->type }}
+                            <div class="col-12 text-center">
+                                 <h2>{{ $game->stadium }}</h2> 
+                                 {{ $game->game_day }} {{ $game->game_time }} <br>
+                                <i>{{ $game->type }}</i>  -  {{ $game->status }}
                             </div>
-                            <div class="col-3 text-right">
+                            <div class="col-12 text-center">
                                 <button class="btn btn-success" id="btnDataEntry">
                                     <span class="fa fa-edit"></span> Capturar Actividad
                                 </button>
 
-                                <button class="btn btn-primary" id="btnFinishDataEntry" style="display: none">
-                                     <span class="fa fa-sign-out"></span> Finalizar
+                                <button class="btn btn-primary" id="btnSetup" style="display: none">
+                                     <span class="fa fa-cog"></span> Configurar Juego
                                 </button>
 
+                                 <button class="btn btn-success" id="btnStart" style="display: none">
+                                     <span class="fa fa-play"></span> Comenzar Juego
+                                </button>
+
+                                <button class="btn btn-danger" id="btnFinishDataEntry" style="display: none">
+                                     <span class="fa fa-sign-out"></span> Finalizar
+                                </button>
                             </div>
                         </div>
                     @else
@@ -52,9 +56,9 @@
                             <div class="row align-items-center">
                                 <div class="col-6 text-left">
                                     @if( $game->t1logo )
-                                        <img class="img-fluid" src="{{ asset('team_logo/' . $game->t1logo) }}" width="80%" >
+                                        <img class="img-fluid" src="{{ asset('team_logo/' . $game->t1logo) }}" width="50%" >
                                     @else
-                                        <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="80%" >
+                                        <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="50%" >
                                     @endif
                                 </div>
 
@@ -63,18 +67,18 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-12 text-center">
+                            <div class="row mb-4">
+                                <div class="col-12 text-left">
                                     <h4>{{ $game->team1 }}</h4>
                                 </div>
                             </div>
 
-                            <div class="row text-left">
+                            {{-- <div class="row text-left">
                                 <div class="col-12">
                                     @include('components.tableGamePlayers', ['teamId' => $game->team1_id])
 
                                 </div>
-                            </div>
+                            </div> --}}
 
                         </div>
 
@@ -84,35 +88,35 @@
                                     <h3><span id="score_team2">{{ $game->score_team2 }}</span></h3>
                                 </div>
 
-                                <div class="col-6 text-center">
+                                <div class="col-6 text-right">
                                     @if( $game->t2logo )
-                                        <img class="img-fluid" src="{{ asset('team_logo/' . $game->t2logo) }}" width="80%" >
+                                        <img class="img-fluid" src="{{ asset('team_logo/' . $game->t2logo) }}" width="50%" >
                                     @else
-                                        <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="80%" >
+                                        <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="50%" >
                                     @endif
 
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-12 text-center">
+                            <div class="row mb-4">
+                                <div class="col-12 text-right">
                                     <h4>{{ $game->team2 }}</h4>
                                 </div>
                             </div>
 
 
 
-                            <div class="row text-left">
+                            {{-- <div class="row text-left">
                                 <div class="col-12">
                                     @include('components.tableGamePlayers', ['teamId' => $game->team2_id])
 
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
                     <div id="dashboard" style="display: none">
-                        <div class="row mb-3"  >
+                        <div class="row mb-3" >
                             <div class="col-4">
                                 <div class="row">
                                     <div class="col-8  text-left">
@@ -128,11 +132,9 @@
                                     <div class="col-4 text-right align-items-center">
                                         <span class="score" id="score_{{ $game->team1_id }}">{{ $game->score_team1 }}</span>
                                     </div>
-
                                 </div>
-
-
                             </div>
+
                             <div class="col-4 text-center align-items-center">
 
                                     <h1 class="crono">  <span id="timer">00:00</span> <span id="period">P1</span> </h1>
@@ -142,6 +144,7 @@
                                     <button class="btn btn-danger" id="stop"> <span class="fa fa-stop"></span></button>
                                     <button class="btn btn-primary" id="start"> <span class="fa fa-play"></span></button>
                             </div>
+
                             <div class="col-4 text-right">
                                 <div class="row">
                                     <div class="col-4 text-left align-items-center">
@@ -176,7 +179,7 @@
                                 <h2>REGISTRO DEL JUEGO</h2>
 
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="table-game-log"">
+                                    <table class="table table-hover" id="table-game-log">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -190,7 +193,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                            <tr id="no-activity"">
+                                            <tr id="no-activity">
                                                 <td colspan="7" class="text-centeer">
                                                     <b>No hay registro del juego aún</b>
                                                 </td>
@@ -255,9 +258,67 @@
   </div>
 <!-- End codeModal Form -->
 
+
+<!-- codeModal Form -->
+<div class="modal" id="SetupModal">
+    <div class="modal-dialog mw-100 w-100">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Configuración el juego</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#team1"> A) {{ $game->team1 }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#team2">B) {{ $game->team2 }} </a>
+                    </li>
+                    
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="team1">
+                        @include('components.tableGamePlayers', ['teamId' => $game->team1_id])
+                    </div>
+                    <div class="tab-pane fade" id="team2">
+                        @include('components.tableGamePlayers', ['teamId' => $game->team2_id])
+                    </div>
+                </div>
+           
+
+            </div>
+            {{ csrf_field() }}
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <span class="fa fa-check"></span>
+                    Aceptar
+                </button>
+                <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
+                    <span class="fa fa-remove"></span>
+                    Cancelar
+                </button>
+            </div>
+
+      </div>
+    </div>
+  </div>
+<!-- End codeModal Form -->
+
 {{-- Players list Modal --}}
 <div class="modal" id="PlayersModal">
-    <div class="modal-dialog ">
+    <div class="modal-dialog">
       <div class="modal-content">
 
         <!-- Modal Header -->
@@ -398,11 +459,11 @@
 
 @section('js')
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/jquery.cookie.js') }}"></script>
 <script type="text/javascript">
 
         jQuery(document).ready(function($) {
-
 
             let gameEnable = false
             let playersList = []
@@ -710,6 +771,12 @@
                 jQuery("#codeModal").modal('show');
             });
 
+            $(document).on("click", "#btnSetup", function (e) {
+                e.preventDefault();
+                jQuery("#SetupModal").modal('show');
+            });
+            
+
             $(document).on("click", "#btnFinishDataEntry", function (e) {
                 $.removeCookie('enableGame');
                 $.removeCookie('playersList');
@@ -773,6 +840,8 @@
 
                     $('#btnDataEntry').show();
                     $('#btnFinishDataEntry').hide();
+                    $('#btnStart').hide();
+                    $('#btnSetup').hide();
 
                 } else {
 
@@ -782,6 +851,8 @@
 
                     $('#btnDataEntry').hide();
                     $('#btnFinishDataEntry').show();
+                    $('#btnStart').show();
+                    $('#btnSetup').show();
 
                 }
             }
