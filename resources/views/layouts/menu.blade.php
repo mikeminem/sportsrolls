@@ -142,10 +142,10 @@
                                         <a class="dropdown-item" href="{{ url('/municipalities')}}"><i class="fa fa-square"></i> {{ __('Municipalities') }}</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ url('/users') }}"><i class="fa fa-users"></i> {{ __('Users') }}</a>
-                                        <a class="dropdown-item" href="#"><i class="fa fa-money"></i> {{ __('Plan') }}</a>
+                                        <a class="dropdown-item" href="#"><i class="fa fa-money"></i> Planes de Trabajo</a>
 
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#"><i class="fa fa-bank"></i> {{ __('Banks') }}</a>
+                                        <a class="dropdown-item" href="#"><i class="fa fa-bank"></i> Cuenta de Banco</a>
 
                                     </div>
                                 </li>
@@ -163,7 +163,8 @@
                                         <div class="dropdown-divider"></div>
 
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{{ url('/sponsors')}}"><i class="fa fa-file"></i> {{ __('Sponsors') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/sponsors')}}"><i class="fa fa-file"></i> Patrocinadores</a>
+                                        <a class="dropdown-item" href="{{ url('/ads')}}"><i class="fa fa-file"></i> Publicidad</a>
 
                                     </div>
                                 </li>
