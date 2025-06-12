@@ -36,25 +36,19 @@ class RosterController extends Controller
             if ( $request->tournament ) {
 
                 $rows = DB::table('rosters as r')
-                    //->join('players as p', 'p.id', '=', 'r.player_id')
                     ->leftjoin('teams as t', 't.id', '=', 'r.team_id')
                     ->select(
                         'r.id',
                         'r.number',
-                        'r.positions',
                         'r.name',
                         'r.last_name',
-                        'r.phone',
                         'r.photo',
                         't.name as team',
                         'r.tournament_id as tournament',
-                        'r.status',
                         'r.team_id',
                         'r.category_id',
-                        'r.emergency_name',
-                        'r.emergency_phone',
-                        'r.dob'
-                        // 'p.photo'
+                        'r.verified',
+                        'r.license'
                     )
                     ->where('r.is_deleted', 0)
                     //->where('r.user_id',Auth::user()->id)
@@ -75,10 +69,6 @@ class RosterController extends Controller
                     ->addColumn('player', function($row) {
                         return  $row->last_name . ', ' . $row->name . ' <b>player #' . $row->number . '</b>  ';
                     })
-                    ->addColumn('emergency_call', function($row) {
-                        return  $row->emergency_name. '<br> ' . $row->emergency_phone;
-                    })
-
                     ->addColumn('action', function($row) {
 
                         $routeEdit = route('rosters.show', $row->id);
@@ -122,9 +112,7 @@ class RosterController extends Controller
             'category_id'   => 'required',
             'team_id'       => 'required',
             'number'        => 'required|max:10',
-            'phone'         => 'required|max:10',
-            //'status'        => 'required',
-            'dob'           => 'required'
+            'verified'      => 'required'
         ];
 
         $attributes = [
@@ -134,8 +122,7 @@ class RosterController extends Controller
             'category_id'   => 'Categiría',
             'team_id'       => 'Equipo',
             'number'        => 'Número en playera',
-            'phone'         => 'Teléfono / Celular',
-            //'status'        => 'Estado'
+            'verified'      => 'Verificado'
         ];
 
         //Validate the data
@@ -195,7 +182,7 @@ class RosterController extends Controller
 
         return response()->json([
             'type' => 'error',
-            'message' => 'Error trying to save player information!'
+            'message' => 'Error al intentar guardar la información del jugador!'
         ]);
 
     }
@@ -215,17 +202,15 @@ class RosterController extends Controller
                 'team_id',
                 'user_id',
                 'number',
-                'status',
                 'category_id',
                 'is_deleted',
                 'tournament_id',
                 'name',
                 'last_name',
-                'phone',
-                'emergency_name',
-                'emergency_phone',
-                'dob',
-                'photo'
+                'photo',
+                'number',
+                'verified',
+                'license'
             )->find($id);
             return $row;
         }
@@ -246,13 +231,13 @@ class RosterController extends Controller
 
             return response()->json([
                 'type' => 'success',
-                'message' => 'Player deleted!'
+                'message' => 'Datos del jugador borrados!'
             ]);
         }
 
         return response()->json([
             'type' => 'error',
-            'message' => 'There is an error trying to delete the playeyr!'
+            'message' => 'Hubo un error al intentar borrar al jugador!'
         ]);
     }
 

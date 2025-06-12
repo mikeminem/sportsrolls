@@ -78,9 +78,6 @@
                                     <th>{{ __("Foto") }}</th>
                                     <th>{{ __("Equipo") }}</th>
                                     <th width="200px">{{ __("Jugador") }}</th>
-                                    <th>{{ __("Phone") }}</th>
-                                    <th>{{ __("En caso de emergencia") }}</th>
-                                    <th>{{ __("Estado") }}</th>
                                     <th> - </th>
                                 </tr>
                             </thead>
@@ -112,7 +109,7 @@
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>{{ __("Tournament") }} *</b></label>
+                                <label for="title"><b>Torneo *</b></label>
                                 <select class="form-control" required id="tournament_id" name="tournament_id">
                                     <option value="">Selecciona</option>
                                     @foreach($tournaments as $tournament)
@@ -134,7 +131,7 @@
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="title"><b>{{ __("Teams") }} *</b></label>
+                                <label for="title"><b>Equipo *</b></label>
                                 <select class="form-control" required id="team_id" name="team_id">
                                     <option value="">{{ __("Select a Tournament") }}</option>
 
@@ -144,76 +141,49 @@
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="name"><b>{{ __("Name") }} *</b></label>
+                                <label for="name"><b>Nombres *</b></label>
                                 <input type="text" class="form-control" id="name" name="name" required maxlength="45">
                             </div>
                         </div>
 
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="last_name"><b>{{ __("Last Name") }} *</b></label>
+                                <label for="last_name"><b>Apellidos *</b></label>
                                 <input type="text" class="form-control" id="last_name" name="last_name" required maxlength="45">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="number"><b>{{ __("Number in T-shirt") }} *</b></label>
+                                <label for="number"><b>Número / Dorsal *</b></label>
                                 <input type="text" class="form-control" id="number" name="number" required maxlength="10">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="phone"><b>{{ __("Phone Number") }} *</b></label>
-                                <input type="text" class="form-control" id="phone" name="phone" required maxlength="10">
+                                <label for="license"><b>Número Licencia </b></label>
+                                <input type="text" class="form-control" id="license" name="license" maxlength="10">
                             </div>
                         </div>
-
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="dob"><b>{{ __("DOB") }}</b></label>
-                                <input type="date" class="form-control" id="dob" name="dob" required >
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 col-sm-12">
-                            <p><b>{{ __("Notify in case of emergency") }}</b></p>
-                        </div>
-
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label for="emergency_name"><b>{{ __("Emergency Name") }}</b></label>
-                                <input type="text" class="form-control" id="emergency_name" name="emergency_name" maxlength="80">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="emergency_phone"><b>{{ __("Emergency Phone") }}</b></label>
-                                <input type="text" class="form-control" id="emergency_phone" name="emergency_phone" maxlength="80">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="status"><b>{{ __("Status") }}</b></label>
-                                <select id="status" name="status" class="form-control" required>
-                                    <option value="Active">{{ __('Active') }}</option>
-                                    <option value="Inactive">{{ __('InActive') }}</option>
+                                <label for="verified"><b>Verificado * </b></label>
+                                <select id="verified" name="verified" class="form-control" required>
+                                    <option value="SI">SI</option>
+                                    <option value="NO">NO</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-6">
-                            <img id="player_photo" src="{{ asset('images/No-photo-m.png') }}" class="img-fluid img-thumbnai" alt="{{ __('Player Photo') }}">
+                            <img id="player_photo" src="{{ asset('images/No-photo-m.png') }}" class="img-fluid img-thumbnail" alt="{{ __('Player Photo') }}">
                         </div>
 
                         <div class="col-md-9 col-sm-6">
                             <div class="form-group">
-                                <label for="photo"><b>{{ __("Photo") }}</b></label>
+                                <label for="photo"><b>Fotografía</b></label>
                                 <input type="file" class="form-control" id="photo" name="photo" maxlength="80" accept="image/*">
                             </div>
                         </div>
@@ -234,11 +204,11 @@
 
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <span class="fa fa-save"></span>
-                                {{__('Save')}}
+                                Guardar
                             </button>
 
-                            <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
-                                <span class="fa fa-remove"></span> {{__('Cancel')}}
+                            <button type="button" class="btn btn-primary btn-lg" class ="close" data-dismiss="modal">
+                                <span class="fa fa-remove"></span> Cancelar
                             </button>
                         </div>
                     </div>
@@ -333,9 +303,7 @@
                         { data: 'photo', name: 'photo'},
                         { data: 'team', name: 'team'},
                         { data: 'player', name: 'player'},
-                        { data: 'phone', name: 'phone'},
-                        { data: 'emergency_call', name: 'emergency_call'},
-                        { data: 'status', name: 'status'},
+                        {{-- { data: 'license', name: 'license'}, --}}
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ]
                 });
@@ -347,17 +315,17 @@
                 $('#table').DataTable().destroy();
                 fetch_data(tournament);
 
-                var tournament=$(this).val();
+                //var tournament=$(this).val();
                 if (tournament =="") {
-                    $("#filterCategories").empty();
+                    //$("#filterCategories").empty();
                     $("#filterCategories").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
 
-                    $("#filterTeams").empty();
+                    //$("#filterTeams").empty();
                     $("#filterTeams").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
 
-                    $("#category_id").empty();
+                    //$("#category_id").empty();
                     $("#category_id").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
-                    $("#team_id").empty();
+                    //$("#team_id").empty();
                     $("#team_id").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
 
                 } else {
@@ -368,12 +336,11 @@
 
             $(document).on("change", "#tournament_id", function () {
                 var tournament = $('#tournament_id').val();
-
-                var tournament=$(this).val();
+                //var tournament=$(this).val();
                 if (tournament =="") {
-                    $("#category_id").empty();
+                    //$("#category_id").empty();
                     $("#category_id").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
-                    $("#team_id").empty();
+                    //$("#team_id").empty();
                     $("#team_id").html('<option value="">{{ __("Selecciona un torneo") }}</option>');
 
                 } else {
@@ -477,13 +444,9 @@
 
                             if (obj == 'category_id') {
                                 category_id = data[obj];
-                                //getTeams("team_id",category_id);
                             }
                         }
                         getTeams("team_id",category_id, data['team_id']);
-
-                        //$("#sport").val("{{ Auth::user()->league->sport->name}}");
-                        //$("#sport_id").val("{{ Auth::user()->league->sport->id}}");
 
                         jQuery.noConflict();
                         jQuery("#formModal").modal('show');
@@ -549,7 +512,7 @@
                     data: $(this).serialize(),
                     success: function (data) {
                         if (data.type == "error") {
-                            $.notify(data.message + "\n" + errors, data.type);
+                            $.notify(data.message + "\n" + data.errors, data.type);
                             return false;
                         }
 

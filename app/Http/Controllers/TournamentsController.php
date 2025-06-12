@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions;
+//use App\Actions;
 use App\Category;
 use App\Journeys;
 use App\Tournaments;
@@ -1092,13 +1092,13 @@ class TournamentsController extends Controller
             ->where('is_deleted',0)
             ->get(['id', 'name','last_name', 'photo', 'number', 'team_id']);
         $tournament = Tournaments::where('id', $game->tournament_id)->get();
-        $actions    = Actions::where('is_deleted',0)->where('sport_id', $tournament[0]->sport_id)->get();
+        //$actions    = Actions::where('is_deleted',0)->where('sport_id', $tournament[0]->sport_id)->get();
 
         return view ('games.show', [
             'game'      => $game,
             'players'   => $players,
             'tournament' => $tournament[0],
-            'actions'    => $actions,
+            //'actions'    => $actions,
             // 'categories' => $categories,
             // 'journeys'   => $journeys,
             // 'stadiums'   => $stadiums,

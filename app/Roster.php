@@ -22,7 +22,8 @@ class Roster extends Model
         'emergency_phone',
         'photo',
         'dob',
-        'hide_name'
+        'verified',
+        'license'
     ];
 
     // public function player()

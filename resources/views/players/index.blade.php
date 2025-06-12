@@ -43,10 +43,6 @@
                                     <th>{{ __("Player") }}</th>
                                     <th>{{ __("Last Name 1") }}</th>
                                     <th>{{ __("Last Name 2") }}</th>
-                                    <th>{{ __("Phone") }}</th>
-                                    <th>{{ __("Call in case of emergency") }}</th>
-                                    <th>{{ __("Blood Type") }}</th>
-                                    <th>{{ __("Status") }}</th>
                                     <th> - </th>
                                 </tr>
                             </thead>
@@ -342,10 +338,6 @@
                         { data: 'names', name: 'names'},
                         { data: 'last_name1', name: 'last_name1'},
                         { data: 'last_name2', name: 'last_name2'},
-                        { data: 'phone', name: 'phone'},
-                        { data: 'emergency_name', name: 'emergency_name'},
-                        { data: 'blood_type', name: 'blood_type'},
-                        { data: 'status', name: 'status'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ]
                 });
