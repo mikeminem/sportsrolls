@@ -57,7 +57,8 @@
                                     <th>Nombre</th>
                                     <th>Valor</th>
                                     <th>Afecta marcador</th>
-                                    <th>Necesita confirmación</th>
+                                    <th>Confirmación</th>
+                                    <th>Sección Habilitada</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -118,29 +119,37 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="scoring"><b>Afecta el marcador *</b></label>
                                 <select id="scoring" name="scoring" class="form-control" required>
-                                    <option value="">Selecciona</option>
                                     <option value="Si">Si</option>
                                     <option value="No">No</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="need_confirmation"><b>Necesita Confirmación *</b></label>
                                 <select id="need_confirmation" name="need_confirmation" class="form-control" required>
-                                    <option value="">Selecciona</option>
                                     <option value="Si">Si</option>
                                     <option value="No">No</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <label for="is_enabled"><b>Sección Habilitada *</b></label>
+                                <select id="is_enabled" name="is_enabled" class="form-control" required>
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="value"><b>Valor *</b></label>
                                 <input type="text" class="form-control" id="value" name="value" required maxlength="80">
@@ -260,6 +269,7 @@
                         { data: 'value', name: 'value'},
                         { data: 'scoring', name: 'scoring'},
                         { data: 'need_confirmation', name: 'need_confirmation'},
+                        { data: 'is_enabled', name: 'is_enabled'},
                         { data: 'action', name: 'action', orderable: false, searchable: false}
                     ]
                 });

@@ -38,7 +38,8 @@ class ActionsController extends Controller
                         'a.label',
                         'a.is_deleted',
                         'a.need_confirmation',
-                        'a.sport_id'
+                        'a.sport_id',
+                        'a.is_enabled'
                     )
                     ->where('a.is_deleted', 0)
                     ->get();
@@ -91,7 +92,7 @@ class ActionsController extends Controller
             'sport_id'      => 'required',
             'scoring'       => 'required',
             'value'         => 'required',
-
+            'is_enabled'    => 'required'
         ];
 
         $attributes = [
@@ -100,7 +101,7 @@ class ActionsController extends Controller
             'sport_id'      => 'Deporte',
             'scoring'       => 'Afecta el marcador',
             'value'         => 'Valor de la acción',
-
+            'is_enabled'    => 'Esta habilitada'
         ];
 
         //Validate the data
@@ -151,7 +152,8 @@ class ActionsController extends Controller
                 'scoring',
                 'value',
                 'is_deleted',
-                'need_confirmation'
+                'need_confirmation',
+                'is_enabled'
             )->find($id);
         }
         return false;
@@ -166,6 +168,14 @@ class ActionsController extends Controller
      */
     public function destroy($id)
     {
+        if (!Auth::user()) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'No tienes permisos para borrar acciones!'
+            ]);
+        }
+
+        //Check if the id is valid
         if (isset($id) && $id > 0) {
             Actions::where('id', $id)->update(['is_deleted' => 1 ]);
 

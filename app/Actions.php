@@ -12,6 +12,8 @@ class Actions extends Model
         'label',
         'scoring',
         'value',
-        'need_confirmation'
+        'need_confirmation',
+        'is_deleted',
+        'is_enabled'
     ];
 }
