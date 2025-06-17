@@ -3,7 +3,8 @@
         <tr>
           <th>Foto</th>
           <th>#</th>
-          <th>Jugador</th>
+          <th>Nombre</th>
+          <th>Asistencia</th>
           <th> - </th>
         </tr>
       </thead>
@@ -27,7 +28,19 @@
                 <td><b>{{ $player->number }}</b></td>
                 <td>{{ $player->last_name }}, {{ $player->name }}</td>
                 <td>
-                      {{-- <button class="btn btn-primary float-right gameActions" id="btnAction" ><span class="fa fa-plus"></span></button> --}}
+                    <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                value="1"
+                                game-id="{{ $gameId }}"
+                                data-playerid="{{ $player->id }}"
+                                id="attendance-player"> ASISTIÓ
+                        </label>
+                    </div>
+                <td>
+
                 </td>
               </tr>
           @endif

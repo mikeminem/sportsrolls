@@ -10,7 +10,7 @@
 
     <title>@yield('title')</title>
 
-    <meta name="robots" content="index, follow">
+    {{-- <meta name="robots" content="index, follow"> --}}
     <meta name="title" content="@yield('title')">
     <meta name="description" content="@yield('description')">
     <meta name="keywords" content="@yield('keywords')">

@@ -4,6 +4,7 @@
 @section('description', $tournament->title ." | " . $tournament->summary . " | " . config('app.name') )
 @section('url',  url('tournament_info/' . $tournament->slug) )
 @section('keywords', $tournament->title ." | " . $tournament->summary . " | " . config('app.name') )
+@section('image', asset('tournaments/' . $tournament->user->league->logo1 ) )
 
 
 @section('content')

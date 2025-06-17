@@ -16,7 +16,7 @@
                     @if($game->status !== 'Finalizado')
                         <div class="row">
                             <div class="col-12 text-center">
-                                 <h2>{{ $game->stadium }}</h2> 
+                                 <h2>{{ $game->stadium }}</h2>
                                  {{ $game->game_day }} {{ $game->game_time }} <br>
                                 <i>{{ $game->type }}</i>  -  {{ $game->status }}
                             </div>
@@ -277,24 +277,24 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#team1"> A) {{ $game->team1 }}</a>
+                        <a class="nav-link active" data-toggle="tab" href="#team1"> A - {{ $game->team1 }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#team2">B) {{ $game->team2 }} </a>
+                        <a class="nav-link" data-toggle="tab" href="#team2">B - {{ $game->team2 }} </a>
                     </li>
-                    
+
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active" id="team1">
-                        @include('components.tableGamePlayers', ['teamId' => $game->team1_id])
+                        @include('components.tableGamePlayers', ['teamId' => $game->team1_id, 'gameId' => $game->id] )
                     </div>
                     <div class="tab-pane fade" id="team2">
-                        @include('components.tableGamePlayers', ['teamId' => $game->team2_id])
+                        @include('components.tableGamePlayers', ['teamId' => $game->team2_id, 'gameId' => $game->id] )
                     </div>
                 </div>
-           
+
 
             </div>
             {{ csrf_field() }}
@@ -775,7 +775,7 @@
                 e.preventDefault();
                 jQuery("#SetupModal").modal('show');
             });
-            
+
 
             $(document).on("click", "#btnFinishDataEntry", function (e) {
                 $.removeCookie('enableGame');

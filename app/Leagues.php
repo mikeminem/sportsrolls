@@ -8,17 +8,17 @@ class Leagues extends Model
 {
     //
     protected $fillable = [
-        'name', 
-        'slogan', 
-        'summary', 
-        'facebook', 
-        'instagram', 
-        'twitter', 
-        'footer1', 
-        'website', 
-        'watsapp', 
-        'sport_id', 
-        'state_id', 
+        'name',
+        'slogan',
+        'summary',
+        'facebook',
+        'instagram',
+        'twitter',
+        'footer1',
+        'website',
+        'watsapp',
+        'sport_id',
+        'state_id',
         'municipality_id',
         'logo1',
         'logo2',
@@ -34,4 +34,5 @@ class Leagues extends Model
     {
         return $this->belongsTo('App\Sports');
     }
+
 }
