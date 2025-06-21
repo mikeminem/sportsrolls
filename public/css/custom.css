@@ -292,3 +292,13 @@ if modal give us problems, just delete the backdrop element
     background: #CB8306;
     color: #FAFAFA;
   }
+
+  .form-check-inline .form-check-input {
+    position: static;
+	accent-color: #9d3039;
+    margin-top: 0;
+    margin-right: 0.3125rem;
+    margin-left: 0;
+	height: 25px;
+	width: 25px;
+}

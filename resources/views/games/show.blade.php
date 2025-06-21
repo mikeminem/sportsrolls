@@ -301,9 +301,9 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-lg">
+                <button class="btn btn-primary btn-lg" id="btnSaveConfig">
                     <span class="fa fa-check"></span>
-                    Aceptar
+                    Guardars
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
                     <span class="fa fa-remove"></span>
@@ -574,6 +574,11 @@
 
             //end of the crono config ##################################
 
+
+            
+            $(document).on("change", "#attendance-player", function (e) {
+                alert('attended' + $(this).attr('data-player-id'))
+            })
 
 
             $(document).on("click", "#addPlayer", function (e) {
@@ -851,7 +856,7 @@
 
                     $('#btnDataEntry').hide();
                     $('#btnFinishDataEntry').show();
-                    $('#btnStart').show();
+                    //$('#btnStart').show();
                     $('#btnSetup').show();
 
                 }
