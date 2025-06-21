@@ -178,6 +178,7 @@ class TeamsController extends Controller
         if (!isset($request->id) || empty($request->id)) {
             $model = new Teams($request->all());
             $model->user_id = Auth::user()->id;
+            $model->slug = str_slug($model->name, '-');
 
             if (!empty($path))
                 $model->photo = $path;
@@ -190,6 +191,10 @@ class TeamsController extends Controller
                                  'message' => 'Se ha creado el Equipo!']);
         } else {
             $model = Teams::find($request->id);
+            if (!$model->slug) {
+                $model->slug = str_slug($model->name, '-');
+            }
+
             $lastImage = $model->photo;
             $lastLogo = $model->logo;
             $model->fill($request->all());

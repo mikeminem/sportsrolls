@@ -213,9 +213,11 @@ Route::get('/tournament_info/{slug}', 'TournamentsController@frontPage');
 Route::get('/tournament_info/{slug}/results', 'TournamentsController@results');
 Route::get('/tournament_info/{slug}/calendar', 'TournamentsController@calendar');
 Route::get('/tournament_info/{slug}/standings', 'TournamentsController@standings');
+Route::get('/tournament_info/{slug}/stats', 'TournamentsController@stats');
 Route::get('/tournament_info/{slug}/photos', 'TournamentsController@photos');
 Route::get('/tournament_info/{slug}/teams', 'TournamentsController@teams');
 Route::get('/tournament_info/{slug}/game/{code}', 'TournamentsController@game');
+Route::get('/tournament_info/{slug}/{category}/{team}', 'TournamentsController@game');
 Route::get('/update_tournament_enable_enrollment/{id}/{enable_enrollment}', 'TournamentsController@updateEnableEnroll');
 Route::get('/tournament_enrollment/{code}', 'TournamentsController@getValidateEnrollCode');
 
