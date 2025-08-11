@@ -22,10 +22,7 @@ class GameLogsController extends Controller
         $log = new GameLogs($request->all());
 
         //see if we need to update the game table for the score
-        if (
-            $log->value > 0
-            && $log->status == 'Exitoso'
-        ) {
+        if ( $log->value > 0 && $log->status == 'Exitoso' ) {
             //change the score value
             $game =  Games::find($log->game_id);
 

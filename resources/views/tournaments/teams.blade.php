@@ -41,28 +41,34 @@
                                                             @if ($team->category_id == $category->id)
                                                                 <tr>
                                                                     <td >
-                                                                        @if( $team->logo )
-                                                                            <img class="img" src="{{ asset('team_logo/' . $team->logo) }} " style="width:40px">
-                                                                        @else
-                                                                            <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
-                                                                        @endif
-                                                                        <b>{{ $team->name }}</b>
-                                                                        {{-- @if( $team->photo )
-                                                                                <br>
-                                                                                <img class="img img-fluid" src="{{ asset('team/' . $team->photo) }} " style="width=100%">
+                                                                        <a href="{{ url('tournament_info/' . $tournament->slug .'/' . $category->name .'/' . $team->slug) }}" class="text-dark">
 
-                                                                        @endif --}}
-                                                                        <!--div class="text-right">
+                                                                            @if( $team->logo )
+                                                                                <img class="img" src="{{ asset('team_logo/' . $team->logo) }} " style="width:40px">
+                                                                            @else
+                                                                                <img class="img" src="{{ asset('images/_shield.png') }} " style="width:40px">
+                                                                            @endif
+                                                                            <b>{{ $team->name }}</b>
+                                                                            {{-- @if( $team->photo )
+                                                                                    <br>
+                                                                                    <img class="img img-fluid" src="{{ asset('team/' . $team->photo) }} " style="width=100%">
 
-                                                                            <span class="fa fa-heart"></span> 123
-                                                                            <span class="fa fa-thumbs-up"></span> 123
-                                                                            <span class="fa fa-thumbs-down"></span>34
+                                                                            @endif --}}
+                                                                            <!--div class="text-right">
 
-                                                                        </div-->
+                                                                                <span class="fa fa-heart"></span> 123
+                                                                                <span class="fa fa-thumbs-up"></span> 123
+                                                                                <span class="fa fa-thumbs-down"></span>34
 
-                                                                        @if ($team->status == 'Baja')
-                                                                        <span class="badge badge-danger">Baja del torneo</span>
-                                                                        @endif
+                                                                            </div-->
+
+                                                                            @if ($team->status == 'Baja')
+                                                                            <span class="badge badge-danger">Baja del torneo</span>
+                                                                            @endif
+
+                                                                            <span class="fa fa-external-link"></span>
+
+                                                                         </a>
                                                                     </td>
                                                                 </tr>
                                                             @endif

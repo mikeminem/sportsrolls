@@ -39,7 +39,8 @@ class TournamentsController extends Controller
             'teams',
             'game',
             'photos',
-            'getValidateEnrollCode'
+            'getValidateEnrollCode',
+            'teamPage'
             ]
         ]);
     }
@@ -1026,19 +1027,22 @@ class TournamentsController extends Controller
             ->orderby('name','asc')
             ->get();
 
+        //this is to create the slug for the teams
+        foreach ($teams as $team) {
+            if (!$team->slug) {
+                $slug = str_slug($team->name, '-');
+                Teams::where('id', $team->id)->update(['slug' => $slug ]);
+            }
+        }
+
         $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
-        //$journeys = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','desc')->get();
-        //$stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
 
 
         return view ('tournaments.teams', [
             'tournament' => $tournament[0],
             'teams'      => $teams,
             'categories' => $categories,
-            // 'journeys'   => $journeys,
-            // 'games'      => $games,
-            // 'stadiums'   => $stadiums,
-            // 'scores'     => $scores,
+
         ]);
     }
 
@@ -1139,6 +1143,43 @@ class TournamentsController extends Controller
             'access'    => $found,
             'type'      => $type,
             'message'   => $message
+        ]);
+
+    }
+
+    function  teamPage($tournament, $category, $team) {
+
+        if (!$tournament || !$category || !$team) {
+            //lets send this to the tournaments list
+            return view ('app.error');
+        }
+
+        $tournament = Tournaments::where('slug', $tournament)->get();
+        $category = Category::where('name', $category)
+            ->where('tournament_id', $tournament[0]->id)
+            ->get();
+        $team = Teams::where('slug', $team)
+            ->where('tournament_id', $tournament[0]->id)
+            ->where('category_id', $category[0]->id)
+            ->get();
+
+        $players = Roster::where('team_id', $team[0]->id)
+            ->where('is_deleted',0)
+            ->get(['id', 'name','last_name', 'number','verified', 'photo' ]);
+
+        $gameController = new GamesController();
+        $games = $gameController->getTeamGames($team[0]->id);
+
+        if (empty($tournament->all()) || empty($category->all()) || empty($team->all())) {
+            return view ('app.error');
+        }
+
+        return view ('tournaments.team', [
+            'tournament' => $tournament[0],
+            'category'   => $category[0],
+            'team'       => $team[0],
+            'players'    => $players,
+            'games'      => $games
         ]);
 
     }

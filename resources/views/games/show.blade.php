@@ -18,7 +18,8 @@
                             <div class="col-12 text-center">
                                  <h2>{{ $game->stadium }}</h2>
                                  {{ $game->game_day }} {{ $game->game_time }} <br>
-                                <i>{{ $game->type }}</i>  -  {{ $game->status }}
+                                <i>{{ $game->type }}</i>  -  {{ $game->status }} -
+                                Jugadores en Cancha <b>5</b>
                             </div>
                             <div class="col-12 text-center">
                                 <button class="btn btn-success" id="btnDataEntry">
@@ -41,8 +42,8 @@
                     @else
                     <div class="row text-center">
                         <div class="col-12">
-                            {{ $game->status }}  {{ $game->category }}
-                            {{ isset($game->group) ? ' - ' . $game->group : '' }}
+                            {{ strtoupper($game->status) }} <br />
+                            {{ $game->category }} {{ isset($game->group) ? ' - ' . $game->group : '' }} <br />
                             {{ Str::upper($game->type ) }}
                             <br />
                             {{ $game->stadium }}
@@ -56,9 +57,9 @@
                             <div class="row align-items-center">
                                 <div class="col-6 text-left">
                                     @if( $game->t1logo )
-                                        <img class="img-fluid" src="{{ asset('team_logo/' . $game->t1logo) }}" width="50%" >
+                                        <img class="img-fluid" src="{{ asset('team_logo/' . $game->t1logo) }}" width="100px" >
                                     @else
-                                        <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="50%" >
+                                        <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="100px" >
                                     @endif
                                 </div>
 
@@ -69,7 +70,7 @@
 
                             <div class="row mb-4">
                                 <div class="col-12 text-left">
-                                    <h4>{{ $game->team1 }}</h4>
+                                    <h5>{{ $game->team1 }}</h5>
                                 </div>
                             </div>
 
@@ -90,9 +91,9 @@
 
                                 <div class="col-6 text-right">
                                     @if( $game->t2logo )
-                                        <img class="img-fluid" src="{{ asset('team_logo/' . $game->t2logo) }}" width="50%" >
+                                        <img class="img-fluid" src="{{ asset('team_logo/' . $game->t2logo) }}" width="100px" >
                                     @else
-                                        <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="50%" >
+                                        <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="100px" >
                                     @endif
 
                                 </div>
@@ -100,7 +101,7 @@
 
                             <div class="row mb-4">
                                 <div class="col-12 text-right">
-                                    <h4>{{ $game->team2 }}</h4>
+                                    <h5>{{ $game->team2 }}</h5>
                                 </div>
                             </div>
 
@@ -117,13 +118,14 @@
 
                     <div id="dashboard" style="display: none">
                         <div class="row mb-3" >
-                            <div class="col-4">
+
+                            <div class="col-6">
                                 <div class="row">
                                     <div class="col-8  text-left">
                                         @if( $game->t1logo )
-                                            <img class="img-fluid" src="{{ asset('team_logo/' . $game->t1logo) }}" width="60px" >
+                                            <img class="img-fluid" src="{{ asset('team_logo/' . $game->t1logo) }}" width="40px" >
                                         @else
-                                            <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="60px" >
+                                            <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="40px" >
                                         @endif
 
                                         {{ $game->team1 }}
@@ -135,17 +137,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-4 text-center align-items-center">
-
-                                    <h1 class="crono">  <span id="timer">00:00</span> <span id="period">P1</span> </h1>
-
-                                    {{-- <button class="btn btn-primary" id="config-crono"> <span class="fa fa-cog"></span></button> --}}
-                                    <button class="btn btn-primary" id="restart"> <span class="fa fa-refresh"></span></button>
-                                    <button class="btn btn-danger" id="stop"> <span class="fa fa-stop"></span></button>
-                                    <button class="btn btn-primary" id="start"> <span class="fa fa-play"></span></button>
-                            </div>
-
-                            <div class="col-4 text-right">
+                            <div class="col-6 text-right">
                                 <div class="row">
                                     <div class="col-4 text-left align-items-center">
                                         <span class="score" id="score_{{ $game->team2_id }}" >{{ $game->score_team2 }}</span>
@@ -154,9 +146,9 @@
                                         {{ $game->team2 }}
 
                                         @if( $game->t2logo )
-                                            <img class="img-fluid" src="{{ asset('team_logo/' . $game->t2logo) }}" width="60px" >
+                                            <img class="img-fluid" src="{{ asset('team_logo/' . $game->t2logo) }}" width="40px" >
                                         @else
-                                            <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="60px" >
+                                            <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="40px" >
                                         @endif
                                     </div>
 
@@ -465,10 +457,12 @@
 
         jQuery(document).ready(function($) {
 
+            const maxPlayers = 5
             let gameEnable = false
             let playersList = []
             let playersListA = []
             let playersListB = []
+
 
 
             if ( $.cookie('playersList') ) {
@@ -489,9 +483,9 @@
 
                         $('#table-' + teamId ).append(
                             '<tr id="player-'+ player.id +'">'
-                                + '<td class="text-right"><span class="playerNumber">'+ player.number +'</span></td>'
-                                + '<td><img src="' + photo +'" width="60px" height="60px"></td>'
-                                + '<td>'+ player.last_name +', ' + player.name +'</td>'
+                                + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
+                                + '<td class="hideColumn" ><img src="' + photo +'" width="60px" height="60px"></td>'
+                                + '<td class="hideColumn" >'+ player.last_name +', ' + player.name +'</td>'
                                 + '<td class="text-right">'
                                     + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
                                     + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'" ><span class="fa fa-arrow-left"></span> </button>'
@@ -514,9 +508,9 @@
 
                         $('#table-' + teamId ).append(
                             '<tr id="player-'+ player.id +'">'
-                                + '<td class="text-right"><span class="playerNumber">'+ player.number +'</span></td>'
-                                + '<td><img src="' + photo +'" width="60px" height="60px"></td>'
-                                + '<td>'+ player.last_name +', ' + player.name +'</td>'
+                                + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
+                                + '<td class="hideColumn"><img src="' + photo +'" width="60px" height="60px"></td>'
+                                + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
                                 + '<td class="text-right">'
                                     + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
                                     + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
@@ -575,7 +569,7 @@
             //end of the crono config ##################################
 
 
-            
+
             $(document).on("change", "#attendance-player", function (e) {
                 alert('attended' + $(this).attr('data-player-id'))
             })
@@ -602,9 +596,9 @@
 
                     $('#table-players').append(
                         '<tr id="player-'+ player.id +'">'
-                            + '<td class="text-right"><span class="playerNumber">'+ player.number +'</span></td>'
-                            + '<td><img src="' + photo + '" width="60px height="60px""></td>'
-                            + '<td>'+ player.last_name +', ' + player.name +'</td>'
+                            + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
+                            + '<td class="hideColumn"><img src="' + photo + '" width="60px height="60px""></td>'
+                            + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
                             + '<td class="text-right"><button class="btn btn-success" id="btnInGame" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-plus"></span> Ingresa</td>'
                         + '</tr>')
 
@@ -624,17 +618,31 @@
             $(document).on("click", "#btnInGame", function (e) {
                 e.preventDefault();
 
-                let playerId = $(this).attr('player-id')
-                let teamId = $(this).attr('team-id')
+                const playerId = $(this).attr('player-id')
+                const teamId = $(this).attr('team-id')
+
+                //validate if we can add a players in game
+                if ( teamId == {{ $game->team1_id }} ) {
+                    if (playersListA.length >= maxPlayers) {
+                        alert('Ya no se pueden agregar mas jugaddores al juego')
+                        return
+                    }
+                }
+
+                if ( teamId == {{ $game->team2_id }} ) {
+                     if (playersListB.length >= maxPlayers) {
+                        alert('Ya no se pueden agregar mas jugaddores al juego')
+                        return
+                    }
+                }
 
                 //remove player from th list
                 $(this).parent().parent().remove();
+
                 //$('#table-game-log > tbody').empty()
                 $('#no-activity').remove();
 
-                let player = playersList.filter( x =>
-                    x.id == playerId
-                )
+                let player = playersList.filter( x => x.id == playerId )
 
                 let players = playersList.filter( x =>
                     x.id == playerId
@@ -649,9 +657,9 @@
 
                         $('#table-' + teamId ).append(
                             '<tr id="player-'+ player.id +'">'
-                                + '<td class="text-right"><span class="playerNumber">'+ player.number +'</span></td>'
-                                + '<td><img src="' + photo + '" width="60px" height="60px"></td>'
-                                + '<td>'+ player.last_name +', ' + player.name +'</td>'
+                                + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
+                                + '<td class="hideColumn"><img src="' + photo + '" width="60px" height="60px"></td>'
+                                + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
                                 + '<td class="text-right">'
                                     + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
                                     + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
@@ -677,7 +685,7 @@
                                 + '<td>'+ player.number +'</td>'
                                 + '<td>'+ player.team_id +'</td>'
                                 + '<td class="text-left"><img src="' + photo + '" width="60px" height="60px"> '+ player.last_name +', ' + player.name +'</td>'
-                                + '<td>INICIA</td>'
+                                + '<td>INGRESA</td>'
                                 + '<td>-</td>'
                                 + '<td>00:00</td>'
                                 + '<td>'
@@ -698,8 +706,8 @@
                         //         +'</td>'
                         //     + '</tr>')
 
-                        }
-                )
+                })
+
                 if ( teamId == {{ $game->team1_id }} ) {
                     playersListA.push(...player)
                     $.cookie('playersListA', JSON.stringify(playersListA))
@@ -712,19 +720,95 @@
 
 
                 //remove the player from the main array
-                playersList = playersList.filter( x =>
-                    x.id != playerId )
-
+                playersList = playersList.filter( x => x.id != playerId )
                 $.cookie('playersList', JSON.stringify(playersList))
 
-            });
+            })
 
+            //player change aout of the game
             $(document).on("click", "#btnChange", function (e) {
 
-                alert('Cambio de jugador' + $(this).attr('player-name'))
-                //$('#action-player-id').html($(this).attr('player-name'));
-                //add the teamid and playerid to the addAction button
-                //jQuery("#ChangeModal").modal('show');
+                e.preventDefault();
+
+                Swal.fire({
+                    title: "¿Deseas realizar el cambio?",
+                    text: "Cambio de jugador SALE!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, realizar cambio!"
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        const playerId = $(this).attr('player-id')
+                        const teamId = $(this).attr('team-id')
+                        let player = []
+
+                        if ( teamId == {{ $game->team1_id }} ) {
+                            player = playersListA.filter( x => x.id == playerId )
+                            playersListA = playersListA.filter( x => x.id != playerId )
+                            $.cookie('playersListA', JSON.stringify(playersListA))
+                        }
+
+                        if ( teamId ==   {{ $game->team2_id }} ) {
+                            player = playersListB.filter( x => x.id == playerId )
+                            playersListB = playersListB.filter( x => x.id != playerId )
+                            $.cookie('playersListB', JSON.stringify(playersListB))
+                        }
+
+                        playersList.push(...player)
+                        $.cookie('playersList', JSON.stringify(playersList))
+                        //remove player from th list
+                        $(this).parent().parent().remove();
+
+                        //add the row in table logs
+                        let players = playersList.filter( x =>
+                            x.id == playerId
+                        ).forEach( player => {
+
+                            let photo =''
+                            if (player.photo == null) {
+                                photo = '{{ asset('images/') }}/No-photo-m.png'
+                            } else {
+                                photo = '{{ asset('players_photos/') }}/' + player.photo
+                            }
+
+                            //table-game-log
+                            //this code can be inside the logGameHandle
+                            $('#table-game-log').prepend(
+                                '<tr>'
+                                    + '<td>'+ player.number +'</td>'
+                                    + '<td>'+ player.team_id +'</td>'
+                                    + '<td class="text-left"><img src="' + photo + '" width="60px" height="60px"> '+ player.last_name +', ' + player.name +'</td>'
+                                    + '<td>SALE</td>'
+                                    + '<td>-</td>'
+                                    + '<td>00:00</td>'
+                                    + '<td>'
+                                        + '<button class="btn btn-danger" id="btnDeleteLog" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-remove"></span> </button>'
+                                    +'</td>'
+                                + '</tr>')
+
+                        })
+
+                    //register the activity on DB
+                        // handleLogGame(
+                        //     tournamentId,
+                        //     gameId,
+                        //     teamId,
+                        //     playerId,
+                        //     actionId,
+                        //     actionStatus,
+                        //     actionValue,
+                        //     period,
+                        //     '00:00',
+                        //     ''
+                        // )
+
+
+                    }
+                })
+
             })
 
             $(document).on("click", "#btnAction", function (e) {
@@ -762,14 +846,23 @@
                         let tournamentId = {{ $game->tournament_id }}
                         let gameId = {{ $game->id }}
 
-                        handleLogGame(tournamentId, gameId, teamId, playerId, actionId, actionStatus, actionValue, period, '00:00', '')
+                        handleLogGame(
+                            tournamentId,
+                            gameId,
+                            teamId,
+                            playerId,
+                            actionId,
+                            actionStatus,
+                            actionValue,
+                            period,
+                            '00:00',
+                            ''
+                        )
                         jQuery("#ActionsModal").modal('hide');
 
                     }
-                });
+                })
             })
-
-
 
             $(document).on("click", "#btnDataEntry", function (e) {
                 e.preventDefault();

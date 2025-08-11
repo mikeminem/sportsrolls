@@ -3,10 +3,10 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>FOTO</th>
-            <th>NOMBRE</th>
+            <th class="hideColumn" >FOTO</th>
+            <th class="hideColumn" >NOMBRE</th>
             <th class="text-right">
-                <button class="btn btn-primary" id="addPlayer" team-id="{{ $teamId }}"><span class="fa fa-arrow-right"></span> INGRESA</button>
+                <button class="btn btn-primary" id="addPlayer" team-id="{{ $teamId }}"><span class="fa fa-arrow-right"></span> Ingresa</button>
             </th>
         </tr>
         </thead>

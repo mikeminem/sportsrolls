@@ -452,7 +452,7 @@ class GamesController extends Controller
             return response()->json([
                 'access'=>'false',
                 'type'=>'error',
-                'message' => 'Algo salió mal para accesar a editar el juego'
+                'message' => 'Algo salió NO HAY clave de acceso'
             ]);
         }
 
@@ -460,12 +460,11 @@ class GamesController extends Controller
 
         $has_access = Games::where('access_code', $access_code)->get(['id']);
 
-
         if (count($has_access) === 0) {
             return response()->json([
                 'access'=>'false',
                 'type'=>'error',
-                'message' => 'Algo salió mal para accesar a editar el juego'
+                'message' => 'No tiene acceso a editar el juego'
             ]);
         }
 
@@ -482,7 +481,14 @@ class GamesController extends Controller
         $gameList = false;
 
         if ($teamId) {
-            $query = "select t1.name as team1, score.score1, t2.name as team2, score.score2, if(score.score1 > score.score2, 'Ganado','Perdido') as result, score.game_day, score.game_time
+            $query = "select
+                t1.name as team1,
+                score.score1,
+                t2.name as team2,
+                score.score2,
+                if(score.score1 > score.score2, 'Ganado','Perdido') as result,
+                score.game_day,
+                score.game_time
                 from
                 (
                     (
@@ -507,8 +513,10 @@ class GamesController extends Controller
                 JOIN teams t2 on t2.id = score.team2
                 WHERE
                 t1.status = 'Activo'
-                and t1.id = $teamId
-                and t2.status = 'Activo';";
+                AND t1.id = $teamId
+                AND t2.status = 'Activo'
+                ORDER BY score.game_day DESC, score.game_time DESC
+                ;";
 
             $gameList = DB::select( DB::raw( $query ) );
 

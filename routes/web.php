@@ -217,7 +217,7 @@ Route::get('/tournament_info/{slug}/stats', 'TournamentsController@stats');
 Route::get('/tournament_info/{slug}/photos', 'TournamentsController@photos');
 Route::get('/tournament_info/{slug}/teams', 'TournamentsController@teams');
 Route::get('/tournament_info/{slug}/game/{code}', 'TournamentsController@game');
-Route::get('/tournament_info/{slug}/{category}/{team}', 'TournamentsController@game');
+Route::get('/tournament_info/{slug}/{category}/{team}', 'TournamentsController@teamPage');
 Route::get('/update_tournament_enable_enrollment/{id}/{enable_enrollment}', 'TournamentsController@updateEnableEnroll');
 Route::get('/tournament_enrollment/{code}', 'TournamentsController@getValidateEnrollCode');
 

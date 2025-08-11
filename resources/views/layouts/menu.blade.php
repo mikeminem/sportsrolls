@@ -16,7 +16,7 @@
                     <img src="{{ asset('/images/dz_logo.png') }}"
                         title="{{ config('app.name', 'Regresar al inicio') }}"
                         alt="{{ config('app.name', 'Regresar al inicio') }}"
-                        width="160px"
+                        width="120px"
                     >
                     {{-- class="d-none d-sm-block" --}}
                 </a>
