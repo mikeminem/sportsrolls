@@ -15,7 +15,8 @@ class Stadiums extends Model
         'phone',
         'notes',
         'is_deleted',
-        'user_id'
+        'user_id',
+        'is_active',
     ];
 
     public function games()

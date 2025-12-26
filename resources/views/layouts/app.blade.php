@@ -49,6 +49,9 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 
+    <!--specific page css-->
+     @yield('css')
+
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1X7MS1GBYC"></script>
@@ -292,6 +295,37 @@ gtag('config', 'G-1X7MS1GBYC');
                     dataType: "json",
                     success: function (data) {
                         options += '<option value="">{{ __("Select...") }}</option>';
+                        var journaments = -1
+                        for(obj in data) {
+                            if ( selected == data[obj]['id'] ) {
+                                options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';
+                            } else {
+                                options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';
+                            }
+                            journaments++;
+                        }
+
+                        if (journaments <0) {
+                            $.notify("No hay Equipos en este torneo, selecciona otro o agrega equipos al torneo", "error");
+                        }
+                        components.forEach( function(component) {
+                            $("#" + component).html(options);
+                        })
+                    },
+                });
+            }
+        }
+
+        function getTeamsByGroup(components, group_id, selected="") {
+            var options = "";
+
+            if (group_id) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('teams_list_by_group') }}/" + group_id,
+                    dataType: "json",
+                    success: function (data) {
+                        options += '<option value="">{{ __("Selecciona...") }}</option>';
                         var journaments = -1
                         for(obj in data) {
                             if ( selected == data[obj]['id'] ) {

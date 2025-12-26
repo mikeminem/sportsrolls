@@ -117,22 +117,27 @@
                     </div>
 
                     <div id="dashboard" style="display: none">
-                        <div class="row mb-3" >
+                        <div class="row mb-1" >
 
                             <div class="col-6">
                                 <div class="row">
-                                    <div class="col-8  text-left">
+                                    <div class="col-6 text-left">
                                         @if( $game->t1logo )
                                             <img class="img-fluid" src="{{ asset('team_logo/' . $game->t1logo) }}" width="40px" >
                                         @else
                                             <img class="img-fluid" src="{{ asset('images/_shield.png') }}" width="40px" >
                                         @endif
 
-                                        {{ $game->team1 }}
                                     </div>
 
-                                    <div class="col-4 text-right align-items-center">
+                                    <div class="col-6 text-right align-items-center">
                                         <span class="score" id="score_{{ $game->team1_id }}">{{ $game->score_team1 }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 text-left align-items-center">
+                                        {{ $game->team1 }}
                                     </div>
                                 </div>
                             </div>
@@ -143,7 +148,6 @@
                                         <span class="score" id="score_{{ $game->team2_id }}" >{{ $game->score_team2 }}</span>
                                     </div>
                                     <div class="col-8 text-right align-items-center">
-                                        {{ $game->team2 }}
 
                                         @if( $game->t2logo )
                                             <img class="img-fluid" src="{{ asset('team_logo/' . $game->t2logo) }}" width="40px" >
@@ -152,6 +156,12 @@
                                         @endif
                                     </div>
 
+                                </div>
+
+                                  <div class="row">
+                                    <div class="col-12 text-right align-items-center">
+                                        {{ $game->team2 }}
+                                    </div>
                                 </div>
 
                             </div>
@@ -325,7 +335,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
-                        <table class="table table-hover" id="table-players">
+                        <table class="table table-hover" id="table-players-list">
                             <thead>
                                 <tr>
                                     <td>#</td>
@@ -457,16 +467,17 @@
 
         jQuery(document).ready(function($) {
 
-            const maxPlayers = 5
-            let gameEnable = false
-            let playersList = []
-            let playersListA = []
-            let playersListB = []
+            const maxPlayers = 5;
+            let gameEnable = false;
+            let gameId = 0;
+            let playersList = [];
+            let playersListA = [];
+            let playersListB = [];
 
 
 
             if ( $.cookie('playersList') ) {
-                playersList = $.parseJSON($.cookie('playersList'))
+                playersList = $.parseJSON($.cookie('playersList'));
             }
 
             if ( $.cookie('playersListA') ) {
@@ -474,23 +485,25 @@
                 let teamId = {{ $game->team1_id }}
                 playersListA.forEach( player => {
 
-                        let photo =''
-                        if (player.photo == null) {
-                            photo = '{{ asset('images/') }}/No-photo-m.png'
-                        } else {
-                            photo = '{{ asset('players_photos/') }}/' + player.photo
-                        }
+                    addPlayerToTable(player);
 
-                        $('#table-' + teamId ).append(
-                            '<tr id="player-'+ player.id +'">'
-                                + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
-                                + '<td class="hideColumn" ><img src="' + photo +'" width="60px" height="60px"></td>'
-                                + '<td class="hideColumn" >'+ player.last_name +', ' + player.name +'</td>'
-                                + '<td class="text-right">'
-                                    + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
-                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'" ><span class="fa fa-arrow-left"></span> </button>'
-                                +'</td>'
-                            + '</tr>')
+                        // let photo =''
+                        // if (player.photo == null) {
+                        //     photo = '{{ asset('images/') }}/No-photo-m.png'
+                        // } else {
+                        //     photo = '{{ asset('players_photos/') }}/' + player.photo
+                        // }
+
+                        // $('#table-' + teamId ).append(
+                        //     '<tr id="player-'+ player.id +'">'
+                        //         + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
+                        //         + '<td class="hideColumn" ><img src="' + photo +'" width="60px" height="60px"></td>'
+                        //         + '<td class="hideColumn" >'+ player.last_name +', ' + player.name +'</td>'
+                        //         + '<td class="text-right">'
+                        //             + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
+                        //             + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'" ><span class="fa fa-arrow-left"></span> </button>'
+                        //         +'</td>'
+                        //     + '</tr>')
 
                 })
             }
@@ -499,23 +512,26 @@
                 playersListB = $.parseJSON($.cookie('playersListB'))
                 let teamId = {{ $game->team2_id }}
                 playersListB.forEach( player => {
-                        let photo =''
-                        if (player.photo == null) {
-                            photo = '{{ asset('images/') }}/No-photo-m.png'
-                        } else {
-                            photo = '{{ asset('players_photos/') }}/' + player.photo
-                        }
 
-                        $('#table-' + teamId ).append(
-                            '<tr id="player-'+ player.id +'">'
-                                + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
-                                + '<td class="hideColumn"><img src="' + photo +'" width="60px" height="60px"></td>'
-                                + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
-                                + '<td class="text-right">'
-                                    + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
-                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
-                                +'</td>'
-                            + '</tr>')
+                    addPlayerToTable(player);
+
+                        // let photo =''
+                        // if (player.photo == null) {
+                        //     photo = '{{ asset('images/') }}/No-photo-m.png'
+                        // } else {
+                        //     photo = '{{ asset('players_photos/') }}/' + player.photo
+                        // }
+
+                        // $('#table-' + teamId ).append(
+                        //     '<tr id="player-'+ player.id +'">'
+                        //         + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
+                        //         + '<td class="hideColumn"><img src="' + photo +'" width="60px" height="60px"></td>'
+                        //         + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
+                        //         + '<td class="text-right">'
+                        //             + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
+                        //             + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
+                        //         +'</td>'
+                        //     + '</tr>')
 
                 })
             }
@@ -579,7 +595,7 @@
                 e.preventDefault();
 
                 // $('#players-list').empty()
-                $('#table-players > tbody').empty()
+                $('#table-players-list > tbody').empty()
                 //filter players by team-id
                 let selectedTeam = parseInt ($(this).attr("team-id") );
 
@@ -594,11 +610,11 @@
                         photo = '{{ asset('players_photos/') }}/' + player.photo
                     }
 
-                    $('#table-players').append(
+                    $('#table-players-list').append(
                         '<tr id="player-'+ player.id +'">'
-                            + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
-                            + '<td class="hideColumn"><img src="' + photo + '" width="60px height="60px""></td>'
-                            + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
+                            + '<td class="text-center"><span class="playerNumber">#'+ player.number +'</span></td>'
+                            + '<td><img src="' + photo + '" width="60px height="60px""></td>'
+                            + '<td>'+ player.last_name +', ' + player.name +'</td>'
                             + '<td class="text-right"><button class="btn btn-success" id="btnInGame" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-plus"></span> Ingresa</td>'
                         + '</tr>')
 
@@ -655,16 +671,19 @@
                             photo = '{{ asset('players_photos/') }}/' + player.photo
                         }
 
-                        $('#table-' + teamId ).append(
-                            '<tr id="player-'+ player.id +'">'
-                                + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
-                                + '<td class="hideColumn"><img src="' + photo + '" width="60px" height="60px"></td>'
-                                + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
-                                + '<td class="text-right">'
-                                    + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
-                                    + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
-                                +'</td>'
-                            + '</tr>')
+                    addPlayerToTable(player)
+
+
+                        // $('#table-' + teamId ).append(
+                        //     '<tr id="player-'+ player.id +'">'
+                        //         + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
+                        //         + '<td class="hideColumn"><img src="' + photo + '" width="60px" height="60px"></td>'
+                        //         + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
+                        //         + '<td class="text-right">'
+                        //             + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
+                        //             + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
+                        //         +'</td>'
+                        //     + '</tr>')
 
                         // $('#table-' + teamId ).append(
                         //     '<tr id="player-'+ player.id +'">'
@@ -897,8 +916,21 @@
 
                         if (data.access === 'true') {
 
+                            if (data.game_id != {{ $game->id }} ) {
+                                $.notify("Clave del juego no valida o incorrecta!", "error");
+
+                                //we need to remove all cookies related to the game
+                                $.removeCookie('enableGame');
+                                $.removeCookie('game_id');
+                                $.removeCookie('playersList');
+                                $.removeCookie('playersListA');
+                                $.removeCookie('playersListB');
+                                return;
+                            }
+
                             enableGame(true);
                             $.cookie('enableGame', true);
+                            $.cookie('game_id', data.game_id);
                             playersList = {!! $players !!}
 
                             $.cookie('playersList', JSON.stringify(playersList))
@@ -929,6 +961,21 @@
                     toggleEnable = $.cookie('enableGame');
                 }
 
+                let game_id = $.cookie('game_id') ?? 0;
+
+                if ( {{ $game->id }} == game_id) {
+                    gameId = {{ $game->id }};
+                } else {
+                    gameId = 0;
+                    //we need to remove all cookies related to the game
+                    $.removeCookie('enableGame');
+                    $.removeCookie('game_id');
+                    $.removeCookie('playersList');
+                    $.removeCookie('playersListA');
+                    $.removeCookie('playersListB');
+                    toggleEnable = false;
+                }
+
 
                 if (toggleEnable == false) {
 
@@ -953,6 +1000,28 @@
                     $('#btnSetup').show();
 
                 }
+            }
+
+            /* this fnction add a player dynamically and reuse all for all this section*/
+            function addPlayerToTable(player) {
+                let photo ='';
+
+                if (player.photo == null) {
+                    photo = '{{ asset('images/') }}/No-photo-m.png'
+                } else {
+                    photo = '{{ asset('players_photos/') }}/' + player.photo
+                }
+
+                $('#table-' + player.team_id ).append(
+                    '<tr id="player-'+ player.id +'">'
+                        + '<td class="text-center">'
+                        + '<button class="btn btn-primary m-2 w-40" id="btnAction" player-id="'
+                            + player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name
+                            +'"><span class="fa fa-arrow-up"></span> #'+  player.number +' </button>'
+                        + '<button class="btn btn-danger w-40" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
+                        + '</td>'
+                )
+
             }
 
 

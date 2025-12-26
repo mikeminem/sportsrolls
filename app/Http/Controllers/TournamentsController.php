@@ -17,14 +17,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-
-use DataTables;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 use App\Sports;
 use App\Stadiums;
 use App\WebPage;
 use FontLib\TrueType\Collection;
-use Illuminate\Support\Facades\DB as FacadesDB;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 class TournamentsController extends Controller
 {
@@ -47,7 +46,7 @@ class TournamentsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function index(Request $request)
     {
@@ -75,15 +74,15 @@ class TournamentsController extends Controller
                         $combo = '<select id="cboEnableEnrollment" class="form-control" data-id="'.$row->id.'" ' . $enable . ' >';
 
                         if ($row->enable_enrollment=='Si') {
-                            $combo .= '<option value="Si" selected>Si</opction>';
+                            $combo .= '<option value="Si" selected>Si</option>';
                         } else {
-                            $combo .= '<option value="Si">Si</opction>';
+                            $combo .= '<option value="Si">Si</option>';
                         }
 
                         if ($row->enable_enrollment=='No') {
-                            $combo .= '<option value="No" selected>No</opction>';
+                            $combo .= '<option value="No" selected>No</option>';
                         } else {
-                            $combo .= '<option value="No">No</opction>';
+                            $combo .= '<option value="No">No</option>';
                         }
 
                         $combo .= '</select>';
@@ -126,9 +125,15 @@ class TournamentsController extends Controller
                                     </a>';
                         }
 
-                        $links .= '<a href="javascript:void(0)" title="Ver Estadisticas" data-id="'. $row->id.'"  data-name="'.$row->title.'" id="btnStats">
-                                <span class="fa fa-bar-chart tool"></span>
-                            </a>';
+                        if ($row->status == 'Terminado') {
+                            $links .= '<a href="javascript:void(0)" title="Reiniciar Torneo" data-id="'. $row->id.'"  data-name="'.$row->title.'" data-status="En Progreso" id="btnStatus">
+                                        <span class="fa fa-rotate-left tool"></span>
+                                    </a>';
+                        }
+
+                        // $links .= '<a href="javascript:void(0)" title="Ver Estadisticas" data-id="'. $row->id.'"  data-name="'.$row->title.'" id="btnStats">
+                        //         <span class="fa fa-bar-chart tool"></span>
+                        //     </a>';
 
                         return $links;
                     })
@@ -144,7 +149,7 @@ class TournamentsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -234,7 +239,7 @@ class TournamentsController extends Controller
             } else {
                 $model->enable_penalties_scoring = "No";
                 $model->winner_points_penalties =-1;
-                $model->loser_points_penalties =0-1;
+                $model->loser_points_penalties =-1;
             }
 
             if (!empty($path)) {
@@ -257,8 +262,8 @@ class TournamentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Tournaments  $tournaments
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return \App\Tournaments|bool
      */
     public function show($id)
     {
@@ -301,8 +306,8 @@ class TournamentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Tournaments  $tournaments
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy( $id )
     {
@@ -323,10 +328,10 @@ class TournamentsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Start or change tournament status.
      *
-     * @param  \App\Tournaments  $tournaments
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function start( Request $request )
     {
@@ -350,8 +355,8 @@ class TournamentsController extends Controller
         int $tournament_id,
         array $categories,
         string $points,
-        string $limit = null
-        ): array {
+        ?string $limit = null
+    ): array {
 
         // foreach ($categories as $category) {
 
@@ -807,7 +812,7 @@ class TournamentsController extends Controller
         ]);
     }
 
-    function results($slug) {
+    function results($slug, Request $request) {
 
         if (!$slug) {
             //lets send this to the tournaments list
@@ -822,6 +827,18 @@ class TournamentsController extends Controller
             ->where('is_deleted',0)
             ->where('show_public','Si')
             ->orderBy('id','ASC')->get();
+
+
+        if (! $request->has('jid')) {
+            //lets find the active one
+            $activeJourney = Journeys::where('tournament_id', $tournament[0]->id)
+                ->where('is_deleted',0)
+                ->where('show_public','Si')
+                ->where('status','Abierto')
+                ->orderBy('id','asc')
+                ->first();
+        }
+
         $stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
 
         $games  = DB::table('games as g')
@@ -846,7 +863,8 @@ class TournamentsController extends Controller
          'g.type',
          'g.score_penalties_team1',
          'g.score_penalties_team2',
-         'g.code')
+         'g.code',
+         'g.period')
         ->join('teams as t1', 't1.id', '=', 'g.team1_id')
         ->join('teams as t2', 't2.id', '=', 'g.team2_id')
         ->leftJoin('categories as c', 'c.id', '=', 'g.category_id')
@@ -855,18 +873,18 @@ class TournamentsController extends Controller
         ->where('g.is_deleted', 0)
         ->where('j.is_deleted', 0)
         ->where('j.show_public', "Si")
-        // ->where('g.status', 'Finalizado')
+        ->where('j.id', $request->has('jid') ? $request->get('jid') : $activeJourney->id )
         ->where('g.tournament_id', $tournament[0]->id )
         ->orderBy('g.game_day', 'asc')
         ->orderBy('g.game_time', 'asc')
         ->get();
-
 
         return view ('tournaments.results', [
             'tournament' => $tournament[0],
             'journeys'   => $journeys,
             'categories' => $categories,
             'games'      => $games,
+            'activeJourney' => $request->has('jid') ? $request->get('jid') : $activeJourney->id,
             // 'stadiums'   => $stadiums,
             // 'scores'     => $scores,
             // 'teams'      => $teams

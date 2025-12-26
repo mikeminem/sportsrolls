@@ -6,12 +6,8 @@ use App\Stadiums;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
-use DB;
-use DataTables;
-use PDF;
-
-
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class StadiumsController extends Controller
 {
@@ -19,47 +15,41 @@ class StadiumsController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-
     public function index()
     {
-        //
-        return view ('stadiums.index');
+        return view('stadiums.index');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store or update a stadium in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function save(Request $request)
     {
-
         $rules = [
             'name'      => 'required|max:120',
             'address'   => 'required|max:120',
-            'phone'     => 'required|max:10|min:10',
-            'manager'   => 'required|max:120'
+            'is_active' => 'required',
         ];
 
         $attributes = [
             'name'      => 'Nombre',
             'manager'   => 'Encargado',
             'phone'     => 'Teléfono / Móvil',
-            'address'   => 'Dirección'
+            'address'   => 'Dirección',
+            'is_active' => 'Activo',
         ];
 
-        //example
-        //$validator = Validator::make($request->all(), $rules, $messages, $attributes);
-
         //Validate the data
-        $validated = Validator::make($request->all(),$rules, [] , $attributes);
-
+        $validated = Validator::make($request->all(), $rules, [], $attributes);
 
         if ($validated->fails()) {
             return response()->json([
@@ -69,24 +59,38 @@ class StadiumsController extends Controller
             ]);
         }
 
-        if (!isset($request->id) || empty($request->id) ) {
+        if (!isset($request->id) || empty($request->id)) {
             //create a new row
-            $model = new Stadiums($request->all());
-            $model->code =  strtoupper( str_random(6));
+            $model = new Stadiums($request->only(['name', 'address', 'manager', 'phone', 'notes', 'is_active']));
+            $model->code = strtoupper(str_random(6));
             $model->user_id = Auth::user()->id;
-            if ($model->save()) 
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado el estadio estadio!']);      
-        } 
-        
-        if (isset($request->id) || !empty($request->id) ) {
-            $model = Stadiums::find($request->id);
-            $model->fill($request->all());
+            if ($model->save()) {
+                return response()->json([
+                    'type' => 'success',
+                    'message' => 'Se ha creado el estadio!'
+                ]);
+            }
+        }
 
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado el estadio!']); 
-            
+        if (isset($request->id) && !empty($request->id)) {
+            $model = Stadiums::find($request->id);
+
+            // Verificar autorización
+            if (!$model || (Auth::user()->id !== $model->user_id && Auth::user()->role !== 'Admin')) {
+                return response()->json([
+                    'type' => 'error',
+                    'message' => 'No tienes permiso para actualizar este estadio!'
+                ]);
+            }
+
+            $model->fill($request->only(['name', 'address', 'manager', 'phone', 'notes', 'is_active']));
+
+            if ($model->update()) {
+                return response()->json([
+                    'type' => 'success',
+                    'message' => 'Se ha modificado el estadio!'
+                ]);
+            }
         }
 
         return response()->json([
@@ -98,78 +102,152 @@ class StadiumsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Stadiums  $stadiums
-     * @return boolean
+     * @param  int  $id
+     * @return \App\Stadiums|null
      */
-    public function show( $id)
+    public function show($id)
     {
-        //
         if ($id) {
-            $stadium = Stadiums::find($id);
-        return $stadium;
+            return Stadiums::where('id', $id)
+                ->where('is_active', 1)
+                ->where('is_deleted', 0)
+                ->first();
         }
-        return false;
+        return null;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Stadiums  $stadiums
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request)
     {
-        //
-        if ($request) {
-            Stadiums::where('id',$request->idDelete)->update(['is_deleted' => 1 ]);
+        if (!$request->idDelete) {
             return response()->json([
-                'type' => 'success',
-                'message' => 'El estadio se ha borrado!'
+                'type' => 'error',
+                'message' => 'ID del estadio no proporcionado!'
             ]);
         }
+
+        $stadium = Stadiums::find($request->idDelete);
+
+        // Verificar autorización
+        if (!$stadium || (Auth::user()->id !== $stadium->user_id && Auth::user()->role !== 'Admin')) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'No tienes permiso para eliminar este estadio!'
+            ]);
+        }
+
+        $stadium->update(['is_deleted' => 1]);
+
         return response()->json([
-            'type' => 'error',
-            'message' => 'Error al intentar borrar el Estadio!'
+            'type' => 'success',
+            'message' => 'El estadio se ha borrado!'
         ]);
     }
 
-    public function allStadiums() {
-        
+    /**
+     * Get all stadiums for DataTables display.
+     *
+     * @return mixed
+     */
+    public function allStadiums()
+    {
         if (Auth::user()->role == "Admin") {
             $rows = DB::table('stadiums as s')
-                ->select('s.id', 's.code', 's.name', 's.address', 's.manager', 's.phone', 's.notes')
-                //->leftjoin('taxes as t', 't.id', '=', 'p.tax_id')
-                //->leftjoin('units as u', 'u.id', '=', 'p.unit')
-                ->where('s.is_deleted',0)
+                ->select('s.id', 's.code', 's.name', 's.address', 's.manager', 's.phone', 's.notes', 's.is_active')
+                ->where('s.is_deleted', 0)
                 ->get();
         } else {
-                $rows = DB::table('stadiums as s')
-                ->select('s.id', 's.code', 's.name', 's.address', 's.manager', 's.phone', 's.notes')
-                ->where('s.is_deleted',0)
+            $rows = DB::table('stadiums as s')
+                ->select('s.id', 's.code', 's.name', 's.address', 's.manager', 's.phone', 's.notes', 's.is_active')
+                ->where('s.is_deleted', 0)
                 ->where('s.user_id', Auth::user()->id)
-                ->get();        
+                ->get();
         }
-        
-        return DataTables::of($rows)
-                // ->addColumn('buy_price', function($rows){
-                //     return "$".$rows->buy_price;
-                // })
-                
-                ->addColumn('action', function($rows) {
-                    $links = '';
-                    if ( (Auth::user()->role == 'Admin' || Auth::user()->role == 'Promoter'))
-                        {
-                            $links .= '<a href="javascript:void(0);" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate" data-id="'.$rows->id.'" ><span class="fa fa-edit tool"></a>
-                                     <a href="javascript:void(0);" title="Borrar Registro" data-id="'. $rows->id.'" data-name="'.$rows->name.'" id="btnDelete"> <span class="fa fa-trash tool"></span></a>';
-                        }
 
-                    return $links;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        return DataTables::of($rows)
+            ->addColumn('is_active', function ($row) {
+                $combo = '<select id="cboIsActive" class="form-control" data-id="' . e($row->id) . '" >';
+
+                if ($row->is_active == 1) {
+                    $combo .= '<option value="1" selected>Si</option>';
+                } else {
+                    $combo .= '<option value="1">Si</option>';
+                }
+
+                if ($row->is_active == 0) {
+                    $combo .= '<option value="0" selected>No</option>';
+                } else {
+                    $combo .= '<option value="0">No</option>';
+                }
+
+                $combo .= '</select>';
+                return $combo;
+            })
+            ->addColumn('action', function ($rows) {
+                $links = '';
+                if ((Auth::user()->role == 'Admin' || Auth::user()->role == 'Promoter')) {
+                    $links .= '<a href="javascript:void(0);" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate" data-id="' . e($rows->id) . '" ><span class="fa fa-edit tool"></span></a>
+                             <a href="javascript:void(0);" title="Borrar Registro" data-id="' . e($rows->id) . '" data-name="' . e($rows->name) . '" id="btnDelete"> <span class="fa fa-trash tool"></span></a>';
+                }
+
+                return $links;
+            })
+            ->rawColumns(['is_active', 'action'])
+            ->make(true);
     }
 
-    public function Print($id) {
+    /**
+     * Print stadium information.
+     *
+     * @param  int  $id
+     * @return void
+     */
+    public function Print($id)
+    {
         echo "Print";
+    }
+
+    /**
+     * Toggle stadium active status.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function isActiveToggle(Request $request)
+    {
+        if (!$request->id) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'ID del estadio no proporcionado!'
+            ]);
+        }
+
+        $stadium = Stadiums::find($request->id);
+
+        // Verificar autorización
+        if (!$stadium || (Auth::user()->id !== $stadium->user_id && Auth::user()->role !== 'Admin')) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'No tienes permiso para actualizar este estadio!'
+            ]);
+        }
+
+        $stadium->is_active = $request->is_active;
+        if ($stadium->update()) {
+            return response()->json([
+                'type' => 'success',
+                'message' => 'El estado del estadio se ha actualizado!'
+            ]);
+        }
+
+        return response()->json([
+            'type' => 'error',
+            'message' => 'Error al intentar actualizar el estado del Estadio!'
+        ]);
     }
 }

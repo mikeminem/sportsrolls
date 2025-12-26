@@ -44,6 +44,7 @@ Route::resource('/stadiums','StadiumsController');
 Route::get('all_stadiums', 'StadiumsController@allStadiums');
 Route::post('save_stadium', 'StadiumsController@save');
 Route::get('get_stadium/{id}', 'StadiumsController@show');
+Route::get('update_stadium_is_active/{id}/{is_active}', 'StadiumsController@isActiveToggle');
 
 //league options
 Route::resource('/leagues','LeaguesController');

@@ -464,7 +464,7 @@
                     url: "/update_tournament_enable_enrollment/" + $(this).attr("data-id") + "/" + $(this).val(),
                     dataType: "json",
                     success: function (data) {
-                        $.notify(data.response, data.results);
+                        $.notify(data.message, data.type);
 
                     },
                     error: function() {

@@ -16,9 +16,9 @@
                     </div>
 
                     @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') ))
-                        <a role="button" 
-                            class="btn btn-primary" 
-                            href="javascript:void(0);" 
+                        <a role="button"
+                            class="btn btn-primary"
+                            href="javascript:void(0);"
                             id="AddStadium"
                              >
                             <span class="fa fa-plus"></span> {{ __("New")}}
@@ -42,15 +42,17 @@
                                     <th>Nombre</th>
                                     <th>Encargado</th>
                                     <th>Teléfono</th>
+                                    <th>Activo</th>
                                     <th> - </th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-        
+
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -64,7 +66,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"> Datos del Estadio / Campo / Gimnasio</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
+                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>
             </div>
             <!--mandamos la forma-->
             <form id="updateForm">
@@ -80,7 +82,7 @@
                         <div class="col-md-9 col-sm-12">
                             <div class="form-group">
                                 <label for="usr"><b>Nombre *</b></label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="80"> 
+                                <input type="text" class="form-control" id="name" name="name" required maxlength="80">
                             </div>
                         </div>
 
@@ -93,17 +95,27 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-9 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label for="usr"><b>Encargado *</b></label>
-                                <input type="text" class="form-control" id="manager" name="manager" required maxlength="80">
+                                <label for="manager"><b>Encargado: </b></label>
+                                <input type="text" class="form-control" id="manager" name="manager"  maxlength="80">
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-12">
                             <div class="form-group">
-                                <label for="code"><b>Teléfono *</b></label>
-                                <input type="phone" class="form-control" id="phone" name="phone" required maxlength="10">
+                                <label for="phone"><b>Teléfono:</b></label>
+                                <input type="phone" class="form-control" id="phone" name="phone"  maxlength="10">
+                            </div>
+                        </div>
+
+                         <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="is_active"><b>Activo:</b></label>
+                                <select name="is_active" id="is_active" required class="form-control">
+                                    <option value="1">Si</option>
+                                    <option value="0">No</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -132,7 +144,7 @@
                         {{ csrf_field() }}
 
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
+                                <span class="fa fa-save"></span>
                                 {{__('Save')}}
                             </button>
 
@@ -152,13 +164,13 @@
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Borrar Rregistro</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deleteForm">
@@ -167,11 +179,11 @@
             </div>
             {{ csrf_field() }}
             <input type="hidden" class="form-control" id="idDelete" name="idDelete" readonly>
-    
+
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -179,16 +191,16 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 @endsection
 
 @section('js')
 <script type="text/javascript">
         jQuery(document).ready(function($){
-            
+
             var Table = $('#table').DataTable({
                 "language": {
                     "sProcessing":    "Procesando...",
@@ -221,7 +233,8 @@
                     //{ data: 'code', name: 'code'},
                     { data: 'name', name: 'name'},
                     { data: 'manager', name: 'manager'},
-                    { data: 'phone', phone: 'name'},
+                    { data: 'phone', name: 'phone'},
+                    { data: 'is_active', name: 'is_active'},
                     { data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });
@@ -230,7 +243,7 @@
                 $("#updateForm").trigger('reset');
                 $("#id").val("");
 
-                jQuery.noConflict(); 
+                jQuery.noConflict();
                 jQuery("#formModal").modal('show');
             });
 
@@ -250,7 +263,7 @@
                     type: "GET",
                     url: "get_stadium/" + $(this).attr("data-id"),
                     dataType: "json",
-                    success: function (data) { 
+                    success: function (data) {
                         $("#id").val(data.id);
                         $("#name").val(data.name);
                         $("#manager").val(data.manager);
@@ -258,7 +271,8 @@
                         $("#notes").val(data.notes);
                         $("#address").val(data.address);
                         $("#code").val(data.code);
-                        jQuery.noConflict(); 
+                        $("#is_active").val(data.is_active);
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('show');
                     },
                 });
@@ -275,7 +289,7 @@
                     url: "save_stadium",
                     dataType: "json",
                     data: $(this).serialize(),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
                             var errors = "";
                             $.each(data.errors, function (i, val) {
@@ -288,11 +302,11 @@
                             return false;
                         }
                         $("#updateForm").trigger('reset');
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('toggle');
                         Table.ajax.reload();
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("Hubo un error al intentar agregar el registro", "error");
@@ -315,7 +329,7 @@
                             return false;
                         }
                         $("#deleteForm").trigger('reset');
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deleteModal").modal('toggle');
                         Table.ajax.reload();
                         $.notify(data.message, data.type);
@@ -327,7 +341,33 @@
                 });
                 return false;
             });
+
+             $(document).on("change", "#cboIsActive", function () {
+                $.ajaxSetup({
+                    headers: {
+                    'X-CSSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/update_stadium_is_active/" + $(this).attr("data-id") + "/" + $(this).val(),
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        $.notify(data.message, data.type);
+                    },
+                    error: function() {
+                        $.notify("Hubo un error al intentar actualizar el registro", "error");
+                    },
+                });
+            });
+
+
         });
+
+
+
 
 </script>
 @endsection

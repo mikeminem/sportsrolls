@@ -24,7 +24,7 @@ class GamesController extends Controller
 
     public function index(Request $request)
     {
-         if($request->ajax()){
+         if($request->ajax()) {
             // SELECT g.id, t1.name as team1, g.score_team1, g.score_team2,  t2.name as team2, c.name as category, g.status , g.notes
             // FROM games as g
             // inner join teams t1 on t1.id = g.team1_id
@@ -233,6 +233,7 @@ class GamesController extends Controller
 
         $stadiums = Stadiums::where('is_deleted','0')
             ->where('user_id',Auth::user()->id)
+            ->where('is_active',1)
             ->orderBy('name','asc')
             ->get(['id','name']);
 
@@ -464,14 +465,16 @@ class GamesController extends Controller
             return response()->json([
                 'access'=>'false',
                 'type'=>'error',
-                'message' => 'No tiene acceso a editar el juego'
+                'message' => 'No tiene acceso a editar el juego',
+                'game_id' => 0
             ]);
         }
 
         return response()->json([
             'access'=>'true',
             'type'=>'success',
-            'message' => 'Bienvenido al modo de edición del juego'
+            'message' => 'Bienvenido al modo de edición del juego',
+            'game_id' => $has_access[0]->id
         ]);
 
     }

@@ -26,7 +26,6 @@ a:hover, .btn-link:hover {
 	color: rgba(0,0,0,.9);
 }
 
-
 .top {
 	background-color: #343a40;
 	color:#FFF;
@@ -246,7 +245,7 @@ if modal give us problems, just delete the backdrop element
   }
 
   .score {
-    font-size: 40px;
+    font-size: 32px;
     font-weight: bolder;
   }
 
@@ -302,3 +301,16 @@ if modal give us problems, just delete the backdrop element
 	height: 25px;
 	width: 25px;
 }
+
+/* for the Journey navigation */
+/* #owl-demo .item {
+    width: 250px;
+  background: #000;
+  padding: 3px;
+  margin: 10px;
+  color: #FFF;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  text-align: center;
+} */

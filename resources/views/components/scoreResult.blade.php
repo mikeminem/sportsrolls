@@ -15,7 +15,8 @@
             {{ Str::upper($game->type ) }} /
             {{ $game->status }}
             @if ($game->status != 'Finalizado')
-                /  {{ $game->period }}
+                {{-- /  {{ $game->period }} --}}
+            {{-- /  <!-- ame-?period--> --- IGNORE --- --}}
             @endif
 
         @php
