@@ -29,7 +29,7 @@
                                         @if($category->has_groups === 'Si')
 
                                             @foreach ($groups as $group)
-                                                <h5>{{ $group->name }}
+                                                <h5>{{ $group->name }}</h5>
 
                                                     @if ($category->id == $group->category_id)
                                                         @include('components.tableStandings')

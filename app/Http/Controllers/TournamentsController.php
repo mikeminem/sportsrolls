@@ -359,7 +359,6 @@ class TournamentsController extends Controller
     ): array {
 
         // foreach ($categories as $category) {
-
         //     $query = "SELECT t.id, t.name as team,
         //         count('x') as JJ,
         //         count(case when PAF > PEC then 1 end) JG,
@@ -427,69 +426,91 @@ class TournamentsController extends Controller
         //     $scores[$category->id] = DB::select( DB::raw( $query ) );
         // }
 
+        //fixing issue with ties on points
         //handle scores for multicategories
-        $query = "SELECT t.id,
-                t.category_id,
-                t.group_id,
-                t.name as team,
-                count('x') as JJ,
-                count(case when PAF > PEC then 1 end) JG,
-                count(case when PAF < PEC then 1 end) JP,
-                count(case when PAF = PEC then 1 end) JE,
-                count(case when PPAF > PPEC then 1 end) JGP,
-                count(case when PPAF < PPEC then 1 end) JPP,
-                sum(score.PAF) as PAF,
-                sum(score.PEC) as PEC,
-                sum(score.PAF) - sum(score.PEC) as DIF
-                $points, t.logo
-                FROM
-                (
-                    (SELECT
-                            h.team1_id team,
-                            h.score_team1 PAF,
-                            h.score_team2 PEC,
-                            h.score_penalties_team1 PPAF,
-                            h.score_penalties_team2 PPEC
-                            FROM games h
-                            INNER JOIN journeys j on j.id = h.journey_id
-                            WHERE
-                            h.status = 'Finalizado' and
-                            h.is_deleted = 0 and
-                            h.type = 'Temporada Regular' and
-                            j.show_public ='Si' and
-                            j.tournament_id = ". $tournament_id ."
-                    )
-                UNION ALL
-                    ( SELECT
-                            v.team2_id team,
-                            v.score_team2 PEF,
-                            v.score_team1 PEC,
-                            v.score_penalties_team2 PPAF,
-                            v.score_penalties_team1 PPEC
-                            FROM games v
-                            INNER JOIN journeys j on j.id = v.journey_id
-                            WHERE
-                            v.status = 'Finalizado' and
-                            v.is_deleted = 0 and
-                            v.type = 'Temporada Regular' and
-                            j.show_public ='Si' and
-                            j.tournament_id = ". $tournament_id ."
-                    )
-                ) AS score
-                JOIN teams t on t.id = score.team
-                WHERE
-                t.status = 'Activo'
-                GROUP BY team ";
+        // $query = "SELECT t.id,
+        //         t.category_id,
+        //         t.group_id,
+        //         t.name as team,
+        //         count('x') as JJ,
+        //         count(case when PAF > PEC then 1 end) JG,
+        //         count(case when PAF < PEC then 1 end) JP,
+        //         count(case when PAF = PEC then 1 end) JE,
+        //         count(case when PPAF > PPEC then 1 end) JGP,
+        //         count(case when PPAF < PPEC then 1 end) JPP,
+        //         sum(score.PAF) as PAF,
+        //         sum(score.PEC) as PEC,
+        //         sum(score.PAF) - sum(score.PEC) as DIF
+        //         $points, t.logo
+        //         FROM
+        //         (
+        //             (SELECT
+        //                     h.team1_id team,
+        //                     h.score_team1 PAF,
+        //                     h.score_team2 PEC,
+        //                     h.score_penalties_team1 PPAF,
+        //                     h.score_penalties_team2 PPEC
+        //                     FROM games h
+        //                     INNER JOIN journeys j on j.id = h.journey_id
+        //                     WHERE
+        //                     h.status = 'Finalizado' and
+        //                     h.is_deleted = 0 and
+        //                     h.type = 'Temporada Regular' and
+        //                     j.show_public ='Si' and
+        //                     j.tournament_id = ". $tournament_id ."
+        //             )
+        //         UNION ALL
+        //             ( SELECT
+        //                     v.team2_id team,
+        //                     v.score_team2 PEF,
+        //                     v.score_team1 PEC,
+        //                     v.score_penalties_team2 PPAF,
+        //                     v.score_penalties_team1 PPEC
+        //                     FROM games v
+        //                     INNER JOIN journeys j on j.id = v.journey_id
+        //                     WHERE
+        //                     v.status = 'Finalizado' and
+        //                     v.is_deleted = 0 and
+        //                     v.type = 'Temporada Regular' and
+        //                     j.show_public ='Si' and
+        //                     j.tournament_id = ". $tournament_id ."
+        //             )
+        //         ) AS score
+        //         JOIN teams t on t.id = score.team
+        //         WHERE
+        //         t.status = 'Activo'
+        //         GROUP BY team ";
+
+        $query = "SELECT
+                s.*,
+                COALESCE(SUM(h.H2H_PTS), 0) AS H2H_PTS,
+                COALESCE(SUM(h.H2H_DIF), 0) AS H2H_DIF
+            FROM v_standings s
+            LEFT JOIN v_h2h_table h
+                ON h.team_id = s.team_id
+                AND h.rival_id IN (
+                    SELECT team_id
+                    FROM v_standings
+                    WHERE PUNTOS = s.PUNTOS
+                    AND team_id <> s.team_id
+                )
+            WHERE
+                s.tournament_id = ". $tournament_id ."
+            GROUP BY s.team_id ";
 
             if ( strlen($points)==0) {
-                $query .= 'ORDER BY JG desc, JP asc';
+                $query .= 'ORDER BY s.JG desc, s.JP asc';
             }
 
+            /*ORDER BY
+                s.PUNTOS DESC,
+                H2H_PTS DESC,
+                H2H_DIF DESC*/
             if (strlen($points)>0) {
-                $query .= 'ORDER BY PUNTOS DESC';
+                $query .= 'ORDER BY s.PUNTOS DESC, H2H_PTS DESC, H2H_DIF DESC';
             }
 
-            $query .= ', DIF DESC';
+            $query .= ', s.DIF DESC, s.PAF DESC';
 
             if ($limit) {
                 $query .= ' LIMIT ' . $limit;
@@ -498,13 +519,6 @@ class TournamentsController extends Controller
         //echo $query;
 
         $scores = DB::select( DB::raw( $query ) );
-
-        // foreach($scores as $scores) {
-        //     echo  $key . " ---> ";
-        //     echo '<hr>';
-        // }
-        //print_r($scores);
-
 
         return $scores;
     }

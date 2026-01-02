@@ -68,19 +68,27 @@ gtag('config', 'G-1X7MS1GBYC');
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v15.0" nonce="n3xha6Hh"></script>
 
-    <!--div class="content-fluid top">
-        <div class="content">
+    <div class="container-fluid top">
+        <div class="container">
             <div class="row">
-                <div class="col-sm-6 col-md-6 text-center">
-                    <i class="fa fa-envelope"></i> {{ __("Contact Us")}}
+                <div class="col-sm-6 col-md-6 text-left">
+                    <i class="fa fa-thumbs-up"></i> La <b>MEJOR</b> página de deportes en Zacatecas
                 </div>
 
-                <div class="col-sm-6 col-md-6 text-center">
-                    <i class="fa fa-whatsapp"></i> {{ __("WhatsApp")}}
+                <div class="col-sm-6 col-md-6 text-right social-icons">
+                    <a href="https://www.facebook.com/deportezacatecasoficial" target="_blank">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+
+                    <a href="https://wa.me/+524925444456?text=Quisiera%20saber%20m%C3%A1s%20acerca%20de%20los%20productos%20y%20servicios%20en%20Deporte%20Zacatecas" target="_blank">
+                        <i class="fa fa-whatsapp"></i>
+                    </a>
+
                 </div>
             </div>
         </div>
-    </div-->
+    </div>
+
     <div id="app">
         @include('layouts.menu')
 

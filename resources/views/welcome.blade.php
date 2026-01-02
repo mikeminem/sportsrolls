@@ -1,23 +1,21 @@
 @extends('layouts.app')
 
-
 @section('title', " Deporte Zacatecas - Bienvenido" )
 @section('description',   config('app.name') . " La mejor página de deportes de Zacatecas, noticias, roles de juego, estadísticas, torneos y más...")
 @section('keywords',  config('app.name') . " Torneos, noticias, rol de juego, deporte, Zacatecas, futbol, basquet-bol, carreras atléticas, jugadores ")
 @section('url',  url('/')  )
 
-
 @section('content')
 
 {{-- <example-component></example-component> --}}
-<div class="container mb-1">
+{{-- <div class="container-fluid bg-light pt-3 pb-3 mb-2">
   <div class="row">
-      <div class="col-12 text-center">
-          <h1>Bienvenido a la mejor página de deportes de Zacatecas </h1>
+      <div class="col-12">
+
       </div>
   </div>
-</div>
-<div class="container mb-1">
+</div> --}}
+<div class="container-fluid no-pad">
   <div class="row">
       <div class="col-md-12">
 
@@ -36,7 +34,7 @@
                         background-position-x: center;
                         background-position-y: center;
                         vertical-align: middle;
-                        height: 250px;  ">
+                        min-height: 600px;">
                         <h2 style="color: #fff;" class="p-5">{{ $webContent->title }}</h2>
                     </div>
                 </a>
@@ -47,7 +45,7 @@
   </div>
 </div>
 
-<div class="container d-md-block d-lg-block  d-xl-block">
+<div class="container-fluid no-pad d-md-block d-lg-block  d-xl-block">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -120,45 +118,64 @@
 </div>
 
 
-<!-- start current torunaments-->
-<div class="container mt-1">
-  <div class="row">
-    <div class="col-md-12">
-      <h2 class="title">{{ __('Convocatorias') }}</h2>
+@php
+    //verifiy if are there convocatories
+    $hasConvocatories = false;
+    foreach ($webContents as $webContent) {
+        if(
+            $webContent->location == 'No Ubicacion'
+            && $webContent->type == 'Convocatoria'
+        ) {
+            $hasConvocatories = true;
+            break;;
+        }
+    }
+
+@endphp
+
+@if ( $hasConvocatories )
+    <!-- start new convocatorias-->
+    <div class="container mt-1">
+    <div class="row">
+        <div class="col-md-12">
+        <h2 class="title">{{ __('Convocatorias') }}</h2>
+        </div>
+
+        <div class="col-md-4 col-sm-12">
+            @foreach ($webContents as $webContent)
+                @if(
+                    $webContent->location == 'No Ubicacion'
+                    && $webContent->type == 'Convocatoria'
+                )
+                    <a href="{{ asset('webpage/' . $webContent->slug ) }}" alt="{{ $webContent->title }}" title="{{ $webContent->title }}">
+
+                    <img
+                        src="{{ asset('web_pages/' . $webContent->image) }}"
+                        alt="{{ $webContent->title }}"
+                        title="{{ $webContent->title }}"
+                        width="100%"
+                        height="100%">
+
+                        {{-- <div class="text-center"
+                        style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}');
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                            /* background-attachment: fixed; */
+                            background-position: center;
+                            background-position-x: center;
+                            background-position-y: top;
+                            vertical-align: middle;
+                            height: 500px;">
+                        </div> --}}
+                    </a>
+                @endif
+            @endforeach
+        </div>
+
     </div>
-
-    <div class="col-md-4 col-sm-12">
-        @foreach ($webContents as $webContent)
-            @if( $webContent->location == 'No Ubicacion'
-              && $webContent->type == 'Convocatoria' )
-                <a href="{{ asset('webpage/' . $webContent->slug ) }}" alt="{{ $webContent->title }}" title="{{ $webContent->title }}">
-
-                  <img
-                    src="{{ asset('web_pages/' . $webContent->image) }}"
-                    alt="{{ $webContent->title }}"
-                    title="{{ $webContent->title }}"
-                    width="100%"
-                    height="100%">
-
-                    {{-- <div class="text-center"
-                      style="background-image: url('{{ asset('web_pages/' . $webContent->image) }}');
-                        background-size: cover;
-                        background-repeat: no-repeat;
-                        /* background-attachment: fixed; */
-                        background-position: center;
-                        background-position-x: center;
-                        background-position-y: top;
-                        vertical-align: middle;
-                        height: 500px;">
-                    </div> --}}
-                </a>
-              @endif
-          @endforeach
     </div>
-
-  </div>
-</div>
-<!-- end current torunaments-->
+    <!-- end of convocatories-->
+@endif
 
 
 <!-- start current torunaments-->
