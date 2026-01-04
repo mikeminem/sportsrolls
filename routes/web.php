@@ -57,6 +57,16 @@ Route::resource('/sports','SportController');
 Route::resource('/categories','CategoryController');
 Route::get('/categories_list/{tournament_id}','CategoryController@list');
 
+// product categories options
+Route::resource('/productcategories','ProductCategoryController');
+Route::get('/productcategories_list','ProductCategoryController@list');
+Route::get('/product_category_image/{filename}', 'ProductCategoryController@image')->name('productcategories.image');
+
+// products options
+Route::resource('/products','ProductController');
+Route::get('/products_list','ProductController@list');
+Route::get('/product_image/{filename}', 'ProductController@image')->name('products.image');
+
 //groups options
 Route::resource('/groups','GroupsController');
 Route::get('/get_groups/{category_id}','GroupsController@getGroups');
@@ -71,7 +81,7 @@ Route::post('/delete_profile_photo', 'ProfilesController@destroy');
 //categories options
 Route::resource('/pagecategories','PageCategoryController');
 Route::get('/pagecategories_list/{user_id}','PageCategoryController@list');
-Route::get('/pagecategory/{slug}','PageCategoryController@showlist');
+Route::get('/pagecategory/{slug}','PageCategoryController@listPage');
 
 Route::resource('/webpages','WebPagesController');
 Route::get('/webpages/{user_id}','WebPagesController@list');

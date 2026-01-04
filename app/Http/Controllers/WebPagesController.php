@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\PageCategory;
 use App\WebPage;
 use App\Tournaments;
 
@@ -31,12 +32,12 @@ class WebPagesController extends Controller
 
             $rows = [];
 
-                $rows = DB::table('webpages as s')                
+                $rows = DB::table('webpages as s')
                     ->select('s.id', 's.title', 's.type', 's.status', 's.description', 's.is_deleted', 's.budget')
                     ->where('s.is_deleted', 0)
                     //->where('s.user_id',Auth::user()->id)
-                    ->get();    
-            
+                    ->get();
+
             return DataTables::of($rows)
                     ->addColumn('budget', function($row) {
                                 return '$' . number_format($row->budget,'2');
@@ -50,7 +51,7 @@ class WebPagesController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a>
-                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete"> 
+                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->title.'" id="btnDelete">
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
@@ -66,9 +67,16 @@ class WebPagesController extends Controller
         } else {
             $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->where('user_id',Auth::user()->id)->get(['id','title']);
         }
-        
+
+        $pCategories = [];
+        if (Auth::user()->role === 'Admin') {
+            $pCategories = PageCategory::where('is_deleted','0')
+            ->get(['id','name']);
+        }
+
         return view ('webpages.index', [
-            'tournaments' => $tournaments
+            'tournaments' => $tournaments,
+            'pCategories' => $pCategories
         ]);
     }
 
@@ -118,7 +126,7 @@ class WebPagesController extends Controller
 
 
         if (
-            !isset($request->id) 
+            !isset($request->id)
             || empty($request->id)
         ) {
             $model = new WebPage($request->all());
@@ -128,10 +136,10 @@ class WebPagesController extends Controller
 
             if (!empty($imagePath))
                 $model->image = $imagePath;
-            
+
             if ($model->save())
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado el contenido web!']);      
+                 return response()->json(['type' => 'success',
+                                 'message' => 'Se ha creado el contenido web!']);
         } else {
             $model = WebPage::find($request->id);
             $lastImage = $model->image;
@@ -144,9 +152,9 @@ class WebPagesController extends Controller
                 $model->image = $imagePath;
             }
 
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado el contenido web!']); 
+            if ($model->update())
+                return response()->json(['type' => 'success',
+                                 'message' => 'Se ha modificado el contenido web!']);
         }
 
         return response()->json([
@@ -174,7 +182,8 @@ class WebPagesController extends Controller
                 'status',
                 'type',
                 'location',
-                'tournament_id'
+                'tournament_id',
+                'page_category_id',
             )->find($id);
         }
         return false;
@@ -204,7 +213,7 @@ class WebPagesController extends Controller
         ]);
     }
 
-    public function showWebPage($slug) 
+    public function showWebPage($slug)
     {
         if (!$slug) {
             return view('errors.501');

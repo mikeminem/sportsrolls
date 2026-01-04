@@ -2,6 +2,7 @@
 
 @section('title', ' :: ' . $webpage->title )
 @section('description', $webpage->description )
+@section('keywords', $webpage->description )
 @section('image',  asset('web_pages/' . $webpage->image) )
 
 @section('content')
@@ -28,15 +29,23 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-md-12">
-
             <div class="card">
                 <div class="card-body">
                     <div class="text-left">
+                        <p><a href="{{ url()->previous() }}" class="btn btn-primary"><span class="fa fa-arrow-left"></span> Regresar</a></p>
                         <h1>{{ $webpage->title }}</h1>
                         <h3>{{ $webpage->description }}</h3>
                     </div>
                     {!! $webpage->content !!}
 
+                    <hr>
+                    <div class="col-md-8">
+
+                        <p>Publicado el {{ date('d M, Y', strtotime($webpage->created_at)) }}
+                            | Por: {{ ($webpage->user->name ?? 'Desconocido') . ' ' .  ($webpage->user->last_name ?? '') }}
+                        </p>
+
+                    </div>
 
                 </div>
             </div>

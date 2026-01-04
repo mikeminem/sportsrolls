@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PageCategory;
+use App\WebPage;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ class PageCategoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['showlist']]);
+        $this->middleware('auth', ['except' => ['listPage']]);
     }
 
     public function index(Request $request)
@@ -27,8 +28,8 @@ class PageCategoryController extends Controller
                 ->select('c.id', 'c.name', 'c.description', 'c.status', 'c.views', 'c.prints', 'c.likes')
                 ->where('c.is_deleted', 0)
                 ->where('c.user_id',Auth::user()->id)
-                ->get();    
-            
+                ->get();
+
             return DataTables::of($rows)
                     ->addColumn('action', function($row) {
 
@@ -39,7 +40,7 @@ class PageCategoryController extends Controller
                                         <span class="fa fa-edit tool">
                                         </span>
                                     </a>
-                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete"> 
+                                    <a href="' . $routeDelete . '" title="Borrar Registro" data-name="'.$row->name.'" id="btnDelete">
                                         <span class="fa fa-trash tool"></span>
                                     </a>';
 
@@ -89,7 +90,7 @@ class PageCategoryController extends Controller
 
 
         if (
-            !isset($request->id) 
+            !isset($request->id)
             || empty($request->id)
         ) {
             $model = new PageCategory($request->all());
@@ -97,16 +98,16 @@ class PageCategoryController extends Controller
             $model->slug = str_slug($model->name);
 
             if ($model->save())
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado la categoria!']);      
+                 return response()->json(['type' => 'success',
+                                 'message' => 'Se ha creado la categoria!']);
         } else {
             $model = PageCategory::find($request->id);
             $model->fill($request->all());
             $model->slug = str_slug($model->name);
-            
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado la categoria!']); 
+
+            if ($model->update())
+                return response()->json(['type' => 'success',
+                                 'message' => 'Se ha modificado la categoria!']);
         }
 
         return response()->json([
@@ -119,7 +120,7 @@ class PageCategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int 
+     * @param  int
      * @return boolean
      */
     public function show( $id)
@@ -135,7 +136,7 @@ class PageCategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Category  $category
-     * @return \Illuminate\Http\JsonResponse 
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
@@ -156,7 +157,7 @@ class PageCategoryController extends Controller
     }
 
     public function list($tournament_id) {
-        
+
         if ($tournament_id) {
             $list = PageCategory::where('tournament_id',$tournament_id)->where('is_deleted',0)->get();
             return (string) $list;
@@ -165,8 +166,32 @@ class PageCategoryController extends Controller
         return (string) false;
     }
 
-    public function showlist($slug) 
+    public function listPage($slug)
     {
-        return "ok";
+        if (!$slug) {
+            abort(404);
+        }
+
+        $category = PageCategory::where('slug', $slug)
+            ->where('is_deleted', 0)
+            ->first();
+
+        // $webPages = DB::table('webpages as wp')
+        //     //->select('wp.id', 'wp.title', 'wp.slug', 'wp.content', 'wp.image', 'wp.keywords', 'wp.views', 'wp.likes', 'wp.prints', 'wp.created_at')
+        //     ->select('wp.id', 'wp.title', 'wp.slug', 'wp.description', 'wp.image', 'wp.keywords', 'wp.views', 'wp.likes', 'wp.prints', 'wp.created_at')
+        //     ->where('wp.page_category_id', $category->id)
+        //     ->where('wp.is_deleted', 0)
+        //     ->orderBy('wp.created_at', 'DESC')
+        //     ->get();
+
+        $pages = WebPage::where('page_category_id', $category->id)
+            ->where('is_deleted', 0)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        return view ('page_categories.list_page', [
+            'category' => $category,
+            'pages' => $pages,
+        ]);
     }
 }

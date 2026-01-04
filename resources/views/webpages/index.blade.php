@@ -15,16 +15,16 @@
                         <h1>{{ __('WebPages')}}</h1>
                     </div>
 
-                    @if (Auth::check() 
-                            &&  ( 
+                    @if (Auth::check()
+                            &&  (
                                 Auth::user()->role == 'Admin'
                                 || Auth::user()->role == 'Promoter'
-                                || Auth::user()->role == 'Writer' 
+                                || Auth::user()->role == 'Writer'
                             )
                         )
-                        <a role="button" 
-                            class="btn btn-primary" 
-                            href="javascript:void(0);" 
+                        <a role="button"
+                            class="btn btn-primary"
+                            href="javascript:void(0);"
                             id="addRow"
                              >
                             <span class="fa fa-plus"></span> {{ __("New")}}
@@ -39,7 +39,7 @@
                         <span class="fa fa-refresh"></span> {{ __("Refresh")}}
                     </a>
                     <hr />
-                   
+
 
                     <div class="table-responsive">
                         <table class="table table-hover" id="table">
@@ -53,9 +53,9 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-        
+
                             </tbody>
                         </table>
                     </div>
@@ -66,141 +66,20 @@
 </div>
 
 <!-- Modal Form -->
-<div id="formModal" class="modal fade" role="dialog">
-    <div class="modal-dialog mw-100 w-75">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title"> Contenido Web</h4>
-                <button type="button" class="close" data-dismiss="modal" data-backdrop="false">&times;</button>          
-            </div>
-            <!--mandamos la forma-->
-            <form id="updateForm" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="row">
-                     
-                        <div class="col-md-9 col-sm-12">
-                            <div class="form-group">
-                                <label for="title"><b>Título *</b></label>
-                                <input type="text" class="form-control" id="title" name="title" required maxlength="120"> 
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="title"><b>Torneo </b></label>
-                                <select class="form-control"  id="tournament_id" name="tournament_id">
-                                    <option value="">Selecciona dónde ver el contenido</option>
-                                    <option value="0">Vista global</option>
-                                    @foreach($tournaments as $tournament)
-                                        <option value="{{ $tournament->id}}">{{ $tournament->title}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label for="description"><b>Descripción corta*</b></label>
-                                <input type="text" class="form-control" id="description" name="description" required maxlength="120"> 
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label for="content"><b>Contenido *</b></label><br />
-                                <textarea name="content" id="content" class="form-control editor" cols="30" rows="6" required></textarea>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="status"><b>Estatus *</b></label>
-                                <select id="status" name="status" class="form-control" required>
-                                    <option value="En Desarrollo">En Desarrollo</option>
-                                    <option value="Por Aprobar">Por Aprobar</option>
-                                    <option value="Aprobado">Aprobado</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="type"><b>Tipo *</b></label>
-                                <select id="type" name="type" class="form-control" required>
-                                    <option value="Pagina Web">Página Web</option>
-                                    <option value="Publicidad">Publicidad</option>
-                                    <option value="Anuncio">Anuncio</option>
-                                    <option value="Convocatoria">Convocatoria</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="location"><b>Ubicación *</b></label>
-                                <select id="location" name="location" class="form-control" required>
-                                    <option value="No Ubicacion">No Ubicación</option>
-                                    <option value="Encabezado">Encabezado</option>
-                                    <option value="Carrusel Principal">Carrusel Principal</option>
-                                    <option value="Lado Izquierdo">Lado Izquierdo</option>
-                                    <option value="Lado Derecho">Lado Derecho</option>
-                                    <option value="Abajo">Abajo</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-12">
-                            <div class="form-group">
-                                <label for="image"><b>Imagen</b></label>
-                                <input type="file" class="form-control" id="image" name="image"> 
-                                <small>La imagen de la nota debe estar en las medidas 1000 x 500 px</small><br>
-                                <img src="" id="logo"  width="200px" >
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12">
-                            <b>Datos marcados con * son obligatorios</b>
-                            <input type="hidden" class="form-control" id="id" name="id" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <div class="form-group text-right">
-                        {{ csrf_field() }}
-
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <span class="fa fa-save"></span> 
-                                {{__('Save')}}
-                            </button>
-
-                            <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
-                                <span class="fa fa-remove"></span> {{__('Cancel')}}
-                            </button>
-                        </div>
-                    </div>
-            </form>
-                <!--fin de la forma-->
-         </div>
-    </div>
-</div>
+@include('webpages.form')
 <!--end of the modal window-->
 
 <!-- delete modal -->
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Borrar Rregistro</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deleteForm">
@@ -214,7 +93,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -222,10 +101,10 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 @endsection
 
 @section('js')
@@ -237,7 +116,7 @@
             fetch_data();
 
             function fetch_data() {
-            
+
                 $('#table').DataTable({
                     "language": {
                         "sProcessing":    "Procesando...",
@@ -286,7 +165,7 @@
                 // $("#image").hide();
                 CKEDITOR.instances.content.setData('')
 
-                jQuery.noConflict(); 
+                jQuery.noConflict();
                 jQuery("#formModal").modal('show');
             });
 
@@ -306,7 +185,7 @@
                     type: "GET",
                     url: $(this).attr("href"),
                     dataType: "json",
-                    success: function (data) { 
+                    success: function (data) {
 
                         for(obj in data) {
                             if (obj ==='image') {
@@ -319,12 +198,12 @@
                             if (obj == 'content') {
                                 CKEDITOR.instances.content.setData(data[obj])
                                 continue;
-                            } 
+                            }
 
-                            $("#" + obj).val(data[obj]);                        
+                            $("#" + obj).val(data[obj]);
                         }
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('show');
                     },
                 });
@@ -349,30 +228,30 @@
                     cache: false,
                     processData: false,
                     data: new FormData(this),
-                    success: function (data) {                
+                    success: function (data) {
                         if (data.type == "error") {
                             var errors = "";
                             $.each(data.errors, function (i, val) {
                                 errors = errors  +  val + "\n";
                             });
-                            
+
                             $.notify(data.message + "\n" + errors, data.type, { position:"center" } );
                             // $.notify('hello !!', {
                             //     style: 'happyblue'
                             // });
-                            
+
                             return false;
                         }
 
                         $("#updateForm").trigger('reset');
-                        
-                        jQuery.noConflict(); 
+
+                        jQuery.noConflict();
                         jQuery("#formModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();
 
                         $.notify(data.message, data.type);
-                        
+
                     },
                     error:function(){
                         $.notify("Hubo un error al intentar agregar el registro", "error");
@@ -395,10 +274,10 @@
                             $.notify(data.message + "\n" + errors, data.type);
                             return false;
                         }
-                        
+
                         $("#deleteForm").trigger('reset');
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deleteModal").modal('toggle');
                         //Table.ajax.reload();
                         $('#table').DataTable().ajax.reload();

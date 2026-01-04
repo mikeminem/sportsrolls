@@ -315,6 +315,11 @@ if modal give us problems, just delete the backdrop element
     padding-right: 0;
 }
 
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 /* for the Journey navigation */
 /* #owl-demo .item {
     width: 250px;

@@ -37,6 +37,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function pages()
+    {
+        return $this->hasMany('App\WebPage');
+    }
+
     public function league()
     {
         return $this->hasOne('App\Leagues');

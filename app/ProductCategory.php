@@ -1,0 +1,20 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ProductCategory extends Model
+{
+    //
+    protected $fillable = [
+        'name',
+        'sku',
+        'image',
+        'price',
+        'stock',
+        'is_deleted',
+        'is_active',
+        'product_category_id',
+    ];
+}

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class WebPage extends Model
 {
     protected $table = 'webpages';
-    
+
     protected $fillable = [
         'used_id',
         'tournament_id',
@@ -23,6 +23,16 @@ class WebPage extends Model
         'is_deleted',
         'facebook',
         'instagram',
-        'twitter'
+        'twitter',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo('App\PageCategory', 'page_category_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
 }

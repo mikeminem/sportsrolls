@@ -75,13 +75,13 @@
 
                         @else
 
-                        <li class="nav-item">
-                            <a class="nav-link" href=" {{ url('/home') }} "><i class="fa fa-home"></i> {{ __('Home') }}</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href=" {{ url('/home') }} "><i class="fa fa-home"></i> {{ __('Home') }}</a>
+                            </li>
 
-                        {{-- <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-comments"></i> {{ __('Mensajes') }}</a>
-                        </li> --}}
+                            {{-- <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fa fa-comments"></i> {{ __('Mensajes') }}</a>
+                            </li> --}}
 
                             @if (Auth::user()->role == "Promoter")
                                 <li class="nav-item dropdown">
@@ -113,6 +113,7 @@
                                 </li>
 
                             @endif
+
 
 
                             @if (Auth::user()->role == "Admin")
@@ -157,19 +158,27 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ url('/alerts') }}"><i class="fa fa-square"></i> {{ __('Alerts') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/pagecategories')}}"><i class="fa fa-file"></i> {{ __('PageCategories') }}</a>
-                                        <a class="dropdown-item" href="{{ url('/webpages')}}"><i class="fa fa-file"></i> {{ __('WebPages') }}</a>
+                                        <a class="dropdown-item" href="{{ url('/pagecategories')}}"><i class="fa fa-file"></i> Categoría Pagina Web</a>
+                                        <a class="dropdown-item" href="{{ url('/webpages')}}"><i class="fa fa-file"></i> Páginas Web</a>
                                         <div class="dropdown-divider"></div>
 
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ url('/sponsors')}}"><i class="fa fa-file"></i> Patrocinadores</a>
-                                        <a class="dropdown-item" href="{{ url('/ads')}}"><i class="fa fa-file"></i> Publicidad</a>
-
                                     </div>
                                 </li>
+                            @endif
 
+                            @if (Auth::user()->role == "Seller" || Auth::user()->role == "Admin")
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        <i class="fa fa-shopping-bag"></i> Tienda <span class="caret"></span>
+                                    </a>
 
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ url('/productcategories') }}"><i class="fa fa-cubes"></i> Categoría de productos</a>
+                                        <a class="dropdown-item" href="{{ url('/products') }}"><i class="fa fa-tag"></i> Productos</a>
+                                    </div>
+                                </li>
                             @endif
 
 
