@@ -1,0 +1,69 @@
+
+@extends('pdf.layout')
+
+@section('title',"Reporte de Compras")
+
+@section('content')
+<h2>Listado de Compras</h2>
+<h4>Cliente: {{ $client->name }} {{ $client->last_name }}</h4>
+<small>Fecha: @php
+	echo Date('d/m/Y h:s:i');
+
+	$registros = 0;
+    $total = 0;
+	@endphp
+
+</small>
+<hr />
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th width="10">#</th>
+                <th width="10">Fecha</th>
+                <th width="20">Sucursal</th>
+
+                <th width="10">Estatus</th>
+                <th width="10">Forma Pago</th>
+                <th width="10">Antendió</th>
+                <th width="10">Total</th>
+
+                
+
+            </tr>                            
+        </thead>
+        <tbody>
+            @foreach($shopping as $s)
+            <tr>
+                <td>{{ $s->id }}</td>
+                <td>{{ $s->created_at }}</td>
+                <td>{{ $s->branch->name }}</td>
+                <td>{{ $s->status }}</td>
+                <td>{{ $s->formaPago }}</td>
+                <td>{{ $s->usuario->name }}</td>
+                <td align="right">$ {{ number_format($s->total,'2') }}</td>   
+            </tr>
+
+            @php
+            	$registros++;
+                $total += $s->total;
+            @endphp
+            @endforeach
+        </tbody>
+
+        <tfoot>
+            <tr >
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b>Total</b></td>
+                <td align="right"><b>$ {{ number_format($total,'2') }}</b></td>   
+            </tr>
+        </tfoot>
+
+     
+    </table>
+    <b>Registros encontrados: {{ $registros}} </b>
+    <br />
+@endsection

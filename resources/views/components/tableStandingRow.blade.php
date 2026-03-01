@@ -18,8 +18,8 @@
     <td class="text-center ">{{ $score->JP }}</td>
 
     @if ($tournament->enable_penalties_scoring === 'Si')
-        <td class="text-center ">{{ $score->JGP }}</td>
-        <td class="text-center ">{{ $score->JPP }}</td>
+        <td class="text-center ">{{ $score->JGP ?? 0 }}</td>
+        <td class="text-center ">{{ $score->JPP ?? 0 }}</td>
     @endif
 
     <td class="text-center hideColumn">{{ $score->PAF }}</td>
@@ -28,10 +28,10 @@
 
     @if (isset($score->PUNTOS)
         && ($tournament->enable_points_system === 'Si'))
-        <td class="text-center ">{{ $score->PUNTOS }} {{ ($score->H2H_DIF) ? '('.$score->H2H_DIF.')' : ''  }}</td>
+        <td class="text-center ">{{ $score->PUNTOS }} Si </td>
     @elseif (isset($score->PUNTOS)
         && isset($score->PUNTOS)
         && ($tournament->enable_penalties_scoring === 'Si'))
-        <td class="text-center ">{{ $score->PUNTOS + $score->PUNTOS_PENALTIES }}</td>
+        <td class="text-center ">{{ ($score->PUNTOS ?? 0) + ($score->PUNTOS_PENALTIES ?? 0) }} No</td>
     @endif
 </tr>

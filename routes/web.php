@@ -266,6 +266,7 @@ Route::get('/show_game/{code}', 'GamesController@showGame');
 Route::get('/game_history/{code}', 'GamesController@gameHistory');
 Route::post('/game_data_entry', 'GamesController@data_entry');
 Route::get('/get_team_games/{teamId}', 'GamesController@getTeamGames');
+Route::get('/print_paper_game/{gameId}', 'GamesController@listPDF')->name('print_paper_game');
 
 Route::get('/get_games_by_journey/{journeyId}', 'GamesController@getJourneyGames');
 

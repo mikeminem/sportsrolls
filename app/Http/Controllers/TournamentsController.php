@@ -358,6 +358,7 @@ class TournamentsController extends Controller
         ?string $limit = null
     ): array {
 
+        //step for categories
         // foreach ($categories as $category) {
         //     $query = "SELECT t.id, t.name as team,
         //         count('x') as JJ,
@@ -426,100 +427,76 @@ class TournamentsController extends Controller
         //     $scores[$category->id] = DB::select( DB::raw( $query ) );
         // }
 
-        //fixing issue with ties on points
         //handle scores for multicategories
-        // $query = "SELECT t.id,
-        //         t.category_id,
-        //         t.group_id,
-        //         t.name as team,
-        //         count('x') as JJ,
-        //         count(case when PAF > PEC then 1 end) JG,
-        //         count(case when PAF < PEC then 1 end) JP,
-        //         count(case when PAF = PEC then 1 end) JE,
-        //         count(case when PPAF > PPEC then 1 end) JGP,
-        //         count(case when PPAF < PPEC then 1 end) JPP,
-        //         sum(score.PAF) as PAF,
-        //         sum(score.PEC) as PEC,
-        //         sum(score.PAF) - sum(score.PEC) as DIF
-        //         $points, t.logo
-        //         FROM
-        //         (
-        //             (SELECT
-        //                     h.team1_id team,
-        //                     h.score_team1 PAF,
-        //                     h.score_team2 PEC,
-        //                     h.score_penalties_team1 PPAF,
-        //                     h.score_penalties_team2 PPEC
-        //                     FROM games h
-        //                     INNER JOIN journeys j on j.id = h.journey_id
-        //                     WHERE
-        //                     h.status = 'Finalizado' and
-        //                     h.is_deleted = 0 and
-        //                     h.type = 'Temporada Regular' and
-        //                     j.show_public ='Si' and
-        //                     j.tournament_id = ". $tournament_id ."
-        //             )
-        //         UNION ALL
-        //             ( SELECT
-        //                     v.team2_id team,
-        //                     v.score_team2 PEF,
-        //                     v.score_team1 PEC,
-        //                     v.score_penalties_team2 PPAF,
-        //                     v.score_penalties_team1 PPEC
-        //                     FROM games v
-        //                     INNER JOIN journeys j on j.id = v.journey_id
-        //                     WHERE
-        //                     v.status = 'Finalizado' and
-        //                     v.is_deleted = 0 and
-        //                     v.type = 'Temporada Regular' and
-        //                     j.show_public ='Si' and
-        //                     j.tournament_id = ". $tournament_id ."
-        //             )
-        //         ) AS score
-        //         JOIN teams t on t.id = score.team
-        //         WHERE
-        //         t.status = 'Activo'
-        //         GROUP BY team ";
-
-        $query = "SELECT
-                s.*,
-                COALESCE(SUM(h.H2H_PTS), 0) AS H2H_PTS,
-                COALESCE(SUM(h.H2H_DIF), 0) AS H2H_DIF
-            FROM v_standings s
-            LEFT JOIN v_h2h_table h
-                ON h.team_id = s.team_id
-                AND h.rival_id IN (
-                    SELECT team_id
-                    FROM v_standings
-                    WHERE PUNTOS = s.PUNTOS
-                    AND team_id <> s.team_id
-                )
-            WHERE
-                s.tournament_id = ". $tournament_id ."
-            GROUP BY s.team_id ";
+        $query = "SELECT t.id,
+                t.category_id,
+                t.group_id,
+                t.name as team,
+                count('x') as JJ,
+                count(case when PAF > PEC then 1 end) JG,
+                count(case when PAF < PEC then 1 end) JP,
+                count(case when PAF = PEC then 1 end) JE,
+                count(case when PPAF > PPEC then 1 end) JGP,
+                count(case when PPAF < PPEC then 1 end) JPP,
+                sum(score.PAF) as PAF,
+                sum(score.PEC) as PEC,
+                sum(score.PAF) - sum(score.PEC) as DIF
+                $points, t.logo
+                FROM
+                (
+                    (SELECT
+                            h.team1_id team,
+                            h.score_team1 PAF,
+                            h.score_team2 PEC,
+                            h.score_penalties_team1 PPAF,
+                            h.score_penalties_team2 PPEC
+                            FROM games h
+                            INNER JOIN journeys j on j.id = h.journey_id
+                            WHERE
+                            h.status = 'Finalizado' and
+                            h.is_deleted = 0 and
+                            h.type = 'Temporada Regular' and
+                            j.show_public ='Si' and
+                            j.tournament_id = ". $tournament_id ."
+                    )
+                UNION ALL
+                    ( SELECT
+                            v.team2_id team,
+                            v.score_team2 PEF,
+                            v.score_team1 PEC,
+                            v.score_penalties_team2 PPAF,
+                            v.score_penalties_team1 PPEC
+                            FROM games v
+                            INNER JOIN journeys j on j.id = v.journey_id
+                            WHERE
+                            v.status = 'Finalizado' and
+                            v.is_deleted = 0 and
+                            v.type = 'Temporada Regular' and
+                            j.show_public ='Si' and
+                            j.tournament_id = ". $tournament_id ."
+                    )
+                ) AS score
+                JOIN teams t on t.id = score.team
+                WHERE
+                t.status = 'Activo'
+                GROUP BY team ";
 
             if ( strlen($points)==0) {
-                $query .= 'ORDER BY s.JG desc, s.JP asc';
+                $query .= 'ORDER BY JG desc, JP asc';
             }
 
-            /*ORDER BY
-                s.PUNTOS DESC,
-                H2H_PTS DESC,
-                H2H_DIF DESC*/
             if (strlen($points)>0) {
-                $query .= 'ORDER BY s.PUNTOS DESC, H2H_PTS DESC, H2H_DIF DESC';
+                $query .= 'ORDER BY PUNTOS DESC';
             }
 
-            $query .= ', s.DIF DESC, s.PAF DESC';
+            $query .= ', DIF DESC';
 
             if ($limit) {
                 $query .= ' LIMIT ' . $limit;
             }
 
         //echo $query;
-
         $scores = DB::select( DB::raw( $query ) );
-
         return $scores;
     }
 
@@ -748,6 +725,10 @@ class TournamentsController extends Controller
         //lets get the tournament info
         $tournament = Tournaments::where('slug', $slug)->get();
 
+        if (!$tournament) {
+            return view ('app.error');
+        }
+
         $clicks = $tournament[0]->clicks + 1;
         Tournaments::where('id', $tournament[0]->id)->update(['clicks' => $clicks ]);
         // $teams = Teams::where('tournament_id', $tournament[0]->id)
@@ -755,20 +736,27 @@ class TournamentsController extends Controller
         //     ->orderby('name','asc')
         //     ->get();
 
-        $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
+        $categories = Category::where('tournament_id', $tournament[0]->id)
+            ->where('is_deleted',0)
+            ->orderBy('name', 'asc')
+            ->get();
+
         $webContents = WebPage::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('created_at', 'desc')->get();
 
         $points = '';
-        if ($tournament[0]->enable_points_system == "Si"){
+        if ($tournament[0]->enable_points_system == "Si") {
             $points = ", sum( case when PAF > PEC then " . $tournament[0]->winner_points . " else 0 end \n";
 
             if ($tournament[0]->draw_points > -1
-                && $tournament[0]->enable_penalties_scoring == "No" ){
+                && $tournament[0]->enable_penalties_scoring == "No" )
+            {
                 $points .= " + case when PAF = PEC then " . $tournament[0]->draw_points . " else 0 end \n";
             }
 
-            if ($tournament[0]->enable_points_system == "Si"
-                && $tournament[0]->enable_penalties_scoring == "No"){
+            if (
+                $tournament[0]->enable_points_system == "Si"
+                && $tournament[0]->enable_penalties_scoring == "No"
+            ) {
                     $points .= " + case when PAF < PEC then " . $tournament[0]->loser_points . " else 0 end ) as PUNTOS";
             } else {
                 $points .= " + case when PPAF > PPEC then " . $tournament[0]->winner_points_penalties . " else 0 end \n";
@@ -782,12 +770,12 @@ class TournamentsController extends Controller
             ->where('is_deleted',0)
             ->where('show_public','Si')
             ->where('status','Abierto')
-            ->where('start_at','<=', date('Y-m-d 00:00'))
-            ->where('finish_at','>=', date('Y-m-d 23:59') )
+            // ->where('start_at','<=', date('Y-m-d 00:00'))
+            // ->where('finish_at','>=', date('Y-m-d 23:59'))
             ->orderBy('id','asc')
             ->get();
 
-        //$stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
+        //$stadiums = Stadiums::where('user_id', $tournament->user_id)->where('is_deleted',0)->get(['id','name']);
         $scores = $this->getScores($tournament[0]->id, $categories->all(), $points);
 
         $journeyIDs = array_map(function($journay){
@@ -834,10 +822,14 @@ class TournamentsController extends Controller
         }
 
         //lets get the tournament info
-        $tournament = Tournaments::where('slug', $slug)->get();
+        $tournament = Tournaments::where('slug', $slug)->first();
 
-        $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
-        $journeys = Journeys::where('tournament_id', $tournament[0]->id)
+        if (!$tournament) {
+            return view ('app.error');
+        }
+
+        $categories = Category::where('tournament_id', $tournament->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
+        $journeys = Journeys::where('tournament_id', $tournament->id)
             ->where('is_deleted',0)
             ->where('show_public','Si')
             ->orderBy('id','ASC')->get();
@@ -845,7 +837,7 @@ class TournamentsController extends Controller
 
         if (! $request->has('jid')) {
             //lets find the active one
-            $activeJourney = Journeys::where('tournament_id', $tournament[0]->id)
+            $activeJourney = Journeys::where('tournament_id', $tournament->id)
                 ->where('is_deleted',0)
                 ->where('show_public','Si')
                 ->where('status','Abierto')
@@ -853,7 +845,11 @@ class TournamentsController extends Controller
                 ->first();
         }
 
-        $stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
+        $activeJourneyId = $request->has('jid')
+            ? $request->get('jid')
+            : ($activeJourney ? $activeJourney->id : ($journeys->first() ? $journeys->first()->id : null));
+
+        $stadiums = Stadiums::where('user_id', $tournament->user_id)->where('is_deleted',0)->get(['id','name']);
 
         $games  = DB::table('games as g')
         ->select('g.id',
@@ -887,18 +883,18 @@ class TournamentsController extends Controller
         ->where('g.is_deleted', 0)
         ->where('j.is_deleted', 0)
         ->where('j.show_public', "Si")
-        ->where('j.id', $request->has('jid') ? $request->get('jid') : $activeJourney->id )
-        ->where('g.tournament_id', $tournament[0]->id )
+        ->where('j.id', $activeJourneyId)
+        ->where('g.tournament_id', $tournament->id )
         ->orderBy('g.game_day', 'asc')
         ->orderBy('g.game_time', 'asc')
         ->get();
 
         return view ('tournaments.results', [
-            'tournament' => $tournament[0],
+            'tournament' => $tournament,
             'journeys'   => $journeys,
             'categories' => $categories,
             'games'      => $games,
-            'activeJourney' => $request->has('jid') ? $request->get('jid') : $activeJourney->id,
+            'activeJourney' => $activeJourneyId,
             // 'stadiums'   => $stadiums,
             // 'scores'     => $scores,
             // 'teams'      => $teams
@@ -1003,38 +999,45 @@ class TournamentsController extends Controller
         }
 
         //lets get the tournament info
-        $tournament = Tournaments::where('slug', $slug)->get();
+        // $tournament = Tournaments::where('slug', $slug)->get();
+        $tournament = Tournaments::where('slug', $slug)->first();
 
-        $categories = Category::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
-        $groups = Groups::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
+        $categories = Category::where('tournament_id', $tournament->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
+        $groups = Groups::where('tournament_id', $tournament->id)->where('is_deleted',0)->orderBy('name', 'asc')->get();
 
-        $journeys = Journeys::where('tournament_id', $tournament[0]->id)->where('is_deleted',0)->orderBy('id','desc')->get();
+        $journeys = Journeys::where('tournament_id', $tournament->id)->where('is_deleted',0)->orderBy('id','desc')->get();
         //$stadiums = Stadiums::where('user_id', $tournament[0]->user_id)->where('is_deleted',0)->get(['id','name']);
 
         $points = '';
-        if ($tournament[0]->enable_points_system == "Si"){
-            $points = ", sum( case when PAF > PEC then " . $tournament[0]->winner_points . " else 0 end \n";
+        if ($tournament->enable_points_system == "Si") {
+            $points = ", sum( case when PAF > PEC then " . $tournament->winner_points . " else 0 end \n";
 
-            if ($tournament[0]->draw_points > -1
-                && $tournament[0]->enable_penalties_scoring == "No" ){
-                $points .= " + case when PAF = PEC then " . $tournament[0]->draw_points . " else 0 end \n";
+            if ($tournament->draw_points > -1
+                && $tournament->enable_penalties_scoring == "No" ){
+                $points .= " + case when PAF = PEC then " . $tournament->draw_points . " else 0 end \n";
             }
 
-            if ($tournament[0]->enable_points_system == "Si"
-                && $tournament[0]->enable_penalties_scoring == "No"){
-                    $points .= " + case when PAF < PEC then " . $tournament[0]->loser_points . " else 0 end ) as PUNTOS";
+            if ($tournament->enable_points_system == "Si"
+                && $tournament->enable_penalties_scoring == "No"){
+                    $points .= " + case when PAF < PEC then " . $tournament->loser_points . " else 0 end ) as PUNTOS";
             } else {
-                $points .= " + case when PPAF > PPEC then " . $tournament[0]->winner_points_penalties . " else 0 end \n";
+                //tie-breaker for penalties
+                //tie
+                //$points .= " + case when PAF = PEC then " . $tournament->draw_points . " else 0 end \n";
 
-                $points .= " + case when PPAF < PPEC then " . $tournament[0]->loser_points_penalties . " else 0 end ) as PUNTOS";
+                //winner in penalties
+                $points .= " + case when PPAF > PPEC then " . $tournament->winner_points_penalties . " else 0 end \n";
+
+                //loser in penalties
+                $points .= " + case when PPAF < PPEC then " . $tournament->loser_points_penalties . " else 0 end ) as PUNTOS";
 
             }
         }
 
-        $scores = $this->getScores($tournament[0]->id, $categories->all(), $points);
+        $scores = $this->getScores($tournament->id, $categories->all(), $points);
 
         return view ('tournaments.standings', [
-            'tournament' => $tournament[0],
+            'tournament' => $tournament,
             'journeys'   => $journeys,
             'categories' => $categories,
             'scores'     => $scores,

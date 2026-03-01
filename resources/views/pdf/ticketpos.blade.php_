@@ -1,0 +1,86 @@
+<html>
+<style type="text/css">
+
+	 @page 
+            {
+                margin: 0.1cm;
+            }
+
+            body {
+                
+                
+            }
+
+
+	body {
+		
+		font-size:10px;
+        /*font-family: 'Arial';*/
+        margin-top: 0cm;
+        margin-left: .2cm;
+        margin-right: .2cm;
+        margin-bottom: 0cm;
+	}
+	
+
+</style>
+<body>
+	<center>
+		*** TICKET DE VENTA *** <br /> 
+			<strong>SUPLEMENTOS ZACATECAS</strong> 
+			<br>
+			<br>
+			RICARDO IRWIN MOLINA NOYOLA <br>
+			RFC: MONR-900622-HP7<br>
+			AV. UNIVERISDAD #295, COL. HIDRÁULICA, ZACATECAS, ZACATECAS, MEXICO C.P. 98068 <br>
+			TELÉFONO: (331)604-7485<br>
+			rmolina578@hotmail.com
+
+	</center>
+
+	<p align="left">
+		FOLIO DE VENTA: {{ $pos->id}} <br>
+		FECHA: {{ $pos->created_at }} <br>
+		PRECIOS EXPRESADOS EN MONEDA NACIONAL
+		<br>
+		<br>
+
+		===========================================<BR>
+		CANT - PROD  -  -  -  -  -  -  -  -  -  - IMPORTE <BR>
+		===========================================<BR>
+
+		@foreach($detalles as $detalle)
+			{{ number_format($detalle->quantity,0)}} | {{ strtoupper(substr($detalle->producto->title,0,25)) }} | ${{ number_format($detalle->importe,2) }}<br />
+
+		@endforeach
+
+		===========================================<BR>
+
+		<p align="right">
+			<b style="font-size: 1.5em">TOTAL  ${{ number_format($pos->total,2) }}</b>
+		</p>
+
+		<p align="center">
+			VISITA NUESTRA PÁGINA PARA PROMOCIONES Y PRODUCTOS EN  http://WWW.SUPLEMENTOSZACATECAS.COM
+		</p>
+
+		<p align="center">
+			SI DESEAS FACTURAR, RECUERDA SOLICITAR TU FACTURA AL TELEFONO (331) 604-74-85, NO SE FACTURAN COMPRAS DE MESES PASADOS
+		</p>
+		<br>
+		<br>
+
+
+		<p style="font-size: 1.4em; text-align: center;">
+			*** GRACIAS POR TU COMPRA ***
+		</p>
+	</p>
+
+	<br>
+		<br>
+		
+		<br>
+		<br>
+		
+</body>
+</html>

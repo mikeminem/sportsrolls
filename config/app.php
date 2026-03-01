@@ -174,6 +174,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -239,6 +240,7 @@ return [
         * My aliases
         */
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'PDF' => 'Barryvdh\DomPDF\Facade',
 
 
         'Form' => Collective\Html\FormFacade::class,

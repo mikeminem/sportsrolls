@@ -13,13 +13,21 @@ use App\Games;
 use App\Journeys;
 use App\Stadiums;
 use Illuminate\Support\Facades\View;
+use PDF;
+
 
 class GamesController extends Controller
 {
     //
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['showGame', 'data_entry', 'getJourneyGames']]);
+        $this->middleware('auth', [
+            'except' => [
+                'showGame',
+                'data_entry',
+                'getJourneyGames',
+                'listPDF']
+        ]);
     }
 
     public function index(Request $request)
@@ -169,6 +177,7 @@ class GamesController extends Controller
                         $routeEdit      = route('games.show', $row->id);
                         //$routeHistory   = route('game_history', $row->code);
                         $routeDelete    = route('games.destroy', $row->id);
+                        $routePrint    = route('print_paper_game', $row->id);
 
                         //if ($row->status != "Finalizado") {
 
@@ -214,6 +223,12 @@ class GamesController extends Controller
                             title="Capturar resultados"
                             id="btnScore">
                         <span class="fa fa-calculator tool"></span>
+                        </a>
+                        <a href="'. $routePrint .'"
+                            title="Imprimir Hoja del Juego"  id="btnPrint"
+                            target="_blank"
+                        >
+                            <span class="fa fa-file tool"></span>
                         </a>
                         <a href="' . $routeDelete . '" data-name="'. $row->id .'"  title="Borrar Registro"  id="btnDelete">
                             <span class="fa fa-trash tool"></span>
@@ -584,6 +599,22 @@ class GamesController extends Controller
         }
         return $btnGames;
 
+    }
+
+    public function listPDF($gameId)
+    {
+        if (!$gameId) {
+            return abort(404);
+        }
+
+        $game = Games::where('is_deleted',0)
+            ->orderBy('id','ASC')
+            ->get();
+
+        //$pdf = PDF::loadView('your-view', $data)->setOptions(['defaultFont' => 'sans-serif']);
+        $pdf = PDF::loadView('pdf.games.gamePaper', compact('game'))
+            ->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->stream('hoja-juego-'.date('Ymd').'.pdf');
     }
 
 }
