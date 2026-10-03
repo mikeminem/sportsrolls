@@ -142,6 +142,8 @@
                                         <a class="dropdown-item" href="{{ url('/states') }}"><i class="fa fa-square"></i> {{ __('States') }}</a>
                                         <a class="dropdown-item" href="{{ url('/municipalities')}}"><i class="fa fa-square"></i> {{ __('Municipalities') }}</a>
                                         <div class="dropdown-divider"></div>
+
+                                        <a class="dropdown-item" href="{{ url('/roles') }}"><i class="fa fa-users"></i> Roles de Usuario</a>
                                         <a class="dropdown-item" href="{{ url('/users') }}"><i class="fa fa-users"></i> {{ __('Users') }}</a>
                                         <a class="dropdown-item" href="#"><i class="fa fa-money"></i> Planes de Trabajo</a>
 

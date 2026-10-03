@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', " Deporte Zacatecas - Bienvenido" )
+@section('title', config('app.name') . " - Bienvenido" )
 @section('description',   config('app.name') . " La mejor página de deportes de Zacatecas, noticias, roles de juego, estadísticas, torneos y más...")
 @section('keywords',  config('app.name') . " Torneos, noticias, rol de juego, deporte, Zacatecas, futbol, basquet-bol, carreras atléticas, jugadores ")
 @section('url',  url('/')  )
@@ -252,13 +252,13 @@
 @endif
 <!-- end comming up torunaments-->
 
-
+Mivaca78
 <!-- torunaments status -->
 
 <div class="container mt-2">
   <div class="row justify-content-center">
     <div class="col-md-12">
-      <h2 class="title">Actividad en el sitio</h2>
+      <h2 class="title">Números en {{ config('app.name') }}</h2>
     </div>
         <div class="col-md-12">
                 @include('components.features',['links'=>0])
@@ -340,12 +340,12 @@
 
 
 @if (count($sponsors)>0)
-  <div class="container-fluid mt-3">
-    {{-- <div class="row">
-          <div class="col-md-12 text-right">
-                <button class="btn btn-default">Patrocinadores</button>
-          </div>
-    </div> --}}
+  <div class="container mt-3">
+    <div class="row">
+         <div class="col-md-12">
+            <h2 class="title">Patrocinadores</h2>
+        </div>
+    </div>
 
       <div class="row justify-content-center">
         <div class="col-md-12 text-center">

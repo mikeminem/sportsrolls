@@ -1,10 +1,12 @@
 @extends('layouts.app')
 
 @section('title', 'Detalles del Juego')
-@section('description',  "Detalles del Juego - ")
+@section('description',  "Detalles del Juego ")
 
+{{-- content starts --}}
 @section('content')
 
+{{-- main menu --}}
 @include('components.menuTournament', ['active' => 'results'])
 
 <div class="container">
@@ -15,13 +17,7 @@
                 <div class="card-body">
                     @if($game->status !== 'Finalizado')
                         <div class="row">
-                            <div class="col-12 text-center">
-                                 <h2>{{ $game->stadium }}</h2>
-                                 {{ $game->game_day }} {{ $game->game_time }} <br>
-                                <i>{{ $game->type }}</i>  -  {{ $game->status }} -
-                                Jugadores en Cancha <b>5</b>
-                            </div>
-                            <div class="col-12 text-center">
+                            <div class="col-12 text-right">
                                 <button class="btn btn-success" id="btnDataEntry">
                                     <span class="fa fa-edit"></span> Capturar Actividad
                                 </button>
@@ -39,23 +35,13 @@
                                 </button>
                             </div>
                         </div>
-                    @else
-                    <div class="row text-center">
-                        <div class="col-12">
-                            {{ strtoupper($game->status) }} <br />
-                            {{ $game->category }} {{ isset($game->group) ? ' - ' . $game->group : '' }} <br />
-                            {{ Str::upper($game->type ) }}
-                            <br />
-                            {{ $game->stadium }}
-                        </div>
-                    </div>
                     @endif
 
                     <div class="row" id="score">
-                        <div class="col-6 text-left">
+                        <div class="col-6 text-center">
 
                             <div class="row align-items-center">
-                                <div class="col-6 text-left">
+                                <div class="col-3 text-center">
                                     @if( $game->t1logo )
                                         <img class="img-fluid" src="{{ asset('team_logo/' . $game->t1logo) }}" width="100px" >
                                     @else
@@ -63,33 +49,27 @@
                                     @endif
                                 </div>
 
-                                <div class="col-6 text-right">
-                                    <h3><span id="score_team1">{{ $game->score_team1 }}</span></h3>
+                                <div class="col-9 text-right align-items-center">
+                                    <span class="score" >{{ $game->score_team1 }}</span>
                                 </div>
                             </div>
 
                             <div class="row mb-4">
-                                <div class="col-12 text-left">
+                                <div class="col-12 text-left align-items-center">
                                     <h5>{{ $game->team1 }}</h5>
+                                    (23-1)
                                 </div>
                             </div>
 
-                            {{-- <div class="row text-left">
-                                <div class="col-12">
-                                    @include('components.tableGamePlayers', ['teamId' => $game->team1_id])
-
-                                </div>
-                            </div> --}}
-
                         </div>
 
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-center">
                             <div class="row align-items-center">
-                                <div class="col-6 text-left">
-                                    <h3><span id="score_team2">{{ $game->score_team2 }}</span></h3>
+                                <div class="col-9 text-left align-items-center">
+                                    <span class="score" >{{ $game->score_team2 }}</span>
                                 </div>
 
-                                <div class="col-6 text-right">
+                                <div class="col-3 text-center">
                                     @if( $game->t2logo )
                                         <img class="img-fluid" src="{{ asset('team_logo/' . $game->t2logo) }}" width="100px" >
                                     @else
@@ -100,22 +80,15 @@
                             </div>
 
                             <div class="row mb-4">
-                                <div class="col-12 text-right">
+                                <div class="col-12 text-right align-items-center">
                                     <h5>{{ $game->team2 }}</h5>
+                                    (12 -2)
                                 </div>
                             </div>
-
-
-
-                            {{-- <div class="row text-left">
-                                <div class="col-12">
-                                    @include('components.tableGamePlayers', ['teamId' => $game->team2_id])
-
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
 
+                    {{-- datos del score,  --}}
                     <div id="dashboard" style="display: none">
                         <div class="row mb-1" >
 
@@ -166,15 +139,27 @@
 
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-6">
-                                @include('components.tablePlayers',['teamId' => $game->team1_id])
-                            </div>
-                            <div class="col-6">
-                                @include('components.tablePlayers',['teamId' => $game->team2_id])
 
-                            </div>
+                         <div class="row">
+                        <div class="col-6">
+                            <button
+                                class="btn btn-primary m-1"
+                                id="addPlayer"
+                                team-id="{{ $game->team1_id }}">
+                                    <span class="fa fa-sign-in"></span> Jugadores en la Banca
+                            </button>
+                            @include('components.tablePlayers',['teamId' => $game->team1_id])
                         </div>
+                        <div class="col-6">
+                            <button
+                                class="btn btn-primary m-1"
+                                id="addPlayer"
+                                team-id="{{ $game->team2_id }}">
+                                    <span class="fa fa-sign-in"></span> Jugadores en la Banca
+                            </button>
+                            @include('components.tablePlayers',['teamId' => $game->team2_id])
+                        </div>
+                    </div>
 
                         <div class="row">
                             <div class="col-12 text-center">
@@ -207,7 +192,22 @@
 
                             </div>
 
+                        </div>
                     </div>
+                    {{-- fin del dashboard --}}
+
+                    {{-- <hr />
+                    <div class="row">
+                        <h3 class="col-12 text-center">Detalles del Juego</h3>
+                        <div class="col-12 text-center">
+                            Fecha y Hora:{{ $game->game_day }} {{ $game->game_time }} -
+                            Tipo: {{ $game->type }} - Estado: {{ $game->status }} -
+                            Categoría: {{ ($game->category) ? $game->category : 'Interdivisional' }}
+                            {{ isset($game->group) ? ' - ' . $game->group : '' }} -
+                            Lugar: {{ $game->stadium }}
+                        </div>
+
+                    </div> --}}
 
                 </div> {{-- end of the card body --}}
             </div> {{-- end of the card --}}
@@ -222,7 +222,7 @@
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Código de acceso</h4>
+          <h4 class="modal-title">CÓDIGO DE ACCESO</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -232,7 +232,7 @@
 
             <div class="modal-body">
             <h5>
-                Ingresa el código de acceso para habilitar la captura de datos del juego, si no tienes el código de acceso, solicitalo al administrador de la liga.
+                Ingresa el CÓDIGO DE ACCESO para habilitar la captura de datos del juego, si no tienes el CÓDIGO DE ACCESO, solicítalo al administrador de la liga.
             </h5>
             <p><div class="form-group">
                 <label for="access_code">Código de Acceso</label>
@@ -268,7 +268,7 @@
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Configuración el juego</h4>
+          <h4 class="modal-title">CONFIGURACIÓN DEL JUEGO</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -284,6 +284,9 @@
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#team2">B - {{ $game->team2 }} </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#referees">ÁRBITROS</a>
+                    </li>
 
                 </ul>
 
@@ -295,17 +298,20 @@
                     <div class="tab-pane fade" id="team2">
                         @include('components.tableGamePlayers', ['teamId' => $game->team2_id, 'gameId' => $game->id] )
                     </div>
-                </div>
+                    <div class="tab-pane fade" id="referees">
 
+                        @include('components.tableGameReferees', ['gameId' => $game->id] )
+                    </div>
+                </div>
 
             </div>
             {{ csrf_field() }}
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button class="btn btn-primary btn-lg" id="btnSaveConfig">
+                <button class="btn btn-primary btn-lg" id="btnStartGame">
                     <span class="fa fa-check"></span>
-                    Guardars
+                    Iniciar Juego
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
                     <span class="fa fa-remove"></span>
@@ -325,7 +331,7 @@
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Listado de Jugadores</h4>
+          <h4 class="modal-title">LISTADO DE JUGADORES</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -339,8 +345,8 @@
                             <thead>
                                 <tr>
                                     <td>#</td>
-                                    <td>Foto</td>
-                                    <td>Nombre</td>
+                                    <td>FOTO</td>
+                                    <td>NOMBRE</td>
                                     <td></td>
                                 </tr>
                             </thead>
@@ -382,7 +388,7 @@
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Registrar acción del Jugador</h4>
+          <h4 class="modal-title">REGISTRAR MOVIMIENTO</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -395,7 +401,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <td>Acción</td>
+                                <td>ACCIÓN</td>
                                 <td></td>
                             </tr>
                         </thead>
@@ -403,7 +409,7 @@
                             <tr>
                                 <tr colspan="2">
                                     <h3>
-                                        <span id="action-player-id">Nombre Player</span>
+                                        <span id="action-player-id">NOMBRE JUGADOR</span>
                                     </h3>
                                 </tr>
 
@@ -446,7 +452,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
                     <span class="fa fa-remove"></span>
-                    Cerrar
+                    CERRAR
                 </button>
             </div>
         {{-- </form> --}}
@@ -467,7 +473,10 @@
 
         jQuery(document).ready(function($) {
 
-            const maxPlayers = 5;
+            const maxPlayers = 12;
+            const maxStarters = 5;
+            const maxCapitan = 1;
+
             let gameEnable = false;
             let gameId = 0;
             let playersList = [];
@@ -487,24 +496,6 @@
 
                     addPlayerToTable(player);
 
-                        // let photo =''
-                        // if (player.photo == null) {
-                        //     photo = '{{ asset('images/') }}/No-photo-m.png'
-                        // } else {
-                        //     photo = '{{ asset('players_photos/') }}/' + player.photo
-                        // }
-
-                        // $('#table-' + teamId ).append(
-                        //     '<tr id="player-'+ player.id +'">'
-                        //         + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
-                        //         + '<td class="hideColumn" ><img src="' + photo +'" width="60px" height="60px"></td>'
-                        //         + '<td class="hideColumn" >'+ player.last_name +', ' + player.name +'</td>'
-                        //         + '<td class="text-right">'
-                        //             + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
-                        //             + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'" ><span class="fa fa-arrow-left"></span> </button>'
-                        //         +'</td>'
-                        //     + '</tr>')
-
                 })
             }
 
@@ -515,81 +506,73 @@
 
                     addPlayerToTable(player);
 
-                        // let photo =''
-                        // if (player.photo == null) {
-                        //     photo = '{{ asset('images/') }}/No-photo-m.png'
-                        // } else {
-                        //     photo = '{{ asset('players_photos/') }}/' + player.photo
-                        // }
-
-                        // $('#table-' + teamId ).append(
-                        //     '<tr id="player-'+ player.id +'">'
-                        //         + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
-                        //         + '<td class="hideColumn"><img src="' + photo +'" width="60px" height="60px"></td>'
-                        //         + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
-                        //         + '<td class="text-right">'
-                        //             + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
-                        //             + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
-                        //         +'</td>'
-                        //     + '</tr>')
-
                 })
             }
 
-
-
-            // crono config ##################################
-            // window.onload = init;
-            // function init(){
-            //     document.querySelector(".start").addEventListener("click",cronometrar);
-            //     document.querySelector(".stop").addEventListener("click",parar);
-            //     document.querySelector(".reiniciar").addEventListener("click",reiniciar);
-            // //    h = 0;
-            //     m = 1;
-            //     s = 0;
-            //     document.getElementById("hms").innerHTML="10:00";
-            // }
-            // function cronometrar(){
-            //     escribir();
-            //     id = setInterval(escribir,1000);
-            //     document.querySelector(".start").removeEventListener("click",cronometrar);
-            // }
-            // function escribir(){
-            //     var hAux, mAux, sAux;
-            //     //s++;
-            //     s--;
-            //     if (s<0){m--;s=59;}
-            //     if (m==0 && s==0){ parar()}
-            //     //if (m<0){h--;m=0;}
-            //     //if (h>24){h=0;}
-
-            //     if (s<10){sAux="0"+s;}else{sAux=s;}
-            //     if (m<10){mAux="0"+m;}else{mAux=m;}
-            // //    if (h<10){hAux="0"+h;}else{hAux=h;}
-
-            // //document.getElementById("hms").innerHTML = hAux + ":" + mAux + ":" + sAux;
-            // document.getElementById("hms").innerHTML = mAux + ":" + sAux;
-            // }
-            // function parar(){
-            //     clearInterval(id);
-            //     document.querySelector(".start").addEventListener("click",cronometrar);
-
-            // }
-            // function reiniciar(){
-            //     clearInterval(id);
-            //     document.getElementById("hms").innerHTML="10:00";
-            //     h=0;m=0;s=0;
-            //     document.querySelector(".start").addEventListener("click",cronometrar);
-            // }
-
-            //end of the crono config ##################################
-
-
-
-            $(document).on("change", "#attendance-player", function (e) {
-                alert('attended' + $(this).attr('data-player-id'))
+            $(document).on("change", "#starter-player_{{ $game->team1_id }}, #starter-player_{{ $game->team2_id }}", function (e) {
+                handleStartersChange($(this));
             })
 
+            $(document).on("change", "#captain-player_{{ $game->team1_id }}, #captain-player_{{ $game->team2_id }}", function (e) {
+                handleCaptainChange($(this));
+            })
+
+             function handleCaptainChange($checkbox) {
+                let teamId = $checkbox.attr('data-team-id');
+                let capitanChecked = $('input[type="checkbox"][id="captain-player_' + teamId + '"]:checked').length;
+
+                if (capitanChecked > maxCapitan) {
+                    alert('Solo puedes seleccionar un capitán por equipo')
+                    $checkbox.prop('checked', false);
+                    return;
+                }
+                //at this point we can save the captain change in the database
+                //alert('attended -> ' + $checkbox.attr('data-player-id') + ', game-id -> ' + $checkbox.attr('data-game-id') + ', team-id -> ' + teamId )
+            }
+
+            function handleStartersChange($checkbox) {
+                let teamId = $checkbox.attr('data-team-id');
+                let startersChecked = $("#starter-player_" + teamId + ":checked").length;
+
+                if (startersChecked > maxStarters) {
+                    alert('Solo puedes seleccionar mas jugadores para el cuadro titular hasta el maximo permitido')
+                    $checkbox.prop('checked', false);
+                    return;
+                }
+                //at this point we can save the starter change in the database
+                //alert('attended -> ' + $checkbox.attr('data-player-id') + ', game-id -> ' + $checkbox.attr('data-game-id') + ', team-id -> ' + teamId )
+            }
+
+            //Configuration of the game
+            $(document).on('click', '#btnStartGame', function(e) {
+                e.preventDefault();
+                //validate capitan values
+                const teamIds = [{{ $game->team1_id }}, {{ $game->team2_id }}];
+
+                for (const teamId of teamIds) {
+                    const captainCount = $('input[type="checkbox"][id="captain-player_' + teamId + '"]:checked').length;
+
+                    if (captainCount < 1) {
+                        alert('Debes seleccionar al menos un capitán para el equipo ' + teamId + '.');
+                        return;
+                    }
+
+                    if (captainCount > maxCapitan) {
+                        alert('Solo puedes seleccionar un capitán por equipo. Revisa el equipo ' + teamId + '.');
+                        return;
+                    }
+                }
+
+                //validate the team assistance
+
+                //validate the team starters
+
+                //save the game configs
+
+
+
+                alert('Start game');
+            })
 
             $(document).on("click", "#addPlayer", function (e) {
                 e.preventDefault();
@@ -615,16 +598,9 @@
                             + '<td class="text-center"><span class="playerNumber">#'+ player.number +'</span></td>'
                             + '<td><img src="' + photo + '" width="60px height="60px""></td>'
                             + '<td>'+ player.last_name +', ' + player.name +'</td>'
-                            + '<td class="text-right"><button class="btn btn-success" id="btnInGame" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-plus"></span> Ingresa</td>'
+                            + '<td class="text-right"><button class="btn btn-success" id="btnInGame" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-plus"></span></td>'
                         + '</tr>')
 
-                    // $('#table-players').append(
-                    //     '<tr id="player-'+ player.id +'">'
-                    //         + '<td>'+ player.number +'</td>'
-                    //         + '<td><img src=" {{ asset('players_photos/') }}/' + player.photo +'" width="60px height="60px""></td>'
-                    //         + '<td>'+ player.last_name +', ' + player.name +'</td>'
-                    //         + '<td class="text-right"><button class="btn btn-success" id="btnInGame" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-plus"></span> Ingresa</td>'
-                    //     + '</tr>')
                 })
 
                 jQuery("#PlayersModal").modal('show');
@@ -673,30 +649,6 @@
 
                     addPlayerToTable(player)
 
-
-                        // $('#table-' + teamId ).append(
-                        //     '<tr id="player-'+ player.id +'">'
-                        //         + '<td class="text-right"><span class="playerNumber">#'+ player.number +'</span></td>'
-                        //         + '<td class="hideColumn"><img src="' + photo + '" width="60px" height="60px"></td>'
-                        //         + '<td class="hideColumn">'+ player.last_name +', ' + player.name +'</td>'
-                        //         + '<td class="text-right">'
-                        //             + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
-                        //             + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
-                        //         +'</td>'
-                        //     + '</tr>')
-
-                        // $('#table-' + teamId ).append(
-                        //     '<tr id="player-'+ player.id +'">'
-                        //         + '<td>'+ player.number +'</td>'
-                        //         + '<td><img src=" {{ asset('players_photos/') }}/' + player.photo +'" width="60px" height="60px"></td>'
-                        //         + '<td>'+ player.last_name +', ' + player.name +'</td>'
-                        //         + '<td class="text-right">'
-                        //             + '<button class="btn btn-success mr-1" id="btnAction" player-id="'+ player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name +'"><span class="fa fa-arrow-up"></span> </button>'
-                        //             + '<button class="btn btn-danger" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
-                        //         +'</td>'
-                        //     + '</tr>')
-
-
                         //table-game-log
                         //this code can be inside the logGameHandle
                         $('#table-game-log').prepend(
@@ -711,19 +663,6 @@
                                     + '<button class="btn btn-danger" id="btnDeleteLog" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-remove"></span> </button>'
                                 +'</td>'
                             + '</tr>')
-
-                        // $('#table-game-log').prepend(
-                        //     '<tr>'
-                        //         + '<td>'+ player.number +'</td>'
-                        //         + '<td>'+ player.team_id +'</td>'
-                        //         + '<td class="text-left"><img src=" {{ asset('players_photos/') }}/' + player.photo +'" width="60px" height="60px"> '+ player.last_name +', ' + player.name +'</td>'
-                        //         + '<td>INICIA</td>'
-                        //         + '<td>-</td>'
-                        //         + '<td>00:00</td>'
-                        //         + '<td>'
-                        //             + '<button class="btn btn-danger" id="btnDeleteLog" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-remove"></span> </button>'
-                        //         +'</td>'
-                        //     + '</tr>')
 
                 })
 
@@ -987,6 +926,7 @@
                     $('#btnFinishDataEntry').hide();
                     $('#btnStart').hide();
                     $('#btnSetup').hide();
+                    $('[id="addPlayer"]').hide();
 
                 } else {
 
@@ -998,6 +938,7 @@
                     $('#btnFinishDataEntry').show();
                     //$('#btnStart').show();
                     $('#btnSetup').show();
+                    $('[id="addPlayer"]').show();
 
                 }
             }
@@ -1014,15 +955,27 @@
 
                 $('#table-' + player.team_id ).append(
                     '<tr id="player-'+ player.id +'">'
-                        + '<td class="text-center">'
-                        + '<button class="btn btn-primary m-2 w-40" id="btnAction" player-id="'
-                            + player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name
-                            +'"><span class="fa fa-arrow-up"></span> #'+  player.number +' </button>'
-                        + '<button class="btn btn-danger w-40" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"><span class="fa fa-arrow-left"></span> </button>'
+                        + '<td class="text-left">' + player.number + '</td>'
+                        + '<td><img src="' + photo + '" width="60px height="60px""></td>'
+                        + '<td> '+ player.last_name +', ' + player.name
                         + '</td>'
+                        + '<td class="text-center">'
+                        + '0'
+                        + '</td>'
+                        + '<td class="text-center">'
+                        + '0'
+                        + '</td>'
+                        + '<td class="text-center">'
+                        + '<button class="btn btn-primary w-40" id="btnAction" player-id="'
+                            + player.id +'" team-id="'+ player.team_id +'" player-name="'+ player.name + ' ' + player.last_name
+                            +'"><span class="fa fa-plus"></span> </button>'
+                        + '<button class="btn btn-danger w-40" id="btnChange" player-id="'+ player.id +'" team-id="'+ player.team_id +'"> '
+                            + '<span class="fa fa-sign-out"></span> </button>'
+                        + '</td>'
+                    + '</tr>'
                 )
 
-            }
+            }s
 
 
 
@@ -1065,12 +1018,14 @@
                     },
                     success: function (data) {
 
+                        console.log(data)
+
                         $('#table-game-log').prepend(
 
                             '<tr game-lop="' + data.id + '" >'
                                 + '<td class="text-right"><span class="score">'+ 'NN' + '</span></td>'
-                                + '<td>'+ 'player.team_id' +'</td>'
-                                + '<td class="text-left"><img src="" width="60px" height="60px"> '+ 'player.last_name' +', ' + 'player.name '+'</td>'
+                                + '<td>'+ player_id +'</td>'
+                                + '<td class="text-left"><img src="" width="60px" height="60px"> '+ 'Player Name'  + '</td>'
                                 + '<td>Registro</td>'
                                 + '<td>-</td>'
                                 + '<td>00:00</td>'
@@ -1082,6 +1037,7 @@
 
                         //update the score
                         if (data.score>0) {
+                            console.log(data.score + ' - ' + team_id)
                             $('#score_' + team_id).html(data.score)
                         }
 

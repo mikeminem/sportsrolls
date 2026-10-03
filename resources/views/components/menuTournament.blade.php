@@ -2,7 +2,7 @@
 <div class="container-fluid text-center header">
     <div class="row">
         <div class="col-md-12">
-            <h1 >{{ $tournament->title }}</h1>
+            <h1>{{ $tournament->title }}</h1>
         </div>
     </div>
 </div>

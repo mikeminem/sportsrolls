@@ -15,8 +15,8 @@
     <meta name="description" content="@yield('description')">
     <meta name="keywords" content="@yield('keywords')">
     <meta name=image content="@yield('image')">
-    <meta name="author" content="DeporteZacatecas.com" />
-    <meta name="copyright" content="Copyright DeporteZacatecas.com" />
+    <meta name="author" content="LaLigiaSantafe.com" />
+    <meta name="copyright" content="Copyright LaLigiaSantafe.com" />
     <meta name="revisit-after" content="1 days" />
     <meta http-equiv="cache-control" content="no-cache"/>
     <link rel="icon" href="{{ asset('images/icoDeporteZacatecas.png') }}" type="image/x-icon">

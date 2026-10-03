@@ -10,6 +10,27 @@ body {
 	user-select: none;
 }
 
+/* Custom stylesheet (must be linked after Bootstrap's CSS) */
+
+/* Default h1 size for extra small devices (phones, less than 576px) */
+h1 {
+  font-size: 1.5rem !important; /* Adjust this value as needed for mobile */
+}
+
+/* Small devices (tablets, 576px and up) */
+@media (min-width: 576px) {
+  h1 {
+    font-size: 2.5rem !important; /* Bootstrap's default h1 size */
+  }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  h1 {
+    font-size: 3rem !important; /* Optional: larger size for desktop */
+  }
+}
+
 
 h5 {
 	margin-bottom: -5px !important;
@@ -212,7 +233,6 @@ if modal give us problems, just delete the backdrop element
 
 
 /*for the table of standings*/
-
 .table-standings {
 	width:100%;
 	text-align: center;

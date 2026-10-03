@@ -53,6 +53,14 @@ Route::get('league_info', 'LeaguesController@show');
 //sports options
 Route::resource('/sports','SportController');
 
+//roles options
+Route::resource('/roles', 'RolesController')->only(['index', 'store', 'show', 'destroy']);
+Route::get('/roles_list', 'RolesController@list')->name('roles.list');
+
+//user roles options
+Route::resource('/user_roles', 'UserRolesController')->only(['index', 'store', 'show', 'destroy']);
+Route::get('/user_roles_list/{user_id}', 'UserRolesController@list')->name('user_roles.list');
+
 //categories options
 Route::resource('/categories','CategoryController');
 Route::get('/categories_list/{tournament_id}','CategoryController@list');

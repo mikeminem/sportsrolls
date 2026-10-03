@@ -171,7 +171,7 @@ class WebPagesController extends Controller
      */
     public function show($id)
     {
-        if ($id) {
+        if (isset($id)) {
             return  Webpage::select(
                 'id',
                 'user_id',
@@ -183,7 +183,7 @@ class WebPagesController extends Controller
                 'type',
                 'location',
                 'tournament_id',
-                'page_category_id',
+                'page_category_id'
             )->find($id);
         }
         return false;

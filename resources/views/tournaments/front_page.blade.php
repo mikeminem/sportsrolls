@@ -315,8 +315,15 @@
             e.preventDefault();
 
             let data = new FormData(this);
+
+
             data.delete('photo2')
-            data.append("photo",$('#player_photo').data('cropbox').getBlob(),"cropped-"+(new Date)+".jpg")
+            const playerPhoto = $('#player_photo');
+            const cropbox = playerPhoto.length ? playerPhoto.data('cropbox') : null;
+
+            if (cropbox && typeof cropbox.getBlob === 'function') {
+                data.append("photo", cropbox.getBlob(), "cropped-" + (new Date()) + ".jpg");
+            }
 
     	    //data.append('photo', $("#player_photo").val().replace(/^data:image\/(png|jpg);base64,/, ""));
 

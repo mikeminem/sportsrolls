@@ -42,6 +42,12 @@ class User extends Authenticatable
         return $this->hasMany('App\WebPage');
     }
 
+    public function roles()
+    {
+        return $this->belongsToMany(Roles::class, 'user_roles', 'user_id', 'rol_id')
+            ->withPivot('id')->where('roles.is_deleted', 0);
+    }
+
     public function league()
     {
         return $this->hasOne('App\Leagues');

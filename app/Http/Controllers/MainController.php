@@ -16,7 +16,7 @@ class MainController extends Controller
     public function index() {
 
         $tournaments = Tournaments::where('is_deleted',0)
-        ->where('status','En Progreso')
+        ->whereIn('status',['En Progreso'])
         ->orderBy('clicks','desc')
         ->get();
 
