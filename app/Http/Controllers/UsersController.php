@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Roles;
+use Illuminate\Validation\Rule;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,17 +19,21 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            abort_unless($request->user()->hasRole('admin'), 403);
+            return $next($request);
+        });
     }
 
     public function index(Request $request)
     {
          if($request->ajax()){
-            $rows = DB::table('users as u')
-                    ->select('u.id', 'u.name', 'u.last_name', 'u.email', 'u.password', 'u.phone', 'u.role', 'u.active as active')
-                    ->where('u.is_deleted', 0)
-                    ->get();        
-            
+            $rows = User::with('roles')->where('is_deleted', 0)->get();
+
             return DataTables::of($rows)
+                    ->editColumn('role', function($row) {
+                        return $row->roles->pluck('name')->implode(', ') ?: $row->role;
+                    })
                     ->addColumn('active', function($row) {
                         return $row->active == 1 ? 'Si' : 'No';
                     })
@@ -50,7 +56,7 @@ class UsersController extends Controller
                     ->make(true);
         }
 
-        return view ('users.index');
+        return view('users.index', ['roles' => Roles::where('is_deleted', 0)->orderBy('name')->get()]);
     }
 
     /**
@@ -63,7 +69,10 @@ class UsersController extends Controller
     {
         $rules = [
             'name'   => 'required|max:120',
-            'last_name'   => 'required|max:120'
+            'last_name'   => 'required|max:120',
+            'id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('is_deleted', 0)],
+            'roles' => 'required|array|min:1',
+            'roles.*' => ['required', 'integer', 'distinct', Rule::exists('roles', 'id')->where('is_deleted', 0)]
         ];
 
         $attributes = [
@@ -83,34 +92,34 @@ class UsersController extends Controller
             ]);
         }
 
-        $password = '';
+        $creating = !$request->filled('id');
+        DB::transaction(function () use ($request, $creating) {
+            $model = $creating ? new User : User::findOrFail($request->id);
+            $model->fill($request->only(['name', 'last_name', 'email', 'phone', 'active']));
+            if ($request->filled('password')) {
+                $model->password = Hash::make($request->password);
+            } elseif ($creating) {
+                $model->password = '';
+            }
 
-        if (!empty($request->password))
-            $password = Hash::make($request->password);
-
-
-        if (!isset($request->id) || empty($request->id)) {
-            $model = new User($request->all());
-            
-            $model->password = $password;
-
-            if ($model->save())
-                 return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha creado el Usuario!']);      
-        } else {
-            $model = User::find($request->id);
-            $model->fill($request->all());
-            $model->password = $password;
-
-            
-            if ($model->update()) 
-                return response()->json(['type' => 'success', 
-                                 'message' => 'Se ha modificado el Usuario!']); 
-        }
+            // Keep existing single-role authorization compatible with the selected roles.
+            $names = Roles::whereIn('id', $request->roles)->pluck('name')->map(function ($name) {
+                return mb_strtolower($name, 'UTF-8');
+            })->all();
+            $model->role = 'Player';
+            foreach (['Admin', 'Promoter', 'Vendor', 'Player'] as $legacyRole) {
+                if (in_array(mb_strtolower($legacyRole, 'UTF-8'), $names, true)) {
+                    $model->role = $legacyRole;
+                    break;
+                }
+            }
+            $model->save();
+            $model->roles()->sync($request->roles);
+        });
 
         return response()->json([
-            'type' => 'error',
-            'message' => 'Error al intentar guardar el Usuario!'
+            'type' => 'success',
+            'message' => $creating ? 'Se ha creado el Usuario!' : 'Se ha modificado el Usuario!'
         ]);
 
     }
@@ -125,7 +134,13 @@ class UsersController extends Controller
     {
         //
         if ($id) {
-            $User = User::select('id', 'name', 'last_name', 'email', 'password', 'phone', 'role', 'active')->find($id);
+            $User = User::select('id', 'name', 'last_name', 'email', 'phone', 'role', 'active')->findOrFail($id);
+            $roleIds = $User->roles()->pluck('roles.id');
+            // Preselect the old role for users that have not yet been migrated.
+            if (!DB::table('user_roles')->where('user_id', $User->id)->exists()) {
+                $roleIds = Roles::where('is_deleted', 0)->where('name', $User->role)->pluck('id');
+            }
+            $User->setAttribute('role_ids', $roleIds);
             
             return $User;
         }

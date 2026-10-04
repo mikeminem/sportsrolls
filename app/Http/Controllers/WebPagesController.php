@@ -62,14 +62,14 @@ class WebPagesController extends Controller
         }
 
         $tournaments = [];
-        if (Auth::user()->role === 'Admin') {
+        if (Auth::user()->hasRole('admin')) {
             $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->get(['id','title']);
         } else {
             $tournaments = Tournaments::where('is_deleted','0')->where('status','!=','Terminado')->where('user_id',Auth::user()->id)->get(['id','title']);
         }
 
         $pCategories = [];
-        if (Auth::user()->role === 'Admin') {
+        if (Auth::user()->hasRole('admin')) {
             $pCategories = PageCategory::where('is_deleted','0')
             ->get(['id','name']);
         }

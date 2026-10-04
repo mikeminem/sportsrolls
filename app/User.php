@@ -48,6 +48,15 @@ class User extends Authenticatable
             ->withPivot('id')->where('roles.is_deleted', 0);
     }
 
+    public function hasRole($name)
+    {
+        $name = mb_strtolower($name, 'UTF-8');
+
+        return $this->roles->contains(function ($role) use ($name) {
+            return mb_strtolower($role->name, 'UTF-8') === $name;
+        });
+    }
+
     public function league()
     {
         return $this->hasOne('App\Leagues');

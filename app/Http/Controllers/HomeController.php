@@ -31,7 +31,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        //$role = User::getRole(Auth::user()->role);
         $hasLeague   = Leagues::where('user_id', Auth::user()->id);
         $hasProfile  = Profiles::where('user_id',Auth::user()->id);
 

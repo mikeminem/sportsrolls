@@ -38,7 +38,7 @@
                             </div>
                         </div>
 
-                        @if(Auth::user()->role === 'Admin')
+                        @if(Auth::user()->hasRole('admin'))
                             <div class="col-md-3 col-sm-12">
                                 <div class="form-group">
                                     <label for="page_category_id"><b>Categoría </b></label>

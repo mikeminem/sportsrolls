@@ -49,6 +49,8 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 
+    <link href="{{ asset('vendor/multi-select/MultiSelect.css') }}" rel="stylesheet">
+
     <!--specific page css-->
      @yield('css')
 
@@ -127,6 +129,33 @@ gtag('config', 'G-1X7MS1GBYC');
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!--page js-->
+    <script src="{{ asset('vendor/multi-select/MultiSelect.js') }}"></script>
+    <script>
+        // Shared multiselect component; the native select remains the form field.
+        function createMultiSelect(selector) {
+            var component = new MultiSelect(selector, {
+                placeholder: 'Selecciona uno o más roles',
+                theme: 'light',
+                width: '100%',
+                selectAll: false
+            });
+            function translateSearch() {
+                var search = component.element.querySelector('.multi-select-search');
+                if (search) search.placeholder = 'Buscar roles...';
+            }
+            component.setValues = function(values) {
+                var selected = (values || []).map(String);
+                component.data.forEach(function(option) {
+                    option.selected = selected.indexOf(String(option.value)) !== -1;
+                });
+                component.refresh();
+                translateSearch();
+            };
+            component.selectElement.addEventListener('change', translateSearch);
+            translateSearch();
+            return component;
+        }
+    </script>
      @yield('js')
 
 

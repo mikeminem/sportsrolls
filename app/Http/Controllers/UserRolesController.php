@@ -15,7 +15,7 @@ class UserRolesController extends Controller
     {
         $this->middleware('auth');
         $this->middleware(function ($request, $next) {
-            abort_unless($request->user()->role === 'Admin', 403);
+            abort_unless($request->user()->hasRole('admin'), 403);
 
             return $next($request);
         });

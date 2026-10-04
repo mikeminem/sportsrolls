@@ -13,7 +13,7 @@
                         <h1>Productos</h1>
                     </div>
 
-                    @if (Auth::check() && ((Auth::user()->role == 'Admin') || (Auth::user()->role == 'Seller')))
+                    @if (Auth::check() && ((Auth::user()->hasRole('admin')) || (Auth::user()->hasRole('seller'))))
                         <a role="button" class="btn btn-primary" href="javascript:void(0);" id="AddProduct">
                             <span class="fa fa-plus"></span> {{ __('New') }}
                         </a>

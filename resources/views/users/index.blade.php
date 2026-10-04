@@ -15,7 +15,7 @@
                         <h1>{{ __('Users')}}</h1>
                     </div>
 
-                    {{-- @if (Auth::check() &&  ( (Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter') )) --}}
+                    {{-- @if (Auth::check() &&  ( (Auth::user()->hasRole('admin')) || (Auth::user()->hasRole('promoter')) )) --}}
                         <a role="button" 
                             class="btn btn-primary" 
                             href="javascript:void(0);" 
@@ -89,13 +89,10 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="role"><b>Rol / Perfil *</b></label>
-                                <select class="form-control" id="role" name="role" required>
-                                    <option value="">Slecciona un Rol</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Promoter">Promotor</option>
-                                    <option value="Player">Jugador</option>
-
-                                    
+                                <select class="form-control" id="role" name="roles[]" multiple required>
+                                    @foreach ($roles as $availableRole)
+                                        <option value="{{ $availableRole->id }}">{{ $availableRole->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -204,6 +201,7 @@
 @section('js')
 <script type="text/javascript">
         jQuery(document).ready(function($){
+            var roleSelect = createMultiSelect('#role');
             
             var Table = $('#table').DataTable({
                 "language": {
@@ -271,9 +269,10 @@
                     dataType: "json",
                     success: function (data) { 
                         
-                        for(obj in data) {
-                            $("#" + obj).val(data[obj]);
+                        for(var obj in data) {
+                            if (obj !== "role" && obj !== "role_ids") $("#" + obj).val(data[obj]);
                         }
+                        roleSelect.setValues(data.role_ids);
 
                         jQuery.noConflict(); 
                         jQuery("#formModal").modal('show');

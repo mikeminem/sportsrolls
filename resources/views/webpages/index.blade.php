@@ -17,9 +17,9 @@
 
                     @if (Auth::check()
                             &&  (
-                                Auth::user()->role == 'Admin'
-                                || Auth::user()->role == 'Promoter'
-                                || Auth::user()->role == 'Writer'
+                                Auth::user()->hasRole('admin')
+                                || Auth::user()->hasRole('promoter')
+                                || Auth::user()->hasRole('writer')
                             )
                         )
                         <a role="button"

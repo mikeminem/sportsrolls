@@ -33,7 +33,7 @@ class UserRolesTest extends TestCase
 
     public function test_multiple_roles_update_and_removal()
     {
-        $this->actingAs(new User(['role' => 'Admin']));
+        $this->actingAs((new User(['role' => 'Player']))->setRelation('roles', Roles::where('name', 'Admin')->get()));
         foreach ([1, 2, 3] as $role) {
             $this->postJson('/user_roles', ['user_id' => 1, 'rol_id' => $role])->assertJson(['type' => 'success']);
         }
@@ -56,7 +56,7 @@ class UserRolesTest extends TestCase
 
     public function test_duplicate_missing_and_deleted_references_are_rejected()
     {
-        $this->actingAs(new User(['role' => 'Admin']));
+        $this->actingAs((new User(['role' => 'Player']))->setRelation('roles', Roles::where('name', 'Admin')->get()));
         $this->postJson('/user_roles', ['user_id' => 1, 'rol_id' => 1])->assertJson(['type' => 'success']);
         foreach ([['user_id' => 1, 'rol_id' => 1], ['user_id' => 99, 'rol_id' => 1],
             ['user_id' => 1, 'rol_id' => 99], ['user_id' => 1], ['user_id' => 'bad', 'rol_id' => 1]] as $data) {
@@ -74,12 +74,63 @@ class UserRolesTest extends TestCase
     public function test_only_admins_can_manage_assignments()
     {
         $this->postJson('/user_roles', ['user_id' => 1, 'rol_id' => 2])->assertStatus(401);
-        $this->actingAs(new User(['role' => 'Player']));
+        $this->actingAs((new User(['role' => 'Admin']))->setRelation('roles', collect()));
         $this->getJson('/user_roles')->assertStatus(403);
         $this->getJson('/user_roles_list/1')->assertStatus(403);
         $this->getJson('/user_roles/1')->assertStatus(403);
         $this->postJson('/user_roles', ['user_id' => 1, 'rol_id' => 2])->assertStatus(403);
         $this->deleteJson('/user_roles/1')->assertStatus(403);
+    }
+
+    public function test_role_membership_uses_assignments_and_ignores_deleted_roles()
+    {
+        $user = User::find(1);
+        $user->role = 'Admin';
+        $this->assertFalse($user->hasRole('Admin'));
+        $user->roles()->sync([1, 3]);
+        $user->unsetRelation('roles');
+        $this->assertTrue($user->hasRole('Player'));
+        $this->assertTrue($user->hasRole('pRoMoTeR'));
+        $this->assertFalse($user->hasRole('Admin'));
+        Roles::find(3)->update(['is_deleted' => 1]);
+        $user->unsetRelation('roles');
+        $this->assertFalse($user->hasRole('Promoter'));
+    }
+
+    public function test_menu_shows_sections_for_each_assigned_role()
+    {
+        $user = User::find(1);
+        $user->roles()->sync([2, 3]);
+        $this->actingAs($user);
+        $server = $_SERVER;
+        try {
+            $_SERVER['HTTP_USER_AGENT'] = 'PHPUnit';
+            $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'es';
+            $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+            $menu = view('layouts.menu')->render();
+            $this->assertContains(url('/users'), $menu);
+            $this->assertContains(url('/stadiums'), $menu);
+            $this->assertNotContains(url('/products'), $menu);
+            $this->assertContains(url('league_info'), $menu);
+            $this->assertContains('Admin, Promoter', $menu);
+
+            $user->roles()->sync([1]);
+            $user->unsetRelation('roles');
+            $menu = view('layouts.menu')->render();
+            $this->assertNotContains(url('/users'), $menu);
+            $this->assertNotContains(url('/stadiums'), $menu);
+            $this->assertNotContains(url('/products'), $menu);
+            $this->assertNotContains(url('league_info'), $menu);
+
+            $seller = Roles::create(['name' => 'Seller']);
+            $user->roles()->sync([$seller->id]);
+            $user->unsetRelation('roles');
+            $menu = view('layouts.menu')->render();
+            $this->assertContains(url('/products'), $menu);
+            $this->assertNotContains(url('/users'), $menu);
+        } finally {
+            $_SERVER = $server;
+        }
     }
 
     public function test_migration_can_be_reversed()

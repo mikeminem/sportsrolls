@@ -76,7 +76,7 @@ class StadiumsController extends Controller
             $model = Stadiums::find($request->id);
 
             // Verificar autorización
-            if (!$model || (Auth::user()->id !== $model->user_id && Auth::user()->role !== 'Admin')) {
+            if (!$model || ((string) Auth::id() !== (string) $model->user_id && !Auth::user()->hasRole('admin'))) {
                 return response()->json([
                     'type' => 'error',
                     'message' => 'No tienes permiso para actualizar este estadio!'
@@ -134,7 +134,7 @@ class StadiumsController extends Controller
         $stadium = Stadiums::find($request->idDelete);
 
         // Verificar autorización
-        if (!$stadium || (Auth::user()->id !== $stadium->user_id && Auth::user()->role !== 'Admin')) {
+        if (!$stadium || ((string) Auth::id() !== (string) $stadium->user_id && !Auth::user()->hasRole('admin'))) {
             return response()->json([
                 'type' => 'error',
                 'message' => 'No tienes permiso para eliminar este estadio!'
@@ -156,7 +156,7 @@ class StadiumsController extends Controller
      */
     public function allStadiums()
     {
-        if (Auth::user()->role == "Admin") {
+        if (Auth::user()->hasRole('admin')) {
             $rows = DB::table('stadiums as s')
                 ->select('s.id', 's.code', 's.name', 's.address', 's.manager', 's.phone', 's.notes', 's.is_active')
                 ->where('s.is_deleted', 0)
@@ -190,7 +190,7 @@ class StadiumsController extends Controller
             })
             ->addColumn('action', function ($rows) {
                 $links = '';
-                if ((Auth::user()->role == 'Admin' || Auth::user()->role == 'Promoter')) {
+                if ((Auth::user()->hasRole('admin') || Auth::user()->hasRole('promoter'))) {
                     $links .= '<a href="javascript:void(0);" data-toggle="tooltip" title="¡Editar Registro!" id="btnUpdate" data-id="' . e($rows->id) . '" ><span class="fa fa-edit tool"></span></a>
                              <a href="javascript:void(0);" title="Borrar Registro" data-id="' . e($rows->id) . '" data-name="' . e($rows->name) . '" id="btnDelete"> <span class="fa fa-trash tool"></span></a>';
                 }
@@ -230,7 +230,7 @@ class StadiumsController extends Controller
         $stadium = Stadiums::find($request->id);
 
         // Verificar autorización
-        if (!$stadium || (Auth::user()->id !== $stadium->user_id && Auth::user()->role !== 'Admin')) {
+        if (!$stadium || ((string) Auth::id() !== (string) $stadium->user_id && !Auth::user()->hasRole('admin'))) {
             return response()->json([
                 'type' => 'error',
                 'message' => 'No tienes permiso para actualizar este estadio!'

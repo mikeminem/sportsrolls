@@ -13,7 +13,7 @@
                         <h1>Categoría de productos</h1>
                     </div>
 
-                    @if (Auth::check() && ((Auth::user()->role == 'Admin') || (Auth::user()->role == 'Promoter')))
+                    @if (Auth::check() && ((Auth::user()->hasRole('admin')) || (Auth::user()->hasRole('promoter'))))
                         <a role="button" class="btn btn-primary" href="javascript:void(0);" id="AddCategory">
                             <span class="fa fa-plus"></span> {{ __('New') }}
                         </a>

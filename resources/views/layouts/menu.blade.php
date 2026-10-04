@@ -83,7 +83,7 @@
                                 <a class="nav-link" href="#"><i class="fa fa-comments"></i> {{ __('Mensajes') }}</a>
                             </li> --}}
 
-                            @if (Auth::user()->role == "Promoter")
+                            @if ( Auth::user()->hasRole('promoter'))
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         <i class="fa fa-trophy"></i> {{ __('League Catalogs') }} <span class="caret"></span>
@@ -116,7 +116,7 @@
 
 
 
-                            @if (Auth::user()->role == "Admin")
+                            @if (Auth::user()->hasRole('admin'))
 
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -170,7 +170,7 @@
                                 </li>
                             @endif
 
-                            @if (Auth::user()->role == "Seller" || Auth::user()->role == "Admin")
+                            @if (Auth::user()->hasRole('seller'))
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         <i class="fa fa-shopping-bag"></i> Tienda <span class="caret"></span>
@@ -190,8 +190,8 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#"><i class="fa fa-certificate"></i> Usted es {{ $role }}</a>
-                                    @if (Auth::user()->role == "Promoter")
+                                    <a class="dropdown-item" href="#"><i class="fa fa-certificate"></i> Roles: {{ Auth::user()->roles->pluck('name')->implode(', ') ?: 'Sin roles asignados' }}</a>
+                                    @if (Auth::user()->hasRole('Promoter'))
                                         <a class="dropdown-item" href=" {{ url('league_info')}}" title="{{ __('League Info') }}"><i class="fa fa-info"></i> {{ __('League Info') }}</a>
                                     @endif
 

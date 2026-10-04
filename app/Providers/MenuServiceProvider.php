@@ -30,7 +30,7 @@ class MenuServiceProvider extends ServiceProvider
         view()->composer("*", function($view)
         {
             if (Auth::check()) {
-                $role = User::getRole(Auth::user()->role);
+                $role = Auth::user()->roles->pluck('name')->implode(', ');
                 $view->with('role', $role);
             }
             
