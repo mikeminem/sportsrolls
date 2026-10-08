@@ -27,7 +27,7 @@ class RolesTest extends TestCase
 
     public function test_roles_can_be_created_updated_and_soft_deleted()
     {
-        $this->actingAs(new User(['id' => 1, 'role' => 'Admin']));
+        $this->actingAs((new User)->setRelation('roles', collect([new Roles(['name' => 'admin'])])));
         $this->postJson('/roles', ['name' => 'Referee', 'is_deleted' => 1])
             ->assertJson(['type' => 'success']);
         $role = Roles::firstOrFail();
@@ -51,7 +51,7 @@ class RolesTest extends TestCase
 
     public function test_invalid_fields_are_rejected()
     {
-        $this->actingAs(new User(['role' => 'Admin']));
+        $this->actingAs((new User)->setRelation('roles', collect([new Roles(['name' => 'admin'])])));
         foreach ([['name' => ''], ['name' => str_repeat('a', 21)],
             ['name' => 'Coach', 'description' => str_repeat('a', 501)],
             ['name' => 'Coach', 'is_default' => 2], ['id' => -1, 'name' => 'Coach']] as $data) {

@@ -76,7 +76,7 @@
                         @else
 
                             <li class="nav-item">
-                                <a class="nav-link" href=" {{ url('/home') }} "><i class="fa fa-home"></i> {{ __('Home') }}</a>
+                                <a class="nav-link" href=" {{ route('dashboard') }} "><i class="fa fa-home"></i> {{ __('Home') }}</a>
                             </li>
 
                             {{-- <li class="nav-item">

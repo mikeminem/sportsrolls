@@ -21,7 +21,10 @@ Route::get('/', 'MainController@index')->name('index');
 Auth::routes(['register' => false, 'password.request' => false, 'password.reset' => false]);
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+Route::get('/home', function () {
+    return redirect()->route('dashboard');
+})->middleware('auth')->name('home');
 
 //******************************************************************
 //* all catalogues
