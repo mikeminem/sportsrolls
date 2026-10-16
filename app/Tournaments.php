@@ -29,9 +29,14 @@ class Tournaments extends Model
         'enable_penalties_scoring',
         'enable_enrollment',
         'period_time',
-        'period_num'
+        'period_num',
+        'chronometer_time',
     ];
 
+
+    protected $casts = [
+        'chronometer_time' => 'integer',
+    ];
 
     public function sport()
     {

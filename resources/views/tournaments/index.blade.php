@@ -150,6 +150,12 @@
                             </div>
 
                         </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label for="chronometer_time">Tiempo del cronómetro (Mins)</label>
+                                <input type="number" class="form-control" id="chronometer_time" name="chronometer_time" value="0" min="0" step="1" readonly>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">

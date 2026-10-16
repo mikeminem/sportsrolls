@@ -158,6 +158,7 @@ class TournamentsController extends Controller
             'title'     => 'required|max:120',
             'summary'   => 'required|max:240',
             'contacts'   => 'required|max:240',
+            'chronometer_time' => 'sometimes|required|integer|min:0|max:2147483647',
         ];
 
         $attributes = [
@@ -190,7 +191,7 @@ class TournamentsController extends Controller
 
         if (!isset($request->id) || empty($request->id)) {
             $model = new Tournaments($request->all());
-            $model->code =  strtoupper( str_random(8));
+            $model->code =  strtoupper( str_random(4));
             $model->user_id = Auth::user()->id;
             $model->start_day = date('Y-m-d');
             $model->slug = str_slug($model->title);
@@ -285,6 +286,7 @@ class TournamentsController extends Controller
                 'enable_penalties_scoring',
                 'enable_enrollment',
                 'period_time',
+                'chronometer_time',
                 'period_num' )->find($id);
 
             if (!$model->code) {
@@ -1131,7 +1133,7 @@ class TournamentsController extends Controller
             ->where('is_deleted',0)
             ->get(['id', 'name','last_name', 'photo', 'number', 'team_id']);
         $tournament = Tournaments::where('id', $game->tournament_id)->get();
-        $actions    = Actions::where('is_deleted',0)->where('sport_id', $tournament[0]->sport_id)->get();
+        $actions    = Actions::where('is_deleted',0)->where('is_enabled', 'Si')->where('sport_id', $tournament[0]->sport_id)->get();
 
         return view ('games.show', [
             'game'      => $game,

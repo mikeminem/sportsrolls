@@ -229,6 +229,7 @@
 
         <!-- Modal body -->
         <form id="codeForm">
+            <input type="hidden" name="game_id" value="{{ $game->id }}">
 
             <div class="modal-body">
             <h5>
@@ -867,9 +868,9 @@
                                 return;
                             }
 
-                            enableGame(true);
                             $.cookie('enableGame', true);
                             $.cookie('game_id', data.game_id);
+                            enableGame(true);
                             playersList = {!! $players !!}
 
                             $.cookie('playersList', JSON.stringify(playersList))
@@ -975,7 +976,7 @@
                     + '</tr>'
                 )
 
-            }s
+            }
 
 
 
@@ -1044,8 +1045,9 @@
                         $.notify(data.message, data.type);
 
                     },
-                    error:function(){
-                        $.notify("Hubo un error al intentar registrar la Acción dl Juego!", "error");
+                    error:function(xhr){
+                        const message = xhr.responseJSON && xhr.responseJSON.message;
+                        $.notify(message || "Hubo un error al registrar la acción del juego", "error");
                     },
                 });
 

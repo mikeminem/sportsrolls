@@ -464,34 +464,30 @@ class GamesController extends Controller
     }
 
     function data_entry(Request $request) {
-        if (!$request->access_code) {
-            return response()->json([
-                'access'=>'false',
-                'type'=>'error',
-                'message' => 'Algo salió NO HAY clave de acceso'
-            ]);
-        }
-
-        $access_code = $request->access_code;
-
-        $has_access = Games::where('access_code', $access_code)->get(['id']);
-
-        if (count($has_access) === 0) {
-            return response()->json([
-                'access'=>'false',
-                'type'=>'error',
-                'message' => 'No tiene acceso a editar el juego',
-                'game_id' => 0
-            ]);
-        }
-
-        return response()->json([
-            'access'=>'true',
-            'type'=>'success',
-            'message' => 'Bienvenido al modo de edición del juego',
-            'game_id' => $has_access[0]->id
+        $request->validate([
+            'access_code' => 'required|string|max:100',
+            'game_id' => 'required|integer|min:1',
         ]);
 
+        $game = Games::where('id', $request->game_id)
+            ->where('access_code', $request->access_code)
+            ->where('is_deleted', 0)->where('status', '!=', 'Finalizado')->first();
+
+        if (!$game) {
+            return response()->json([
+                'access' => 'false', 'type' => 'error',
+                'message' => 'Código incorrecto o partido no disponible para captura.',
+                'game_id' => 0,
+            ]);
+        }
+
+        $request->session()->put('game_capture.'.$game->id, true);
+
+        return response()->json([
+            'access' => 'true', 'type' => 'success',
+            'message' => 'Bienvenido al modo de edición del juego',
+            'game_id' => $game->id,
+        ]);
     }
 
     function getTeamGames ($teamId)

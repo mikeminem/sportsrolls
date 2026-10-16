@@ -63,9 +63,9 @@ class DashboardTest extends TestCase
             [[], ['profile']],
             [['PLAYER'], ['profile']],
             [['CAPITAN'], ['profile']],
-            [['promoter'], ['profile', 'roster', 'tournaments', 'teams', 'calendar', 'games']],
-            [['admin'], ['profile', 'tournaments', 'teams', 'calendar', 'games', 'users', 'roles', 'catalogs']],
-            [['player', 'capitan', 'promoter', 'admin'], ['profile', 'roster', 'tournaments', 'teams', 'calendar', 'games', 'users', 'roles', 'catalogs']],
+            [['promoter'], ['profile', 'roster', 'tournaments', 'categories', 'teams', 'calendar', 'games']],
+            [['admin'], ['profile', 'tournaments', 'categories', 'teams', 'calendar', 'games', 'users', 'roles', 'catalogs']],
+            [['player', 'capitan', 'promoter', 'admin'], ['profile', 'roster', 'tournaments', 'categories', 'teams', 'calendar', 'games', 'users', 'roles', 'catalogs']],
         ];
     }
 
