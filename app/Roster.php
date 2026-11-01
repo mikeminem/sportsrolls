@@ -9,6 +9,7 @@ class Roster extends Model
     protected $fillable = [
         'team_id',
         'user_id',
+        'player_id',
         'number',
         'positions',
         'status',
@@ -26,9 +27,13 @@ class Roster extends Model
         'license'
     ];
 
-    // public function player()
-    // {
-    //     return $this->belongsTo('App\Player');
-    // }
-}
+    public function player()
+    {
+        return $this->belongsTo(User::class, 'player_id');
+    }
 
+    public function registeredBy()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+}

@@ -69,7 +69,12 @@ class User extends Authenticatable
 
     public function rosters()
     {
-        return $this->hasMany('App\Roster');
+        return $this->hasMany(Roster::class, 'player_id');
+    }
+
+    public function registeredRosters()
+    {
+        return $this->hasMany(Roster::class, 'user_id');
     }
 
     public function profile()

@@ -25,6 +25,16 @@ class DashboardTest extends TestCase
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('last_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+        });
+        Schema::create('profiles', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id');
+            foreach (['dob', 'photo', 'sex', 'favorite_number', 'about_me', 'tshirt_size'] as $field) {
+                $table->string($field)->nullable();
+            }
         });
         Schema::create('tournaments', function (Blueprint $table) {
             $table->increments('id');
@@ -60,12 +70,12 @@ class DashboardTest extends TestCase
     public function roleCombinations()
     {
         return [
-            [[], ['profile']],
-            [['PLAYER'], ['profile']],
-            [['CAPITAN'], ['profile']],
-            [['promoter'], ['profile', 'roster', 'tournaments', 'categories', 'teams', 'calendar', 'games']],
-            [['admin'], ['profile', 'tournaments', 'categories', 'teams', 'calendar', 'games', 'users', 'roles', 'catalogs']],
-            [['player', 'capitan', 'promoter', 'admin'], ['profile', 'roster', 'tournaments', 'categories', 'teams', 'calendar', 'games', 'users', 'roles', 'catalogs']],
+            [[], []],
+            [['PLAYER'], []],
+            [['CAPITAN'], []],
+            [['promoter'], ['roster', 'tournaments', 'categories', 'teams', 'calendar', 'games']],
+            [['admin'], ['tournaments', 'categories', 'teams', 'calendar', 'games', 'users', 'roles', 'catalogs']],
+            [['player', 'capitan', 'promoter', 'admin'], ['roster', 'tournaments', 'categories', 'teams', 'calendar', 'games', 'users', 'roles', 'catalogs']],
         ];
     }
 
@@ -76,7 +86,9 @@ class DashboardTest extends TestCase
         $response = $this->get('/dashboard')->assertStatus(200);
         preg_match_all('/data-dashboard-card="([^"]+)"/', $response->getContent(), $matches);
         $this->assertSame($expected, $matches[1]);
-        $response->assertDontSee('Inscribir equipo')->assertDontSee('Mis estadísticas');
+        $response->assertDontSee('Inscribir equipo')->assertSee('data-dashboard-profile');
+        $this->assertSame(in_array('player', array_map('strtolower', $roles)),
+            strpos($response->getContent(), 'data-player-statistics') !== false);
     }
 
     public function test_dashboard_requires_login_and_home_redirects()
@@ -109,6 +121,35 @@ class DashboardTest extends TestCase
         $user->unsetRelation('roles');
         $this->get('/dashboard')->assertStatus(200)->assertDontSee('data-dashboard-card="users"');
         $this->getJson('/roles')->assertStatus(403);
+    }
+
+    public function test_header_uses_own_profile_and_escapes_personal_information()
+    {
+        $this->signIn(['player']);
+        DB::table('users')->where('id', 1)->update(['last_name' => 'López',
+            'email' => 'ana@example.test', 'phone' => '4921234567']);
+        $this->actingAs(User::find(1));
+        DB::table('profiles')->insert([
+            ['user_id' => 1, 'dob' => '2000-03-01', 'photo' => 'ana.jpg', 'sex' => 'Femenino',
+                'favorite_number' => '12', 'about_me' => '<script>unsafe()</script>', 'tshirt_size' => 'M'],
+            ['user_id' => 2, 'dob' => null, 'photo' => 'other.jpg', 'sex' => null,
+                'favorite_number' => null, 'about_me' => 'Perfil ajeno', 'tshirt_size' => null],
+        ]);
+        $this->get('/dashboard')->assertStatus(200)->assertSee('López')
+            ->assertSee('ana@example.test')->assertSee('4921234567')->assertSee('01/03/2000')
+            ->assertSee('photo/ana.jpg')->assertSee('Femenino')->assertSee('data-player-statistics')
+            ->assertDontSee('<script>unsafe()</script>')->assertDontSee('Perfil ajeno')
+            ->assertSee('Estadísticas próximamente');
+    }
+
+    public function test_header_handles_missing_profile_and_legacy_zero_birth_date()
+    {
+        $this->signIn(['admin']);
+        $this->get('/dashboard')->assertStatus(200)->assertSee('Agrega tu fotografía')
+            ->assertSee('Por completar')->assertDontSee('data-player-statistics');
+        DB::table('profiles')->insert(['user_id' => 1, 'dob' => '0000-00-00']);
+        $this->actingAs(User::find(1));
+        $this->get('/dashboard')->assertStatus(200)->assertDontSee('30/11/-0001');
     }
 
     public function test_player_cannot_access_role_management_directly()

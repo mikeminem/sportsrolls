@@ -15,15 +15,20 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $user->loadMissing('roles');
+        $user->loadMissing(['roles', 'profile']);
+        $profile = $user->profile;
+        $isPlayer = $user->hasRole('player');
+        $birthDate = null;
+        if ($profile && $profile->dob) {
+            $date = \DateTime::createFromFormat('!Y-m-d', $profile->dob);
+            if ($date && $date->format('Y-m-d') === $profile->dob) {
+                $birthDate = $date->format('d/m/Y');
+            }
+        }
         $promoter = $user->hasRole('promoter');
         $admin = $user->hasRole('admin');
         $tournaments = collect();
-        $sections = [
-            'activity' => ['title' => 'Mi actividad', 'cards' => [
-                'profile' => ['title' => 'Mi perfil', 'icon' => 'user', 'description' => 'Consulta y actualiza tus datos personales.', 'url' => url('/my_profile')],
-            ]],
-        ];
+        $sections = [];
 
         if ($promoter) {
             $sections['team'] = ['title' => 'Gestión de equipo', 'cards' => [
@@ -58,6 +63,6 @@ class HomeController extends Controller
             ]];
         }
 
-        return view('home', compact('user', 'sections', 'tournaments'));
+        return view('home', compact('user', 'profile', 'birthDate', 'isPlayer', 'sections', 'tournaments'));
     }
 }

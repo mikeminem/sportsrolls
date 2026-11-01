@@ -17,8 +17,9 @@
 
 Route::get('/', 'MainController@index')->name('index');
 
+Auth::routes();
 //Auth::routes(['register' => false]);
-Auth::routes(['register' => false, 'password.request' => false, 'password.reset' => false]);
+//Auth::routes(['register' => false, 'password.request' => false, 'password.reset' => false]);
 
 
 Route::get('/dashboard', 'HomeController@index')->name('dashboard');
@@ -262,6 +263,7 @@ Route::resource('/pictures','PicturesController');
 Route::get('/pictures_list/{user_id}','PicturesController@list');
 
 //roster players
+Route::get('/roster_players', 'RosterController@players')->name('rosters.players');
 Route::resource('/rosters','RosterController');
 Route::get('/rosters_list/{user_id}','RosterController@list');
 

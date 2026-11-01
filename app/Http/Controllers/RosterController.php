@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Roster;
+use App\User;
+use Illuminate\Validation\Rule;
 use App\Sport;
 use App\Tournaments;
 
@@ -21,10 +23,13 @@ class RosterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth',  ['except' => [
-            'store'
-            ]
-        ]);
+        $this->middleware('auth');
+    }
+
+    public function players()
+    {
+        return response()->json(User::where('active', 1)->where('is_deleted', 0)
+            ->orderBy('name')->orderBy('last_name')->get(['id', 'name', 'last_name']));
     }
 
     public function index(Request $request)
@@ -105,7 +110,17 @@ class RosterController extends Controller
      */
     public function store(Request $request)
     {
+        $player = User::where('id', $request->player_id)->where('active', 1)
+            ->where('is_deleted', 0)->first(['id', 'name', 'last_name']);
+        // Always copy identity from the selected account, never from submitted text.
+        $request->merge([
+            'name' => $player ? $player->name : null,
+            'last_name' => $player ? $player->last_name : null,
+        ]);
+
         $rules = [
+            'player_id' => ['required', 'integer', Rule::exists('users', 'id')
+                ->where('active', 1)->where('is_deleted', 0)],
             'name'          => 'required|max:45',
             'last_name'     => 'required|max:45',
             'tournament_id' => 'required',
@@ -116,6 +131,7 @@ class RosterController extends Controller
         ];
 
         $attributes = [
+            'player_id' => 'Jugador',
             'name'          => 'Nombre',
             'tournament_id' => 'Torneo',
             'last_name'     => 'Apellidos',
@@ -145,7 +161,7 @@ class RosterController extends Controller
 
         if (!isset($request->id) || empty($request->id)) {
             //insert
-            $model          = new Roster($request->all());
+            $model          = new Roster($request->except(['user_id', 'is_deleted']));
 
             if (isset(Auth::user()->id)) {
                 $model->user_id = Auth::user()->id;
@@ -168,7 +184,7 @@ class RosterController extends Controller
             //update
             $model = Roster::find($request->id);
             $lastphoto = $model->photo;
-            $model->fill($request->all());
+            $model->fill($request->except(['user_id', 'is_deleted']));
 
             if (!empty($pathphoto)) {
                 Storage::delete('public/players_photos/' . $lastphoto);
@@ -201,6 +217,7 @@ class RosterController extends Controller
                 'id',
                 'team_id',
                 'user_id',
+                'player_id',
                 'number',
                 'category_id',
                 'is_deleted',

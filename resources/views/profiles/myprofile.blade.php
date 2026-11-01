@@ -24,10 +24,10 @@
                                         <div class="card-body text-center">
                                             <h4 class="card-title">{{ Auth::user()->name}}</h4>
                                             <span class="btn btn-primary btn-file" style="width: 200px">
-                                                    <span class="fa fa-photo"></span> 
+                                                    <span class="fa fa-photo"></span>
                                                     Buscar foto
                                                     <input type="file" accept="image/*" id="photo"  name="photo" onchange="showMyImage(this)" >
-                                                    
+
                                             </span>
                                             <a href="javascript:void(0)" class="btn btn-primary" id="btnDeletePhoto" @disabled(true) style="width: 200px" ><span class="fa fa-remove"></span>  Borrar foto</a>
 
@@ -35,25 +35,34 @@
                                             <div class="row">
                                                 <div class="col-md-12 col-sm-12">
                                                     <div class="form-group">
-                                                        <label for="tshirt_size"><b>Talla Playera *</b></label>
-                                                        <input type="text" class="form-control" id="tshirt_size" name="tshirt_size" placeholder="Talla playera" maxlength="10" value="{{ ($profile)?$profile->tshirt_size:""}}">
+                                                        <label for="tshirt_size"><b>Talla Playera</b></label>
+                                                        <!--input type="text" class="form-control" id="tshirt_size" name="tshirt_size" placeholder="Talla playera" maxlength="10" value="{{ ($profile)?$profile->tshirt_size:""}}"-->
+                                                        <select class="form-control" id="tshirt_size" name="tshirt_size">
+                                                            <option value="">Selecciona</option>
+                                                            <option value="S" {{ $profile->tshirt_size == 'S' ? 'selected' : '' }}>CHICA</option>
+                                                            <option value="M" {{ $profile->tshirt_size == 'M' ? 'selected' : '' }}>MEDIANA</option>
+                                                            <option value="L" {{ $profile->tshirt_size == 'L' ? 'selected' : '' }}>GRANDE</option>
+                                                            <option value="XL" {{ $profile->tshirt_size == 'XL' ? 'selected' : '' }}>EXTRA GRANDE</option>
+
+
+                                                        </select>
                                                     </div>
                                                 </div>
-        
+
                                                 <div class="col-md-12 col-sm-12">
                                                     <div class="form-group">
-                                                        <label for="favorite_number"><b>Número favorito *</b></label>
+                                                        <label for="favorite_number"><b>Número favorito</b></label>
                                                         <input type="text" class="form-control" id="favorite_number" name="favorite_number" placeholder="Número favorito" maxlength="5" value="{{ ($profile)?$profile->favorite_number:""}}">
                                                     </div>
                                                 </div>
-        
+
                                                 <div class="col-md-12 col-sm-12">
                                                     <div class="form-group">
-                                                        <label for="footware_meansure"><b>Calzado cms *</b></label>
+                                                        <label for="footware_meansure"><b>Estatura CMS</b></label>
                                                         <input type="text" class="form-control" id="footware_meansure" name="footware_meansure" placeholder="Mi # de calzado" maxlength="4" value="{{ ($profile)?$profile->footware_meansure:""}}">
                                                     </div>
                                                 </div>
-        
+
                                             </div>
 
                                         </div>
@@ -62,7 +71,7 @@
 
                                 <div class="col-md-9 col-sm-12">
 
-                                    <div class="row">      
+                                    <div class="row">
                                         <div class="col-md-4 col-sm-12">
                                             <div class="form-group">
                                                 <label for="dob"><b>Fecha de nacimiento *</b></label>
@@ -132,7 +141,7 @@
 
                                     </div>
 
-                                    <div class="row">      
+                                    <div class="row">
                                         <div class="col-md-4 col-sm-12">
                                             <div class="form-group">
                                                 <label for="state_id"><b>Estado *</b></label>
@@ -181,19 +190,19 @@
 
                                 </div>
                             </div>
-        
+
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     Datos marcados con * son obligatorios
                                 </div>
-                            
+
                                 <div class="col-md-6 col-sm-12">
-                                
+
                                     <div class="form-group text-right">
                                         {{ csrf_field() }}
-            
+
                                         <button type="submit" class="btn btn-primary btn-lg">
-                                            <span class="fa fa-save"></span> 
+                                            <span class="fa fa-save"></span>
                                             {{__('Save')}}
                                         </button>
 
@@ -201,7 +210,7 @@
                                 </div>
                             </div>
                         </form>
-                    </div>     
+                    </div>
                 </div>
             </div>
         </div>
@@ -213,13 +222,13 @@
 <div class="modal" id="deletePhotoModal">
     <div class="modal-dialog">
       <div class="modal-content">
-  
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Borrar Foto de Perfil</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-  
+
 
         <!-- Modal body -->
         <form id="deletePhotoForm">
@@ -233,7 +242,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <span class="fa fa-check"></span> 
+                    <span class="fa fa-check"></span>
                     {{__('Delete')}}
                 </button>
                 <button type="button" class="btn btn-primary btn-lg" class="close" data-dismiss="modal">
@@ -241,14 +250,17 @@
                 </button>
             </div>
         </form>
-  
+
       </div>
     </div>
-  </div>	
+  </div>
 
 @endsection
 
 @section('js')
+
+<script src="{{ asset('vendor/compressorjs/compressor.min.js') }}"></script>
+
 <script type="text/javascript">
         jQuery(document).ready(function($){
 
@@ -261,11 +273,66 @@
 
             $(document).on("click", "#btnDeletePhoto", function (e) {
                 e.preventDefault();
-                jQuery("#deletePhotoModal").modal('show');    
+                jQuery("#deletePhotoModal").modal('show');
             });
-            
-            $(document).on("submit", "#frmProfile", function (e) {
+
+            async function compressProfilePhoto(file) {
+                var maxBytes = 100 * 1024;
+                var settings = [
+                    { size: 800, quality: 0.7 },
+                    { size: 640, quality: 0.55 },
+                    { size: 512, quality: 0.4 }
+                ];
+
+                for (var step of settings) {
+                    var result = await new Promise(function (resolve, reject) {
+                        new Compressor(file, {
+                            maxWidth: step.size,
+                            maxHeight: step.size,
+                            quality: step.quality,
+                            mimeType: 'image/jpeg',
+                            strict: false,
+                            success: resolve,
+                            error: reject
+                        });
+                    });
+
+                    if (result.size <= maxBytes) return result;
+                }
+
+                throw new Error('La imagen no pudo reducirse a 100 KB. Selecciona otra foto.');
+            }
+
+            $(document).on("submit", "#frmProfile", async function (e) {
                 e.preventDefault();
+                var form = this;
+                if ($(form).data('saving')) return false;
+
+                $(form).data('saving', true);
+                var button = $(form).find('button[type="submit"]');
+                var originalButton = button.html();
+                button.prop('disabled', true).text('Guardando...');
+
+                function unlockForm() {
+                    $(form).data('saving', false);
+                    button.prop('disabled', false).html(originalButton);
+                }
+
+                var formData = new FormData(form);
+                var photo = form.querySelector('#photo').files[0];
+                if (photo) {
+                    try {
+                        button.text('Comprimiendo foto...');
+                        var compressedPhoto = await compressProfilePhoto(photo);
+                        formData.set('photo', compressedPhoto, 'profile.jpg');
+                        button.text('Guardando...');
+                    } catch (error) {
+                        $.notify(error.message || 'No se pudo comprimir la foto. Selecciona otra imagen.', 'error');
+                        unlockForm();
+                        return false;
+                    }
+                }
+
                 $.ajax({
                     type: "POST",
                     url: "profiles",
@@ -273,8 +340,8 @@
                     contentType: false,
                     cache: false,
                     processData: false,
-                    data: new FormData(this),
-                    success: function (data) {                
+                    data: formData,
+                    success: function (data) {
                         if (data.type == "error") {
                             var errors = "";
                             $.each(data.errors, function (i, val) {
@@ -288,6 +355,7 @@
                     error:function(){
                         $.notify("Hubo un error al intentar agregar el registro", "error");
                     },
+                    complete: unlockForm,
                 });
                 return false;
             });
@@ -305,13 +373,13 @@
                             $.notify(data.message + "\n" + errors, data.type);
                             return false;
                         }
-                        
+
                         $("#deleteForm").trigger('reset');
                         //remove_photo_profile
-                        var img=document.getElementById("thumbnil");        
+                        var img=document.getElementById("thumbnil");
                         img.src = '{{ asset('images/noimage.png')}}';
 
-                        jQuery.noConflict(); 
+                        jQuery.noConflict();
                         jQuery("#deletePhotoModal").modal('toggle');
                         $.notify(data.message, data.type);
 
@@ -325,7 +393,7 @@
             });
 
 
-            
+
             function getMunicipalities(sport, selected="") {
                 var options = "";
 
@@ -334,21 +402,21 @@
                         type: "GET",
                         url: "{{ url('municipalities_list') }}/" + sport,
                         dataType: "json",
-                        success: function (data) { 
+                        success: function (data) {
                             options = '<option value="">Selecciona</option>';
                             var municipalities = -1
                             for(obj in data) {
                                 if ( selected == data[obj]['id'] ) {
-                                    options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';            
+                                    options += '<option value="' +data[obj]['id'] + '" selected="selected" >' + data[obj]['name'] + '</option>';
                                 } else {
-                                    options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';            
+                                    options += '<option value="' +data[obj]['id'] + '" >' + data[obj]['name'] + '</option>';
                                 }
                                 municipalities++;
                             }
-                            
+
                             if (municipalities <=-1) {
                                 $.notify("No hay Municipios en este estado, selecciona otro o agrega municioios al estado", "error");
-                            
+
                             }
                             $("#municipality_id").html(options);
 
@@ -363,29 +431,26 @@
 
         function showMyImage(fileInput) {
             var files = fileInput.files;
-        
-            for (var i = 0; i < files.length; i++) {           
+
+            for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                var imageType = /image.*/;     
+                var imageType = /image.*/;
                 if (!file.type.match(imageType)) {
                     continue;
-                }           
-                var img=document.getElementById("thumbnil");            
-                img.file = file;    
+                }
+                var img=document.getElementById("thumbnil");
+                img.file = file;
                 var reader = new FileReader();
-                reader.onload = (function(aImg) { 
-                    return function(e) { 
-                        aImg.src = e.target.result; 
-                    }; 
+                reader.onload = (function(aImg) {
+                    return function(e) {
+                        aImg.src = e.target.result;
+                    };
                 })(img);
                 reader.readAsDataURL(file);
-            }    
+            }
             files = null;
         }
 
-
-
-        
 
 </script>
 @endsection

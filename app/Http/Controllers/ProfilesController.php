@@ -18,8 +18,8 @@ class ProfilesController extends Controller
     {
         $this->middleware('auth');
     }
-    
-    
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -32,9 +32,6 @@ class ProfilesController extends Controller
         $rules = [
             //'name'      => 'required|max:120|min:10',
             'dob'                   => 'required',
-            'tshirt_size'           => 'required',
-            'favorite_number'       => 'required',
-            'footware_meansure'     => 'required',
             'sex'                   => 'required',
             'state_id'              => 'required',
             'municipality_id'       => 'required',
@@ -42,9 +39,6 @@ class ProfilesController extends Controller
 
         $attributes = [
             'dob'                   => 'Fecha de nacimiento',
-            'tshirt_size'           => 'Estatura',
-            'favorite_number'       => "Peso",
-            'footware_meansure'     => 'Medida de calzado',
             'sex'                   => 'Sexo',
             'state_id'              => 'Estado',
             'municipality_id'       => 'Municipio/delegación',
@@ -82,7 +76,7 @@ class ProfilesController extends Controller
                     $model->photo = $path;
                 }
 
-                if ($model->update()) 
+                if ($model->update())
                     return response()->json([
                         'type' => 'success',
                         'message' => 'Información del perfil guardado!'
@@ -91,11 +85,11 @@ class ProfilesController extends Controller
                 //New entry
                 $model = new Profiles($request->all());
                 $model->user_id = Auth::user()->id;
-                
-                if (!empty($path))
-                    $model->photo = $path;  
 
-                if ($model->save()) 
+                if (!empty($path))
+                    $model->photo = $path;
+
+                if ($model->save())
                     return response()->json([
                         'type' => 'success',
                         'message' => 'Información del perfil guardado!'
@@ -128,17 +122,17 @@ class ProfilesController extends Controller
             $profile = new User();
             $municipalities = Municipalities::where('is_deleted',0)->orderby('name','asc')->get(['id','name']);
 
-        } 
-        
+        }
 
-        return view("profiles.myprofile", [ 
+
+        return view("profiles.myprofile", [
             'profile'   => $profile,
             'states'    => $states,
             'municipalities' => $municipalities
         ]);
     }
 
-   
+
 
 
     /**
@@ -161,7 +155,7 @@ class ProfilesController extends Controller
                     'message' => 'La foto ha sido borrada!'
                 ]);
             }
-            
+
         }
         return response()->json([
             'type' => 'error',
@@ -169,5 +163,5 @@ class ProfilesController extends Controller
         ]);
     }
 
-    
+
 }
